@@ -1,0 +1,65 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery-ui.min.css">
+  <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.css">
+  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery.min.js"></script>
+  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery-ui.min.js"></script>
+  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/three.min.js"></script>
+  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+</head>
+<nav class="navbar is-light is-fixed-top">
+  <div class="navbar-start" id="navTitle">
+    <p class="navbar-item title "> <i class="fas fa-dna fa-fw"> </i> TESTING HA PDB STRUCTURE </p>
+  </div>
+</nav>
+
+<body class="has-navbar-fixed-top">
+  <div class="section">
+  </div>
+  <div class="container isfluid">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-parent is-vertical">
+          <article class="tile is-child box has-text-centered" style="background-color:#CAEBEB">
+            <div id="icn3dwrap">
+              <script type="text/javascript">
+                $(document).ready(function() {
+                  var options = {};
+                  options['proteins'] = 'sphere';
+                  options['color'] = 'cyan';
+                  options['pk'] = '2';
+                  options['bHighlight'] = 2;
+                  var cfg = {
+                    divid: 'icn3dwrap',
+                    width: 600,
+                    height: 600,
+                    resize: false,
+                    rotate: 'none',
+                    pdbid: '1RUZ',
+                    showcommand: true,
+                  };
+                  if (Object.keys(options).length > 0) cfg['options'] = options;
+                  var icn3dui = new iCn3DUI(cfg);
+
+                  $.when(icn3dui.show3DStructure()).then(function() {
+                    icn3dui.setOption('color', 'cyan');
+                    //icn3dui.setOption('protein', 'sphere');
+                    icn3dui.selectByCommand("$1RUZ.H,I,J:5-10,KRDE", "test", "test sel");
+                    icn3dui.showSelection();
+                    //icn3dui.centerSelection()
+                  });
+                });
+              </script>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
