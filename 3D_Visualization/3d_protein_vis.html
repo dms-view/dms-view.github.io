@@ -22,16 +22,25 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-parent is-vertical">
-          <article class="tile is-child box has-text-centered" style="background-color:#CAEBEB">
+          <div class="tile is-child box has-text-centered" style="background-color:#e5f5f9">
+            <button id ="my_button">Click me to select</button>
+            <button id ="my_button2">Click me to deselect</button>
+          </div>
+        </div>
+        <div class="tile is-parent is-vertical">
+          <div class="tile is-child box has-text-centered" style="background-color:#CAEBEB">
             <div id="icn3dwrap">
               <script type="text/javascript">
+                function myFunction(elmnt) {
+                  return "$1RUZ.H:20";
+                };
                 $(document).ready(function() {
                   var options = {};
                   options['proteins'] = 'sphere';
                   options['color'] = 'blue';
 
                   var hAtoms = {};
-                  hAtoms['2505'] = 1;
+                  hAtoms['2001'] = 1;
 
                   var cfg = {
                     divid: 'icn3dwrap',
@@ -42,26 +51,29 @@
                     pdbid: '1RUZ',
                     showcommand: true,
                   };
+
                   if (Object.keys(options).length > 0) cfg['options'] = options;
                   var icn3dui = new iCn3DUI(cfg);
 
-                  $.when(icn3dui.show3DStructure()).then(function() {
-                    //icn3dui.hideMenu(600,600);
-                    icn3dui.setOption('color', 'blue');
-                    //icn3dui.setOption('proteins', 'sphere');
+                    $.when(icn3dui.show3DStructure()).then(function() {
+                      icn3dui.hideMenu(600,600);
+                      icn3dui.setOption('color', 'blue');
+                      icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
+                      icn3dui.showSelection();
+                      document.getElementById("my_button").addEventListener("click", function(){
+                      icn3dui.selectByCommand("$1RUZ.H:104", "test2", "test sel");
+                      icn3dui.setOption('color', 'hydrophobic');
+                    });
+                    document.getElementById("my_button2").addEventListener("click", function(){
                     icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                    icn3dui.showSelection();
-                    icn3dui.selectByCommand("$1RUZ.H:5", "test2", "test sel");
-                    //icn3dui.setOption('color', 'residue');
-                    icn3dui.setOption('color', 'hydrophobic');
                     icn3dui.setOption('color', 'blue');
-                    icn3dui.selectByCommand("$1RUZ.H:20", "test2", "test sel");
-                    icn3dui.setOption('color', 'hydrophobic');
                   });
+                  });
+
                 });
               </script>
             </div>
-          </article>
+          </div>
         </div>
       </div>
     </div>
