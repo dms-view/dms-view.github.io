@@ -28,9 +28,11 @@
                 $(document).ready(function() {
                   var options = {};
                   options['proteins'] = 'sphere';
-                  options['color'] = 'cyan';
-                  options['pk'] = '2';
-                  options['bHighlight'] = 2;
+                  options['color'] = 'blue';
+
+                  var hAtoms = {};
+                  hAtoms['2505'] = 1;
+
                   var cfg = {
                     divid: 'icn3dwrap',
                     width: 600,
@@ -44,11 +46,17 @@
                   var icn3dui = new iCn3DUI(cfg);
 
                   $.when(icn3dui.show3DStructure()).then(function() {
-                    icn3dui.setOption('color', 'cyan');
-                    //icn3dui.setOption('protein', 'sphere');
-                    icn3dui.selectByCommand("$1RUZ.H,I,J:5-10,KRDE", "test", "test sel");
+                    //icn3dui.hideMenu(600,600);
+                    icn3dui.setOption('color', 'blue');
+                    //icn3dui.setOption('proteins', 'sphere');
+                    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
                     icn3dui.showSelection();
-                    //icn3dui.centerSelection()
+                    icn3dui.selectByCommand("$1RUZ.H:5", "test2", "test sel");
+                    //icn3dui.setOption('color', 'residue');
+                    icn3dui.setOption('color', 'hydrophobic');
+                    icn3dui.setOption('color', 'blue');
+                    icn3dui.selectByCommand("$1RUZ.H:20", "test2", "test sel");
+                    icn3dui.setOption('color', 'hydrophobic');
                   });
                 });
               </script>
