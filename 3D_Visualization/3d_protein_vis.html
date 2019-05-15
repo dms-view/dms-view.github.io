@@ -23,8 +23,8 @@
       <div class="tile is-parent">
         <div class="tile is-parent is-vertical">
           <div class="tile is-child box has-text-centered" style="background-color:#e5f5f9">
-            <button id ="my_button">Click me to select</button>
-            <button id ="my_button2">Click me to deselect</button>
+            <button id="my_button">Click me to select</button>
+            <button id="my_button2">Click me to deselect</button>
           </div>
         </div>
         <div class="tile is-parent is-vertical">
@@ -55,19 +55,19 @@
                   if (Object.keys(options).length > 0) cfg['options'] = options;
                   var icn3dui = new iCn3DUI(cfg);
 
-                    $.when(icn3dui.show3DStructure()).then(function() {
-                      icn3dui.hideMenu(600,600);
-                      icn3dui.setOption('color', 'blue');
-                      icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                      icn3dui.showSelection();
-                      document.getElementById("my_button").addEventListener("click", function(){
+                  $.when(icn3dui.show3DStructure(),
+                    icn3dui.hideMenu(600, 600),
+                    icn3dui.setOption('color', 'blue')).then(function() {
+                    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
+                    icn3dui.showSelection();
+                    document.getElementById("my_button").addEventListener("click", function() {
                       icn3dui.selectByCommand("$1RUZ.H:104", "test2", "test sel");
                       icn3dui.setOption('color', 'hydrophobic');
                     });
-                    document.getElementById("my_button2").addEventListener("click", function(){
-                    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                    icn3dui.setOption('color', 'blue');
-                  });
+                    document.getElementById("my_button2").addEventListener("click", function() {
+                      icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
+                      icn3dui.setOption('color', 'blue');
+                    });
                   });
 
                 });
