@@ -11,7 +11,6 @@
   <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
   <style>
-
     .axis {
       font: 10px sans-serif;
     }
@@ -31,6 +30,7 @@
     }
 
   </style>
+
 </head>
 <nav class="navbar is-light is-fixed-top">
   <div class="navbar-start" id="navTitle">
@@ -40,187 +40,196 @@
 
 <body class="has-navbar-fixed-top">
   <div class="section">
+    <!-- thi is a random section that allows for the nvigation bar a tthe top to
+     not obscure the section directly below it-->
   </div>
   <div class="column">
     <div class="column is-moble">
       <div class="tile is-parent">
         <div class="tile is-parent is-vertical">
-          <div class="tile is-child box has-text-centered" >
-            <button id="my_button">Click me to select</button>
-            <button id="my_button2">Click me to deselect</button>
-            <div id="my_dataviz"></div>
-            <script>
-              var margin = {
-                  top: 20,
-                  right: 20,
-                  bottom: 70,
-                  left: 40
-                },
-                width = 600 - margin.left - margin.right,
-                height = 300 - margin.top - margin.bottom;
+          <div class="tile is-child box has-text-centered">
+            <button id="my_button"> Click me to select </button>
+            <button id="my_button2"> Click me to deselect </button>
+            <input type="color" id="myColor" value="#ff0080">
 
-              // Parse the date / time
-              //var parseDate = d3.time.format("%Y-%m").parse;
+                  <div id="my_dataviz"></div>
+                  <script>
+                    var margin = {
+                        top: 20,
+                        right: 20,
+                        bottom: 70,
+                        left: 40
+                      },
+                      width = 600 - margin.left - margin.right,
+                      height = 300 - margin.top - margin.bottom;
 
-              var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+                    // Parse the date / time
+                    //var parseDate = d3.time.format("%Y-%m").parse;
 
-              var y = d3.scale.linear().range([height, 0]);
+                    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 
-              var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient("bottom")
-                //.tickValues(d.aa)
-                //.tickFormat(d3.time.format("%Y-%m"));
+                    var y = d3.scale.linear().range([height, 0]);
 
-              var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient("left")
-                .ticks(10);
+                    var xAxis = d3.svg.axis()
+                      .scale(x)
+                      .orient("bottom")
+                    //.tickValues(d.aa)
+                    //.tickFormat(d3.time.format("%Y-%m"));
 
-              var svg = d3.select("#my_dataviz").append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform",
-                  "translate(" + margin.left + "," + margin.top + ")");
+                    var yAxis = d3.svg.axis()
+                      .scale(y)
+                      .orient("left")
+                      .ticks(10);
 
-              d3.csv("bar-data.csv", function(error, data) {
+                    var svg = d3.select("#my_dataviz").append("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                      .append("g")
+                      .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
 
-                x.domain(data.map(function(d) { return d.aa; }));
-                y.domain([0, d3.max(data, function(d) {
-                  return d.value;
-                })]);
+                    d3.csv("bar-data.csv", function(error, data) {
 
-                svg.append("g")
-                  .attr("class", "x axis")
-                  .attr("transform", "translate(0," + height + ")")
-                  .call(xAxis)
-                  .selectAll("text")
-                  .style("text-anchor", "end")
-                  .attr("dx", "-.8em")
-                  .attr("dy", "-.55em")
-                  .attr("transform", "rotate(-90)");
+                      x.domain(data.map(function(d) {
+                        return d.aa;
+                      }));
+                      y.domain([0, d3.max(data, function(d) {
+                        return d.value;
+                      })]);
 
-                svg.append("g")
-                  .attr("class", "y axis")
-                  .call(yAxis)
-                  .append("text")
-                  .attr("transform", "rotate(-90)")
-                  .attr("y", 6)
-                  .attr("dy", ".71em")
-                  .style("text-anchor", "end")
-                  .text("Value ($)");
+                      svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis)
+                        .selectAll("text")
+                        .style("text-anchor", "end")
+                        .attr("dx", "-.8em")
+                        .attr("dy", "-.55em")
+                        .attr("transform", "rotate(-90)");
 
-                svg.selectAll("bar")
-                  .data(data)
-                  .enter().append("rect")
-                  .attr("class", "bar")
-                  .on("mouseover", onMouseOver) //Add listener for the mouseover event
-                  .on("mouseout", onMouseOut)   //Add listener for the mouseout event
-                  .on("click", function(d){xx = d.value})
-                  .attr("x", function(d) {
-                    return x(d.aa);
-                  })
-                  .attr("width", x.rangeBand())
-                  .attr("y", function(d) {
-                    return y(d.value);
-                  })
-                  .attr("height", function(d) {
-                    return height - y(d.value);
-                  });
+                      svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text("Value ($)");
 
-              });
-              //mouseover event handler function
-              function onMouseOver(d, i) {
-                  d3.select(this).attr('class', 'highlight');
-                  d3.select(this)
-                    .transition()     // adds animation
-                    .duration(400)
-                    .attr('width', x.bandwidth() + 5)
-                    .attr("y", function(d) { return y(d.value) - 10; })
-                    .attr("height", function(d) { return height - y(d.value) + 10; });
+                      svg.selectAll("bar")
+                        .data(data)
+                        .enter().append("rect")
+                        .attr("class", "bar")
+                        .on("mouseover", onMouseOver) //Add listener for the mouseover event
+                        .on("mouseout", onMouseOut) //Add listener for the mouseout event
+                        .on("click", function(d) {
+                          xx = d.value
+                        })
+                        .attr("x", function(d) {
+                          return x(d.aa);
+                        })
+                        .attr("width", x.rangeBand())
+                        .attr("y", function(d) {
+                          return y(d.value);
+                        })
+                        .attr("height", function(d) {
+                          return height - y(d.value);
+                        });
 
-                  g.append("text")
-                   .attr('class', 'val')
-                   .attr('x', function() {
-                       return x(d.year);
-                   })
-                   .attr('y', function() {
-                       return y(d.value) - 15;
-                   })
-                   .text(function() {
-                       return [ '$' +d.value];  // Value of the text
-                   });
-              }
+                    });
+                    //mouseover event handler function
+                    function onMouseOver(d, i) {
+                      d3.select(this).attr('class', 'highlight');
+                      d3.select(this)
+                        .transition() // adds animation
+                        .duration(400)
+                        .attr('width', x.bandwidth() + 5)
+                        .attr("y", function(d) {
+                          return y(d.value) - 10;
+                        })
+                        .attr("height", function(d) {
+                          return height - y(d.value) + 10;
+                        });
 
-              //mouseout event handler function
-              function onMouseOut(d, i) {
-                  // use the text label class to remove label on mouseout
-                  d3.select(this).attr('class', 'bar');
-                  d3.select(this)
-                    .transition()     // adds animation
-                    .duration(400)
-                    .attr('width', x.bandwidth())
-                    .attr("y", function(d) { return y(d.value); })
-                    .attr("height", function(d) { return height - y(d.value); });
+                      g.append("text")
+                        .attr('class', 'val')
+                        .attr('x', function() {
+                          return x(d.year);
+                        })
+                        .attr('y', function() {
+                          return y(d.value) - 15;
+                        })
+                        .text(function() {
+                          return ['$' + d.value]; // Value of the text
+                        });
+                    }
 
-                  d3.selectAll('.val')
-                    .remove()
-              }
-            </script>
-            </div>
+                    //mouseout event handler function
+                    function onMouseOut(d, i) {
+                      // use the text label class to remove label on mouseout
+                      d3.select(this).attr('class', 'bar');
+                      d3.select(this)
+                        .transition() // adds animation
+                        .duration(400)
+                        .attr('width', x.bandwidth())
+                        .attr("y", function(d) {
+                          return y(d.value);
+                        })
+                        .attr("height", function(d) {
+                          return height - y(d.value);
+                        });
+
+                      d3.selectAll('.val')
+                        .remove()
+                    }
+                  </script>
           </div>
         </div>
-        <div class="tile is-parent is-vertical">
-          <div class="tile is-child box has-text-centered">
-            <div id="icn3dwrap" align = "center">
-              <script type="text/javascript">
-                function myFunction(elmnt) {
-                  return "$1RUZ.H:20";
+      </div>
+      <div class="tile is-parent is-vertical">
+        <div class="tile is-child box has-text-centered">
+          <div id="icn3dwrap" align="center">
+            <script type="text/javascript">
+              $(document).ready(function() {
+                var options = {};
+                options['proteins'] = 'sphere';
+                options['color'] = 'a87a89';
+
+                var cfg = {
+                  divid: 'icn3dwrap',
+                  width: 1200,
+                  height: 600,
+                  resize: false,
+                  rotate: 'none',
+                  pdbid: '1RUZ',
+                  showcommand: true,
                 };
-                $(document).ready(function() {
-                  var options = {};
-                  options['proteins'] = 'sphere';
-                  options['color'] = 'blue';
 
-                  var hAtoms = {};
-                  hAtoms['2001'] = 1;
+                if (Object.keys(options).length > 0) cfg['options'] = options;
+                var icn3dui = new iCn3DUI(cfg);
 
-                  var cfg = {
-                    divid: 'icn3dwrap',
-                    width: 1200,
-                    height: 600,
-                    resize: false,
-                    rotate: 'none',
-                    pdbid: '1RUZ',
-                    showcommand: true,
-                  };
-
-                  if (Object.keys(options).length > 0) cfg['options'] = options;
-                  var icn3dui = new iCn3DUI(cfg);
-
-                  $.when(icn3dui.show3DStructure(),
-                    icn3dui.hideMenu(600, 600),
-                    icn3dui.setOption('color', 'blue')).then(function() {
-                    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                    icn3dui.showSelection();
-                    document.getElementById("my_button").addEventListener("click", function() {
-                      icn3dui.selectByCommand("$1RUZ.H:"+xx, "test2", "test sel");
-                      icn3dui.setOption('color', 'hydrophobic');
-                    });
-                    document.getElementById("my_button2").addEventListener("click", function() {
-                      icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                      icn3dui.setOption('color', 'blue');
-                    });
+                $.when(icn3dui.show3DStructure(),
+                  icn3dui.hideMenu(600, 600)).then(function() {
+                  icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
+                  icn3dui.showSelection();
+                  document.getElementById("my_button").addEventListener("click", function() {
+                    icn3dui.selectByCommand("$1RUZ.H:" + xx, "test2", "test sel");
+                    icn3dui.setOption('color',  document.getElementById("myColor").value);
                   });
-
+                  document.getElementById("my_button2").addEventListener("click", function() {
+                    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
+                    icn3dui.setOption('color', 'a87a89');
+                  });
                 });
-              </script>
-            </div>
+
+              });
+            </script>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
 
