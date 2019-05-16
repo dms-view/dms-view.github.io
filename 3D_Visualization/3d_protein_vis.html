@@ -41,11 +41,11 @@
 <body class="has-navbar-fixed-top">
   <div class="section">
   </div>
-  <div class="container isfluid">
-    <div class="tile is-ancestor">
+  <div class="column">
+    <div class="column is-moble">
       <div class="tile is-parent">
         <div class="tile is-parent is-vertical">
-          <div class="tile is-child box has-text-centered" style="background-color:#e5f5f9">
+          <div class="tile is-child box has-text-centered" >
             <button id="my_button">Click me to select</button>
             <button id="my_button2">Click me to deselect</button>
             <div id="my_dataviz"></div>
@@ -86,12 +86,7 @@
 
               d3.csv("bar-data.csv", function(error, data) {
 
-                data.forEach(function(d) {
-                  d.aa = +d.aa;
-                  d.value = +d.value;
-                });
-
-                x.domain(data.map(function(d) { return d.year; }));
+                x.domain(data.map(function(d) { return d.aa; }));
                 y.domain([0, d3.max(data, function(d) {
                   return d.value;
                 })]);
@@ -177,8 +172,8 @@
           </div>
         </div>
         <div class="tile is-parent is-vertical">
-          <div class="tile is-child box has-text-centered" style="background-color:#CAEBEB">
-            <div id="icn3dwrap">
+          <div class="tile is-child box has-text-centered">
+            <div id="icn3dwrap" align = "center">
               <script type="text/javascript">
                 function myFunction(elmnt) {
                   return "$1RUZ.H:20";
@@ -193,7 +188,7 @@
 
                   var cfg = {
                     divid: 'icn3dwrap',
-                    width: 600,
+                    width: 1200,
                     height: 600,
                     resize: false,
                     rotate: 'none',
