@@ -1,6 +1,8 @@
 <html>
+<meta charset="utf-8">
 
 <head>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
   <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery-ui.min.css">
   <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.css">
   <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery.min.js"></script>
@@ -8,6 +10,27 @@
   <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/three.min.js"></script>
   <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+  <style>
+
+    .axis {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .bar {
+        fill: steelblue;
+    }
+
+    .highlight {
+        fill: orange;
+    }
+
+  </style>
 </head>
 <nav class="navbar is-light is-fixed-top">
   <div class="navbar-start" id="navTitle">
@@ -25,6 +48,132 @@
           <div class="tile is-child box has-text-centered" style="background-color:#e5f5f9">
             <button id="my_button">Click me to select</button>
             <button id="my_button2">Click me to deselect</button>
+            <div id="my_dataviz"></div>
+            <script>
+              var margin = {
+                  top: 20,
+                  right: 20,
+                  bottom: 70,
+                  left: 40
+                },
+                width = 600 - margin.left - margin.right,
+                height = 300 - margin.top - margin.bottom;
+
+              // Parse the date / time
+              //var parseDate = d3.time.format("%Y-%m").parse;
+
+              var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+              var y = d3.scale.linear().range([height, 0]);
+
+              var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                //.tickValues(d.aa)
+                //.tickFormat(d3.time.format("%Y-%m"));
+
+              var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(10);
+
+              var svg = d3.select("#my_dataviz").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+
+              d3.csv("bar-data.csv", function(error, data) {
+
+                data.forEach(function(d) {
+                  d.aa = +d.aa;
+                  d.value = +d.value;
+                });
+
+                x.domain(data.map(function(d) { return d.year; }));
+                y.domain([0, d3.max(data, function(d) {
+                  return d.value;
+                })]);
+
+                svg.append("g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis)
+                  .selectAll("text")
+                  .style("text-anchor", "end")
+                  .attr("dx", "-.8em")
+                  .attr("dy", "-.55em")
+                  .attr("transform", "rotate(-90)");
+
+                svg.append("g")
+                  .attr("class", "y axis")
+                  .call(yAxis)
+                  .append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", 6)
+                  .attr("dy", ".71em")
+                  .style("text-anchor", "end")
+                  .text("Value ($)");
+
+                svg.selectAll("bar")
+                  .data(data)
+                  .enter().append("rect")
+                  .attr("class", "bar")
+                  .on("mouseover", onMouseOver) //Add listener for the mouseover event
+                  .on("mouseout", onMouseOut)   //Add listener for the mouseout event
+                  .on("click", function(d){xx = d.value})
+                  .attr("x", function(d) {
+                    return x(d.aa);
+                  })
+                  .attr("width", x.rangeBand())
+                  .attr("y", function(d) {
+                    return y(d.value);
+                  })
+                  .attr("height", function(d) {
+                    return height - y(d.value);
+                  });
+
+              });
+              //mouseover event handler function
+              function onMouseOver(d, i) {
+                  d3.select(this).attr('class', 'highlight');
+                  d3.select(this)
+                    .transition()     // adds animation
+                    .duration(400)
+                    .attr('width', x.bandwidth() + 5)
+                    .attr("y", function(d) { return y(d.value) - 10; })
+                    .attr("height", function(d) { return height - y(d.value) + 10; });
+
+                  g.append("text")
+                   .attr('class', 'val')
+                   .attr('x', function() {
+                       return x(d.year);
+                   })
+                   .attr('y', function() {
+                       return y(d.value) - 15;
+                   })
+                   .text(function() {
+                       return [ '$' +d.value];  // Value of the text
+                   });
+              }
+
+              //mouseout event handler function
+              function onMouseOut(d, i) {
+                  // use the text label class to remove label on mouseout
+                  d3.select(this).attr('class', 'bar');
+                  d3.select(this)
+                    .transition()     // adds animation
+                    .duration(400)
+                    .attr('width', x.bandwidth())
+                    .attr("y", function(d) { return y(d.value); })
+                    .attr("height", function(d) { return height - y(d.value); });
+
+                  d3.selectAll('.val')
+                    .remove()
+              }
+            </script>
+            </div>
           </div>
         </div>
         <div class="tile is-parent is-vertical">
@@ -61,7 +210,7 @@
                     icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
                     icn3dui.showSelection();
                     document.getElementById("my_button").addEventListener("click", function() {
-                      icn3dui.selectByCommand("$1RUZ.H:104", "test2", "test sel");
+                      icn3dui.selectByCommand("$1RUZ.H:"+xx, "test2", "test sel");
                       icn3dui.setOption('color', 'hydrophobic');
                     });
                     document.getElementById("my_button2").addEventListener("click", function() {
