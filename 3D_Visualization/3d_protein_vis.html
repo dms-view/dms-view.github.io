@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 
 <head>
-  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery-ui.min.css">
   <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.css">
   <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery.min.js"></script>
@@ -20,13 +20,10 @@
       fill: none;
       stroke: #000;
       shape-rendering: crispEdges;
-    }
-    .bar {
-        fill: steelblue;
-    }
-
-    .highlight {
-        fill: orange;
+    }.line{
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 2px;
     }
 
   </style>
@@ -52,137 +49,67 @@
             <button id="my_button2"> Click me to deselect </button>
             <input type="color" id="myColor" value="#ff0080">
 
-                  <div id="my_dataviz"></div>
+                  <div id="MAP_line_plot"></div>
                   <script>
-                    var margin = {
-                        top: 20,
-                        right: 20,
-                        bottom: 70,
-                        left: 40
-                      },
-                      width = 600 - margin.left - margin.right,
-                      height = 300 - margin.top - margin.bottom;
+                  // set the dimensions and margins of the graph
+                  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+                      width = 960 - margin.left - margin.right,
+                      height = 500 - margin.top - margin.bottom;
 
-                    // Parse the date / time
-                    //var parseDate = d3.time.format("%Y-%m").parse;
 
-                    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+                  // set the ranges
+                  var x = d3.scaleLinear().range([0, width], 1.0);
+                  var y = d3.scaleLinear().range([height, 0]);
 
-                    var y = d3.scale.linear().range([height, 0]);
+                  // define the line
+                  var valueline = d3.line()
+                      .x(function(d) { return x(d.site); })
+                      .y(function(d) { return y(d.max); });
 
-                    var xAxis = d3.svg.axis()
-                      .scale(x)
-                      .orient("bottom")
-                    //.tickValues(d.aa)
-                    //.tickFormat(d3.time.format("%Y-%m"));
-
-                    var yAxis = d3.svg.axis()
-                      .scale(y)
-                      .orient("left")
-                      .ticks(10);
-
-                    var svg = d3.select("#my_dataviz").append("svg")
+                  // append the svg obgect to the body of the page
+                  // appends a 'group' element to 'svg'
+                  // moves the 'group' element to the top left margin
+                  var svg = d3.select("#MAP_line_plot").append("svg")
                       .attr("width", width + margin.left + margin.right)
                       .attr("height", height + margin.top + margin.bottom)
-                      .append("g")
-                      .attr("transform",
-                        "translate(" + margin.left + "," + margin.top + ")");
+                    .append("g")
+                    .attr("transform",
+                            "translate(" + margin.left + "," + margin.top + ")");
 
-                    d3.csv("bar-data.csv", function(error, data) {
+                  var dot = svg.append("g").attr("transform",
+                                              "translate(" + margin.left + "," + margin.top + ")");
 
-                      x.domain(data.map(function(d) {
-                        return d.aa;
-                      }));
-                      y.domain([0, d3.max(data, function(d) {
-                        return d.value;
-                      })]);
+                  // Get the data
+                  d3.csv("line-data.csv", function(error, data) {
+                    if (error) throw error;
 
-                      svg.append("g")
-                        .attr("class", "x axis")
+                    data.forEach(function(d) {
+                     d.site = parseInt(d.site);
+                     d.max = parseInt(d.max);
+                   });
+
+                    // Scale the range of the data
+                    x.domain(d3.extent(data, function(d) { return d.site; }));
+                    y.domain([0, d3.max(data, function(d) { return d.max; })]);
+
+                    // Add the valueline path.
+                    svg.append("path")
+                        .data([data])
+                        .attr("class", "line")
+                        .attr("d", valueline);
+
+                    // Add the X Axis
+                    svg.append("g")
                         .attr("transform", "translate(0," + height + ")")
-                        .call(xAxis)
-                        .selectAll("text")
-                        .style("text-anchor", "end")
-                        .attr("dx", "-.8em")
-                        .attr("dy", "-.55em")
-                        .attr("transform", "rotate(-90)");
+                        .call(d3.axisBottom(x));
 
-                      svg.append("g")
-                        .attr("class", "y axis")
-                        .call(yAxis)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", 6)
-                        .attr("dy", ".71em")
-                        .style("text-anchor", "end")
-                        .text("Value ($)");
+                    // Add the Y Axis
+                    svg.append("g")
+                        .call(d3.axisLeft(y));
 
-                      svg.selectAll("bar")
-                        .data(data)
-                        .enter().append("rect")
-                        .attr("class", "bar")
-                        .on("mouseover", onMouseOver) //Add listener for the mouseover event
-                        .on("mouseout", onMouseOut) //Add listener for the mouseout event
-                        .on("click", function(d) {
-                          xx = d.value
-                        })
-                        .attr("x", function(d) {
-                          return x(d.aa);
-                        })
-                        .attr("width", x.rangeBand())
-                        .attr("y", function(d) {
-                          return y(d.value);
-                        })
-                        .attr("height", function(d) {
-                          return height - y(d.value);
-                        });
+                  });
 
-                    });
-                    //mouseover event handler function
-                    function onMouseOver(d, i) {
-                      d3.select(this).attr('class', 'highlight');
-                      d3.select(this)
-                        .transition() // adds animation
-                        .duration(400)
-                        .attr('width', x.bandwidth() + 5)
-                        .attr("y", function(d) {
-                          return y(d.value) - 10;
-                        })
-                        .attr("height", function(d) {
-                          return height - y(d.value) + 10;
-                        });
 
-                      g.append("text")
-                        .attr('class', 'val')
-                        .attr('x', function() {
-                          return x(d.year);
-                        })
-                        .attr('y', function() {
-                          return y(d.value) - 15;
-                        })
-                        .text(function() {
-                          return ['$' + d.value]; // Value of the text
-                        });
-                    }
-
-                    //mouseout event handler function
-                    function onMouseOut(d, i) {
-                      // use the text label class to remove label on mouseout
-                      d3.select(this).attr('class', 'bar');
-                      d3.select(this)
-                        .transition() // adds animation
-                        .duration(400)
-                        .attr('width', x.bandwidth())
-                        .attr("y", function(d) {
-                          return y(d.value);
-                        })
-                        .attr("height", function(d) {
-                          return height - y(d.value);
-                        });
-
-                      d3.selectAll('.val')
-                        .remove()
-                    }
                   </script>
           </div>
         </div>
