@@ -50,108 +50,14 @@
             <input type="color" id="myColor" value="#ff0080">
 
                   <div id="MAP_line_plot"></div>
-                  <script>
-                  // set the dimensions and margins of the graph
-                  var margin = {top: 20, right: 20, bottom: 30, left: 50},
-                      width = 960 - margin.left - margin.right,
-                      height = 500 - margin.top - margin.bottom;
-
-
-                  // set the ranges
-                  var x = d3.scaleLinear().range([0, width], 1.0);
-                  var y = d3.scaleLinear().range([height, 0]);
-
-                  // define the line
-                  var valueline = d3.line()
-                      .x(function(d) { return x(d.site); })
-                      .y(function(d) { return y(d.max); });
-
-                  // append the svg obgect to the body of the page
-                  // appends a 'group' element to 'svg'
-                  // moves the 'group' element to the top left margin
-                  var svg = d3.select("#MAP_line_plot").append("svg")
-                      .attr("width", width + margin.left + margin.right)
-                      .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform",
-                            "translate(" + margin.left + "," + margin.top + ")");
-
-                  var dot = svg.append("g").attr("transform",
-                                              "translate(" + margin.left + "," + margin.top + ")");
-
-                  // Get the data
-                  d3.csv("line-data.csv", function(error, data) {
-                    if (error) throw error;
-
-                    data.forEach(function(d) {
-                     d.site = parseInt(d.site);
-                     d.max = parseInt(d.max);
-                   });
-
-                    // Scale the range of the data
-                    x.domain(d3.extent(data, function(d) { return d.site; }));
-                    y.domain([0, d3.max(data, function(d) { return d.max; })]);
-
-                    // Add the valueline path.
-                    svg.append("path")
-                        .data([data])
-                        .attr("class", "line")
-                        .attr("d", valueline);
-
-                    // Add the X Axis
-                    svg.append("g")
-                        .attr("transform", "translate(0," + height + ")")
-                        .call(d3.axisBottom(x));
-
-                    // Add the Y Axis
-                    svg.append("g")
-                        .call(d3.axisLeft(y));
-
-                  });
-
-
-                  </script>
+                    <script src="./line_plot.js"></script>
           </div>
         </div>
       </div>
       <div class="tile is-parent is-vertical">
         <div class="tile is-child box has-text-centered">
           <div id="icn3dwrap" align="center">
-            <script type="text/javascript">
-              $(document).ready(function() {
-                var options = {};
-                options['proteins'] = 'sphere';
-                options['color'] = 'a87a89';
-
-                var cfg = {
-                  divid: 'icn3dwrap',
-                  width: 1200,
-                  height: 600,
-                  resize: false,
-                  rotate: 'none',
-                  pdbid: '1RUZ',
-                  showcommand: true,
-                };
-
-                if (Object.keys(options).length > 0) cfg['options'] = options;
-                var icn3dui = new iCn3DUI(cfg);
-
-                $.when(icn3dui.show3DStructure(),
-                  icn3dui.hideMenu(600, 600)).then(function() {
-                  icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                  icn3dui.showSelection();
-                  document.getElementById("my_button").addEventListener("click", function() {
-                    icn3dui.selectByCommand("$1RUZ.H:" + xx, "test2", "test sel");
-                    icn3dui.setOption('color',  document.getElementById("myColor").value);
-                  });
-                  document.getElementById("my_button2").addEventListener("click", function() {
-                    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
-                    icn3dui.setOption('color', 'a87a89');
-                  });
-                });
-
-              });
-            </script>
+            <script src="./prot_struct.js"></script>
           </div>
         </div>
       </div>
