@@ -81,8 +81,6 @@ var frequencies = [
     }
 ];
 
-var frequenciesByMutation = d3.group(frequencies, d => d.mutation);
-
 var xScale = d3.scaleTime()
                .domain([parseTime("2010-10-01"), parseTime("2012-10-01")])
                .range([0, width]);
@@ -128,37 +126,6 @@ svg.append("text")
    .style("text-anchor", "middle")
    .text("Frequency");
 
-// Plot one line per amino acid at a specified site with different color per line.
-// Multi-line plot based on http://bl.ocks.org/d3noob/88d2a87b72ea894c285c
-frequenciesByMutation.forEach(function (dataset, key) {
-    // Create a group to store the line and dots in.
-    var g = svg.append("g");
-
-    // Create the line plot itself by adding a path, binding data, and running the line generator.
-    g.append("path")
-       .datum(dataset)
-       .attr("class", "line")
-       .attr("stroke-width", 2)
-       .attr("stroke", d => colorScale(key))
-       .attr("fill", "None")
-       .attr("d", line);
-
-    // Add a circle for each observed data point.
-    g.selectAll(".dot")
-       .data(dataset)
-       .enter()
-       .append("circle")
-       .attr("class", "dot")
-       .attr("cx", function (d) { return xScale(parseTime(d.timepoint)); })
-       .attr("cy", function (d) { return yScale(d.frequency); } )
-       .attr("r", 5)
-       .attr("fill", d => colorScale(key))
-       .on("mouseover", function (a, b, c) {
-           console.log(a);
-       })
-       .on("mouseout", function () {} );
-});
-
 // Add a legend using Susie Lu's d3-legend:
 // https://d3-legend.susielu.com/#color
 svg.append("g")
@@ -169,5 +136,43 @@ var legend = d3.legendColor()
                .title("Mutation")
                .scale(colorScale);
 
-svg.select(".legend")
-   .call(legend);
+// Load frequencies JSON.
+d3.json("/data/frequencies.json").then(function (data) {
+    // Plot one line per amino acid at a specified site with different color per line.
+    // Multi-line plot based on http://bl.ocks.org/d3noob/88d2a87b72ea894c285c
+    console.log(data);
+
+    var frequenciesByMutation = d3.group(data["frequencies"], d => d.mutation);
+
+    frequenciesByMutation.forEach(function (dataset, key) {
+        // Create a group to store the line and dots in.
+        var g = svg.append("g");
+
+        // Create the line plot itself by adding a path, binding data, and running the line generator.
+        g.append("path")
+           .datum(dataset)
+           .attr("class", "line")
+           .attr("stroke-width", 2)
+           .attr("stroke", d => colorScale(key))
+           .attr("fill", "None")
+           .attr("d", line);
+
+        // Add a circle for each observed data point.
+        g.selectAll(".dot")
+           .data(dataset)
+           .enter()
+           .append("circle")
+           .attr("class", "dot")
+           .attr("cx", function (d) { return xScale(parseTime(d.timepoint)); })
+           .attr("cy", function (d) { return yScale(d.frequency); } )
+           .attr("r", 5)
+           .attr("fill", d => colorScale(key))
+           .on("mouseover", function (a, b, c) {
+               console.log(a);
+           })
+           .on("mouseout", function () {} );
+    });
+
+    svg.select(".legend")
+       .call(legend);
+});
