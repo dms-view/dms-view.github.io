@@ -15,8 +15,7 @@ function plotSiteMutations (dataset) {
 
     var line = d3.line()
                  .x(function (d) { return xScale(parseTime(d.timepoint)); })
-                 .y(function (d) { return yScale(d.frequency); })
-                 .curve(d3.curveMonotoneX);
+                 .y(function (d) { return yScale(d.frequency); });
 
     var mutations = d3.select(".frequencies")
                       .selectAll(".line")
