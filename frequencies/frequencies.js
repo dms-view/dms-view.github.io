@@ -1,5 +1,65 @@
 // Initial code based on https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89
 
+// Set function for joins.
+function name (d) {
+    return d.mutation;
+}
+
+// Define functions for plotting.
+function plotSiteMutations (dataset) {
+    // Create the line plot itself by adding a path, binding data, and running the line generator.
+    console.log(dataset);
+
+    // Group site data by mutation in arrays to enable plotting one line per mutation.
+    dataset_by_mutation = d3.groups(dataset, d => d.mutation);
+
+    var line = d3.line()
+                 .x(function (d) { return xScale(parseTime(d.timepoint)); })
+                 .y(function (d) { return yScale(d.frequency); })
+                 .curve(d3.curveMonotoneX);
+
+    var mutations = d3.select(".frequencies")
+                      .selectAll(".line")
+                      .data(dataset_by_mutation, function (key, values) { console.log("key: " + key[1][0].site); return key[1][0].site; });
+    mutations.enter().append("path")
+             .attr("class", "line")
+             .attr("stroke-width", 2)
+             .attr("stroke", function (d) { return colorScale(d[1][0].mutation); })
+             .attr("fill", "None")
+             .attr("d", function (d) { return line(d[1]); });
+    mutations.exit().remove();
+
+    // Add a circle for each observed data point.
+    var dots = d3.select(".frequencies").selectAll(".dot")
+                 .data(dataset, function (d) { return d.site; });
+    dots.enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("cx", function (d) { return xScale(parseTime(d.timepoint)); })
+        .attr("cy", function (d) { return yScale(d.frequency); } )
+        .attr("r", 5)
+        .attr("fill", d => colorScale(d.mutation))
+        .on("mouseover", function (a, b, c) {
+            console.log(a);
+        })
+        .on("mouseout", function () {} );
+    dots.exit().remove();
+}
+
+// Selection site from dropdown.
+function selectSite (data) {
+    var selectedSite = parseInt(d3.select(this).property("value"));
+    console.log("Select site: " + selectedSite);
+
+    var siteFrequencies = frequenciesBySite.get(selectedSite);
+    plotSiteMutations(siteFrequencies);
+
+    // Update the legend to reflect the mutations at the selected site.
+    d3.select("svg")
+      .select(".legend")
+      .call(legend);
+}
+
 // Setup plot and window margins.
 var plotWidth = 1024;
 var plotHeight = 400;
@@ -16,71 +76,7 @@ var height = plotHeight - margin.top - margin.bottom;
 // Parse dates by year, month, and day.
 var parseTime = d3.timeParse("%Y-%m-%d");
 
-// Generate data to plot.
-// TODO: load these data from a TSV or JSON
-var frequencies = [
-    {
-        "timepoint": "2010-10-01",
-        "frequency": 0.05,
-        "site": 160,
-        "mutation": "K"
-    },
-    {
-        "timepoint": "2010-10-01",
-        "frequency": 0.95,
-        "site": 160,
-        "mutation": "T"
-    },
-    {
-        "timepoint": "2011-04-01",
-        "frequency": 0.10,
-        "site": 160,
-        "mutation": "K"
-    },
-    {
-        "timepoint": "2011-04-01",
-        "frequency": 0.90,
-        "site": 160,
-        "mutation": "T"
-    },
-    {
-        "timepoint": "2011-10-01",
-        "frequency": 0.12,
-        "site": 160,
-        "mutation": "K"
-    },
-    {
-        "timepoint": "2011-10-01",
-        "frequency": 0.88,
-        "site": 160,
-        "mutation": "T"
-    },
-    {
-        "timepoint": "2012-04-01",
-        "frequency": 0.55,
-        "site": 160,
-        "mutation": "K"
-    },
-    {
-        "timepoint": "2012-04-01",
-        "frequency": 0.45,
-        "site": 160,
-        "mutation": "T"
-    },
-    {
-        "timepoint": "2012-10-01",
-        "frequency": 0.20,
-        "site": 160,
-        "mutation": "K"
-    },
-    {
-        "timepoint": "2012-10-01",
-        "frequency": 0.80,
-        "site": 160,
-        "mutation": "T"
-    }
-];
-
+// Setup plot scales, axes, legend, and line generators.
 var xScale = d3.scaleTime()
                .domain([parseTime("2010-10-01"), parseTime("2012-10-01")])
                .range([0, width]);
@@ -136,42 +132,37 @@ var legend = d3.legendColor()
                .title("Mutation")
                .scale(colorScale);
 
+// Create a group to store the line and dots in.
+var g = svg.append("g")
+           .attr("class", "frequencies");
+
+// Setup variables to store data.
+var frequencies;
+var frequenciesBySite;
+var sites;
+var dropdown;
+
 // Load frequencies JSON.
 d3.json("/data/frequencies.json").then(function (data) {
     // Plot one line per amino acid at a specified site with different color per line.
     // Multi-line plot based on http://bl.ocks.org/d3noob/88d2a87b72ea894c285c
-    console.log(data);
+    frequencies = data["frequencies"];
+    frequenciesBySite = d3.group(data["frequencies"], d => d.site);
+    sites = Array.from(frequenciesBySite.keys());
 
-    var frequenciesByMutation = d3.group(data["frequencies"], d => d.mutation);
+    // Create a dropdown menu to populate with data.
+    dropdown = d3.select("body").append("select");
+    dropdown.selectAll("option")
+            .data(sites)
+            .enter()
+            .append("option")
+            .text(function (d) { return d; })
+            .attr("value", function (d) { return d; });
+    dropdown.on("change", selectSite);
 
-    frequenciesByMutation.forEach(function (dataset, key) {
-        // Create a group to store the line and dots in.
-        var g = svg.append("g");
-
-        // Create the line plot itself by adding a path, binding data, and running the line generator.
-        g.append("path")
-           .datum(dataset)
-           .attr("class", "line")
-           .attr("stroke-width", 2)
-           .attr("stroke", d => colorScale(key))
-           .attr("fill", "None")
-           .attr("d", line);
-
-        // Add a circle for each observed data point.
-        g.selectAll(".dot")
-           .data(dataset)
-           .enter()
-           .append("circle")
-           .attr("class", "dot")
-           .attr("cx", function (d) { return xScale(parseTime(d.timepoint)); })
-           .attr("cy", function (d) { return yScale(d.frequency); } )
-           .attr("r", 5)
-           .attr("fill", d => colorScale(key))
-           .on("mouseover", function (a, b, c) {
-               console.log(a);
-           })
-           .on("mouseout", function () {} );
-    });
+    // Plot frequencies for the first site by default.
+    var siteFrequencies = frequenciesBySite.get(sites[0]);
+    plotSiteMutations(siteFrequencies);
 
     svg.select(".legend")
        .call(legend);
