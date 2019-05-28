@@ -1,10 +1,5 @@
 // Initial code based on https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89
 
-// Set function for joins.
-function name (d) {
-    return d.mutation;
-}
-
 // Define functions for plotting.
 function plotSiteMutations (dataset) {
     // Create the line plot itself by adding a path, binding data, and running the line generator.
@@ -31,12 +26,11 @@ function plotSiteMutations (dataset) {
     // Add a circle for each observed data point.
     var dots = d3.select(".frequencies").selectAll(".dot")
                  .data(dataset, function (d) { return d.site; });
-    dots.enter()
-        .append("circle")
+    dots.enter().append("circle")
         .attr("class", "dot")
         .attr("cx", function (d) { return xScale(parseTime(d.timepoint)); })
         .attr("cy", function (d) { return yScale(d.frequency); } )
-        .attr("r", 5)
+        .attr("r", 7)
         .attr("fill", d => colorScale(d.mutation))
         .on("mouseover", function (a, b, c) {
             console.log(a);
