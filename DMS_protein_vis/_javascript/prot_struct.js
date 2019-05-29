@@ -20,14 +20,22 @@
       icn3dui.hideMenu()).then(function() {
       icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
       icn3dui.showSelection();
-      document.getElementById("my_button").addEventListener("click", function() {
+      document.getElementById("preferences").addEventListener("click", function() {
         icn3dui.selectByCommand("$1RUZ.H:" + xx, "test2", "test sel");
         icn3dui.setOption('color',  document.getElementById("myColor").value);
       });
-      document.getElementById("my_button2").addEventListener("click", function() {
+      document.getElementById("remove_selections").addEventListener("click", function() {
         icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
         icn3dui.setOption('color', 'a87a89');
       });
+      // the below button allows a png export of the protein structure
+      document.getElementById("save_image").addEventListener("click", function() {
+        icn3dui.saveFile("test.png", 'png');
+      });
+      document.getElementById("send_state").addEventListener("click", function() {
+        icn3dui.shareLink();
+      });
+
     });
 
   });
