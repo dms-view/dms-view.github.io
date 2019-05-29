@@ -68,18 +68,19 @@ function selectSite(data) {
   d3.select("svg")
     .select(".legend")
     .call(legend);
-
-  document.getElementById("preferences").addEventListener("click", function() {
-    console.log("Select site: " + xx);
-    var siteFrequencies = frequenciesBySite.get(xx);
-    plotSiteMutations(siteFrequencies);
-
-    // Update the legend to reflect the mutations at the selected site.
-    d3.select("svg")
-      .select(".legend")
-      .call(legend);
-  });
 }
+
+
+document.getElementById("preferences").addEventListener("click", function() {
+  console.log("Select site: " + xx);
+  var siteFrequencies = frequenciesBySite.get(xx);
+  plotSiteMutations(siteFrequencies);
+
+  // Update the legend to reflect the mutations at the selected site.
+  d3.select("svg")
+    .select(".legend")
+    .call(legend);
+});
 
 // Setup plot and window margins.
 var plotWidth = 1024;
@@ -188,6 +189,7 @@ d3.json("_data/frequencies.json").then(function(data) {
       return d;
     });
   dropdown.on("change", selectSite);
+
 
   // Plot frequencies for the first site by default.
   var siteFrequencies = frequenciesBySite.get(sites[0]);
