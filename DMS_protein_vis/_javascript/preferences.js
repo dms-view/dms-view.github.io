@@ -36,13 +36,13 @@ var sitePreferenceData = [
     },
     {
         "gene": "HA1",
-        "site": 4,
+        "site": 144,
         "aminoAcid": "L",
         "value" : 1.0
     },
     {
         "gene": "HA1",
-        "site": 5,
+        "site": 160,
         "aminoAcid": "S",
         "value" : 0.8
     }]
@@ -116,7 +116,8 @@ dataGroup.selectAll(".bar")
 .attr("fill", "steelblue")
 .on("mouseover", function(d){return tooltip.style("visibility", "visible").text(d.aminoAcid + d.value);})
 .on("mousemove", function(d){return tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-600)+"px").text(" Mutational tolerance of "+ d.aminoAcid +": "+ d.value);})
-.on("mouseout", function(d){return tooltip.style("visibility", "hidden");});
+.on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
+.on("click",function(d) {xx = d.site});
 
 
 /*
