@@ -6989,8 +6989,8 @@ text {
   stroke-width: 2px; }
 
 table {
-  visibility: hidden;
-  position: relative;
+  visibility: visible;
+  position: static;
   top: 1000px;
   left: 2000px;
   font-family: sans-serif;

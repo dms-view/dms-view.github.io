@@ -5,8 +5,8 @@
 
     var cfg = {
       divid: 'icn3dwrap',
-      width: 1200,
-      height: 600,
+      width: 600,
+      height: 400,
       resize: false,
       rotate: 'none',
       pdbid: '1RUZ',
