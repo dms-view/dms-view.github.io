@@ -6988,29 +6988,18 @@ text {
   stroke: grey;
   stroke-width: 2px; }
 
-table {
-  visibility: visible;
-  position: static;
-  top: 1000px;
-  left: 2000px;
-  font-family: sans-serif;
-  font-size: 0.7em; }
+.area {
+  fill: steelblue;
+  clip-path: url(#clip); }
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all; }
 
 tr:nth-child(even) {
   background-color: #d9d9d9; }
 
-.brushed {
-  fill: #ff3399;
-  stroke: #8e1b54;
-  opacity: 1.0; }
-
-.non_brushed {
-  fill: #404040;
-  opacity: 0.5; }
-
 .icn3dw {
   height: 500px;
   width: 700px; }
-
-.dropdown:hover .dropdown-content {
-  display: block; }

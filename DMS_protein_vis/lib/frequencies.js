@@ -22,6 +22,7 @@ function plotSiteMutations(dataset) {
     console.log("key: " + key[1][0].site);
     return key[1][0].site;
   });
+
   mutations.enter().append("path").attr("class", "line").attr("stroke-width", 2).attr("stroke", function (d) {
     return colorScale(d[1][0].mutation);
   }).attr("fill", "None").attr("d", function (d) {
@@ -57,7 +58,7 @@ function selectSite(data) {
   d3.select("svg").select(".legend").call(legend);
 }
 
-document.getElementById("preferences").addEventListener("click", function () {
+document.getElementById("line_plot").addEventListener("click", function () {
   console.log("Select site: " + xx);
   var siteFrequencies = frequenciesBySite.get(xx);
   plotSiteMutations(siteFrequencies);

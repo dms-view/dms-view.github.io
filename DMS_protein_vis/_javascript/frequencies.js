@@ -22,6 +22,7 @@ function plotSiteMutations(dataset) {
       console.log("key: " + key[1][0].site);
       return key[1][0].site;
     });
+    
   mutations.enter().append("path")
     .attr("class", "line")
     .attr("stroke-width", 2)
@@ -70,8 +71,7 @@ function selectSite(data) {
     .call(legend);
 }
 
-
-document.getElementById("preferences").addEventListener("click", function() {
+document.getElementById("line_plot").addEventListener("click", function() {
   console.log("Select site: " + xx);
   var siteFrequencies = frequenciesBySite.get(xx);
   plotSiteMutations(siteFrequencies);

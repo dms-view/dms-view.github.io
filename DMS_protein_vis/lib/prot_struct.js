@@ -21,7 +21,7 @@ $(document).ready(function () {
   $.when(icn3dui.show3DStructure(), icn3dui.hideMenu()).then(function () {
     icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
     icn3dui.showSelection();
-    document.getElementById("preferences").addEventListener("click", function () {
+    document.getElementById("line_plot").addEventListener("click", function () {
       icn3dui.selectByCommand("$1RUZ.H:" + xx, "test2", "test sel");
       icn3dui.setOption('color', document.getElementById("myColor").value);
     });

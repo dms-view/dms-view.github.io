@@ -1,5 +1,4 @@
 // Variable declaration
-
 d3.csv("_data/line-data.csv", function(error, data) {
       var width = 500;
       if (error) throw error;
