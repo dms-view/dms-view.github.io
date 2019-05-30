@@ -4,13 +4,13 @@
 var margin = {
     top: 20,
     right: 20,
-    bottom: 110,
+    bottom: 150,
     left: 40
   },
   margin2 = {
-    top: 430,
+    top: 400,
     right: 20,
-    bottom: 30,
+    bottom: 20,
     left: 40
   },
   svg_dx = 1050,
@@ -119,6 +119,22 @@ d3.csv("line-data-PGT151.csv", d => {
     .attr("class", "line")
     .attr("d", valueline);
 
+var circlePoint = focus.append("g")
+                 .selectAll("circle")
+                 .data(d)
+                 .enter()
+                 .append("circle");
+
+var circleAttributes = circlePoint
+                 .attr("r", 5)
+                 .attr("cx", (d) => x(+d.site))
+                 .attr("cy", (d) => y(+d.abs_diffsel))
+                 .attr("class", "non_brushed")
+                 .on("mouseover", function(d){return tooltip.style("visibility", "visible").text(d.site + d.abs_diffsel);})
+                 .on("mousemove", function(d){return tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-600)+"px").text("Immune selection of "+ d.site +": "+ d.abs_diffsel);})
+                 .on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
+                 .on("click",function(d) {xx = d.site});
+
   focus.append("g")
     .attr("class", "axis axis--x")
     .attr("id", "axis_x")
@@ -140,25 +156,7 @@ d3.csv("line-data-PGT151.csv", d => {
     .attr("transform", "rotate(-90) translate(-20, 15)")
     .text("abs_diffsel Value");
 
-// right now the circles aren't working
-// you can uncomment the block below and the circles will appear
-// the tooltip will not work
-// however, when you zoom with the brush the circles don't change even though
-// the line plot path does
 
-  // var circles = focus.append("g")
-  //                  .selectAll("circle")
-  //                  .data(d)
-  //                  .enter()
-  //                  .append("circle")
-  //                  .attr("r", 5)
-  //                  .attr("cx", (d) => x(+d.site))
-  //                  .attr("cy", (d) => y(+d.abs_diffsel))
-  //                  .attr("class", "non_brushed")
-  //                  .on("mouseover", function(d){return tooltip.style("visibility", "visible").text(d.site + d.abs_diffsel);})
-  //                  .on("mousemove", function(d){return tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-600)+"px").text("Immune selection of "+ d.site +": "+ d.abs_diffsel);})
-  //                  .on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
-  //                  .on("click",function(d) {xx = d.site});
 
   // make the smaller plot (called context in the tutorial)
   context.append("path")
@@ -180,7 +178,7 @@ d3.csv("line-data-PGT151.csv", d => {
   svg.append("rect")
     .attr("class", "zoom")
     .attr("width", plot_dx)
-    .attr("height", plot_dy)
+    .attr("height", plot_dy2)
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .call(zoom);
 });
@@ -190,6 +188,9 @@ function brushed() {
   var s = d3.event.selection || x2.range();
   x.domain(s.map(x2.invert, x2));
   focus.select(".line").attr("d", valueline);
+  focus.selectAll("circle")
+                   .attr("cx", (d) => x(+d.site))
+                   .attr("cy", (d) => y(+d.abs_diffsel))
   focus.select(".axis--x").call(xAxis);
   svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
     .scale(plot_dx / (s[1] - s[0]))
@@ -201,6 +202,14 @@ function zoomed() {
   var t = d3.event.transform;
   x.domain(t.rescaleX(x2).domain());
   focus.select(".line").attr("d", valueline);
+  focus.selectAll("circle")
+                   .attr("cx", (d) => x(+d.site))
+                   .attr("cy", (d) => y(+d.abs_diffsel))
+                   .attr("class", "non_brushed")
+                   .on("mouseover", function(d){return tooltip.style("visibility", "visible").text(d.site + d.abs_diffsel);})
+                   .on("mousemove", function(d){return tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-600)+"px").text("Immune selection of "+ d.site +": "+ d.abs_diffsel);})
+                   .on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
+                   .on("click",function(d) {xx = d.site});
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 }
