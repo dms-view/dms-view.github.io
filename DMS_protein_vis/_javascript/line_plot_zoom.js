@@ -19,10 +19,10 @@ var margin = {
   plot_dy = svg_dy - margin.top - margin.bottom,
   plot_dy2 = svg_dy - margin2.top - margin2.bottom;
 
-var x = d3.scaleLinear().range([margin.left, plot_dx]),
-  x2 = d3.scaleLinear().range([margin.left, plot_dx]),
-  y = d3.scaleLinear().range([plot_dy, margin.top])
-y2 = d3.scaleLinear().range([plot_dy2, margin.top]);
+var x = d3.scaleLinear().range([0, plot_dx]),
+    x2 = d3.scaleLinear().range([0, plot_dx]),
+    y = d3.scaleLinear().range([plot_dy, margin.top]),
+    y2 = d3.scaleLinear().range([plot_dy2, margin.top]);
 
 // actually create the chart
 var svg = d3.select("#line_plot")
@@ -97,16 +97,16 @@ var tooltip = d3.select("#line_plot")
   .style("background", "white")
   .style("padding", "5px")
   .style("border", "1px solid #cccccc")
-  .style("border-radius", "10px");
+  .style("border-radius", "10px")
+  .style("visibility", "hidden");
 
 // Here is where we read in the data and create the plot
 d3.csv("_data/line-data-PGT151.csv").then(d => {
-
   var n = d.length;
 
   // find the min and the max of x/y
   var d_extent_x = d3.extent(d, d => +d.site),
-    d_extent_y = d3.extent(d, d => +d.abs_diffsel);
+      d_extent_y = d3.extent(d, d => +d.abs_diffsel);
 
   // set the domains
   x.domain(d_extent_x);
@@ -121,52 +121,52 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
     .attr("class", "line")
     .attr("d", valueline);
 
-var circlePoint = focus.append("g")
-                 .selectAll("circle")
-                 .data(d)
-                 .enter()
-                 .append("circle");
+  var circlePoint = focus.append("g")
+      .selectAll("circle")
+      .data(d)
+      .enter()
+      .append("circle");
 
-    function showTooltip (d) {
-        mousePosition = d3.mouse(d3.event.target);
-        d3.select(this).attr("fill", "red").attr("r", 8);
+  function showTooltip (d) {
+    mousePosition = d3.mouse(d3.event.target);
+    d3.select(this).attr("fill", "red").attr("r", 8);
 
-        return tooltip
-            .style("visibility", "visible")
-            .style("left", mousePosition[0]+"px")
-            .style("top", mousePosition[1] + 50 +"px")
-            .text("Immune selection of "+ d.site +": "+ parseFloat(d.abs_diffsel).toFixed(2));
-    }
+    return tooltip
+      .style("visibility", "visible")
+      .style("left", mousePosition[0]+"px")
+      .style("top", mousePosition[1] + 50 +"px")
+      .text("Immune selection of "+ d.site +": "+ parseFloat(d.abs_diffsel).toFixed(2));
+  }
 
-    function hideTooltip (d) {
-        d3.select(this).attr("fill", "black").attr("r", 5);
-        return tooltip.style("visibility", "hidden");
-    }
+  function hideTooltip (d) {
+    d3.select(this).attr("fill", "black").attr("r", 5);
+    return tooltip.style("visibility", "hidden");
+  }
 
-var circleAttributes = circlePoint
-                 .attr("r", 5)
-                 .attr("cx", (d) => x(+d.site))
-                 .attr("cy", (d) => y(+d.abs_diffsel))
-                 .attr("class", "non_brushed")
-                 .on("mouseover", showTooltip)
-                 .on("mouseout", hideTooltip)
-                 .on("click", function(d) {
-                     console.log("Select site: " + d.site);
-                     const selectedSite = parseInt(d.site);
+  var circleAttributes = circlePoint
+      .attr("r", 5)
+      .attr("cx", (d) => x(+d.site))
+      .attr("cy", (d) => y(+d.abs_diffsel))
+      .attr("class", "non_brushed")
+      .on("mouseover", showTooltip)
+      .on("mouseout", hideTooltip)
+      .on("click", function(d) {
+        console.log("Select site: " + d.site);
+        const selectedSite = parseInt(d.site);
 
-                     // Highlight the selected site on the protein structure.
-                     icn3dui.selectByCommand("$1RUZ.H:" + selectedSite, "test2", "test sel");
-                     icn3dui.setOption('color',  document.getElementById("myColor").value);
+        // Highlight the selected site on the protein structure.
+        icn3dui.selectByCommand("$1RUZ.H:" + selectedSite, "test2", "test sel");
+        icn3dui.setOption('color',  document.getElementById("myColor").value);
 
-                     // Update frequencies, if any exist for the selected site.
-                     var siteFrequencies = frequenciesBySite.get(selectedSite);
-                     if (siteFrequencies != undefined) {
-                         plotSiteMutations(siteFrequencies);
-                     }
-                     else {
-                         console.warn("No mutation frequencies are defined for site " + selectedSite);
-                     }
-                 });
+        // Update frequencies, if any exist for the selected site.
+        var siteFrequencies = frequenciesBySite.get(selectedSite);
+        if (siteFrequencies != undefined) {
+          plotSiteMutations(siteFrequencies);
+        }
+        else {
+          console.warn("No mutation frequencies are defined for site " + selectedSite);
+        }
+      });
 
   focus.append("g")
     .attr("class", "axis axis--x")
@@ -188,8 +188,6 @@ var circleAttributes = circlePoint
     .append("text")
     .attr("transform", "rotate(-90) translate(-20, 15)")
     .text("abs_diffsel Value");
-
-
 
   // make the smaller plot (called context in the tutorial)
   context.append("path")
