@@ -30,6 +30,14 @@ var svg = d3.select("#line_plot")
   .attr("width", svg_dx)
   .attr("height", svg_dy);
 
+// Add a clipping box to prevent focus plot from extending beyond the x-axis
+// domain.
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", plot_dx)
+    .attr("height", plot_dy);
+
 // define the axis. There are two xAxes for the two plots but the context plot
 // does not have a y axis
 var xAxis = d3.axisBottom(x),
@@ -117,8 +125,9 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
   // make the context plot
   // Add the valueline path.
   focus.append("path")
-    .data([d])
+    .datum(d)
     .attr("class", "line")
+    .style("clip-path", "url(#clip)")
     .attr("d", valueline);
 
   var circlePoint = focus.append("g")
@@ -148,6 +157,7 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
       .attr("cx", (d) => x(+d.site))
       .attr("cy", (d) => y(+d.abs_diffsel))
       .attr("class", "non_brushed")
+      .style("clip-path", "url(#clip)")
       .on("mouseover", showTooltip)
       .on("mouseout", hideTooltip)
       .on("click", function(d) {
