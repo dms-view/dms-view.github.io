@@ -73,7 +73,7 @@ function selectSite(data) {
 
 document.getElementById("line_plot").addEventListener("click", function() {
   console.log("Select site: " + xx);
-  var siteFrequencies = frequenciesBySite.get(xx);
+  var siteFrequencies = frequenciesBySite.get(parseInt(xx));
   plotSiteMutations(siteFrequencies);
 
   // Update the legend to reflect the mutations at the selected site.
