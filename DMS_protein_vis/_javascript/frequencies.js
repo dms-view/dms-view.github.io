@@ -54,7 +54,12 @@ function plotSiteMutations(dataset) {
       console.log(a);
     })
     .on("mouseout", function() {});
-  dots.exit().remove();
+    dots.exit().remove();
+
+    // Update the legend to reflect the mutations at the selected site.
+    d3.select("svg")
+      .select(".legend")
+      .call(legend);
 }
 
 // Selection site from dropdown.
@@ -70,17 +75,6 @@ function selectSite(data) {
     .select(".legend")
     .call(legend);
 }
-
-document.getElementById("line_plot").addEventListener("click", function() {
-  console.log("Select site: " + xx);
-  var siteFrequencies = frequenciesBySite.get(parseInt(xx));
-  plotSiteMutations(siteFrequencies);
-
-  // Update the legend to reflect the mutations at the selected site.
-  d3.select("svg")
-    .select(".legend")
-    .call(legend);
-});
 
 // Setup plot and window margins.
 var plotWidth = 1024;

@@ -150,7 +150,23 @@ var circleAttributes = circlePoint
                  .attr("class", "non_brushed")
                  .on("mouseover", showTooltip)
                  .on("mouseout", hideTooltip)
-                 .on("click",function(d) {xx = d.site; console.log(xx);});
+                 .on("click", function(d) {
+                     console.log("Select site: " + d.site);
+                     const selectedSite = parseInt(d.site);
+
+                     // Highlight the selected site on the protein structure.
+                     icn3dui.selectByCommand("$1RUZ.H:" + selectedSite, "test2", "test sel");
+                     icn3dui.setOption('color',  document.getElementById("myColor").value);
+
+                     // Update frequencies, if any exist for the selected site.
+                     var siteFrequencies = frequenciesBySite.get(selectedSite);
+                     if (siteFrequencies != undefined) {
+                         plotSiteMutations(siteFrequencies);
+                     }
+                     else {
+                         console.warn("No mutation frequencies are defined for site " + selectedSite);
+                     }
+                 });
 
   focus.append("g")
     .attr("class", "axis axis--x")
@@ -223,11 +239,7 @@ function zoomed() {
   focus.select(".line").attr("d", valueline);
   focus.selectAll("circle")
                    .attr("cx", (d) => x(+d.site))
-                   .attr("cy", (d) => y(+d.abs_diffsel))
-                   .attr("class", "non_brushed")
-                   .on("mouseover", showTooltip)
-                   .on("mouseout", hideTooltip)
-                   .on("click",function(d) {xx = d.site; console.log(xx)});
+                   .attr("cy", (d) => y(+d.abs_diffsel));
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 }
