@@ -91,11 +91,13 @@ var valueline = d3.line()
 var tooltip = d3.select("#line_plot")
   .append("div")
   .style("font-family", "'Open Sans', sans-serif")
-  .style("position", "relative")
+  .style("position", "absolute")
   .style("font-size", "20px")
-  .style("z-index", "10")
-  .style("visibility", "hidden");
-
+  .style("z-index", "20")
+  .style("background", "white")
+  .style("padding", "5px")
+  .style("border", "1px solid #cccccc")
+  .style("border-radius", "10px");
 
 // Here is where we read in the data and create the plot
 d3.csv("_data/line-data-PGT151.csv").then(d => {
@@ -125,14 +127,29 @@ var circlePoint = focus.append("g")
                  .enter()
                  .append("circle");
 
+    function showTooltip (d) {
+        mousePosition = d3.mouse(d3.event.target);
+        d3.select(this).attr("fill", "red").attr("r", 8);
+
+        return tooltip
+            .style("visibility", "visible")
+            .style("left", mousePosition[0]+"px")
+            .style("top", mousePosition[1] + 50 +"px")
+            .text("Immune selection of "+ d.site +": "+ parseFloat(d.abs_diffsel).toFixed(2));
+    }
+
+    function hideTooltip (d) {
+        d3.select(this).attr("fill", "black").attr("r", 5);
+        return tooltip.style("visibility", "hidden");
+    }
+
 var circleAttributes = circlePoint
                  .attr("r", 5)
                  .attr("cx", (d) => x(+d.site))
                  .attr("cy", (d) => y(+d.abs_diffsel))
                  .attr("class", "non_brushed")
-                 .on("mouseover", function(d){return tooltip.style("visibility", "visible").text(d.site + d.abs_diffsel);})
-                 .on("mousemove", function(d){return tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-600)+"px").text("Immune selection of "+ d.site +": "+ d.abs_diffsel);})
-                 .on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
+                 .on("mouseover", showTooltip)
+                 .on("mouseout", hideTooltip)
                  .on("click",function(d) {xx = d.site; console.log(xx);});
 
   focus.append("g")
@@ -208,9 +225,8 @@ function zoomed() {
                    .attr("cx", (d) => x(+d.site))
                    .attr("cy", (d) => y(+d.abs_diffsel))
                    .attr("class", "non_brushed")
-                   .on("mouseover", function(d){return tooltip.style("visibility", "visible").text(d.site + d.abs_diffsel);})
-                   .on("mousemove", function(d){return tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-600)+"px").text("Immune selection of "+ d.site +": "+ d.abs_diffsel);})
-                   .on("mouseout", function(d){return tooltip.style("visibility", "hidden");})
+                   .on("mouseover", showTooltip)
+                   .on("mouseout", hideTooltip)
                    .on("click",function(d) {xx = d.site; console.log(xx)});
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
