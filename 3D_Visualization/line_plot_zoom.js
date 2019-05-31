@@ -98,7 +98,7 @@ var tooltip = d3.select("#chart")
 
 
 // Here is where we read in the data and create the plot
-d3.csv("line-data-PGT151.csv", d => {
+d3.csv("line-data-PGT151.csv").then(d => {
 
   var n = d.length;
 
