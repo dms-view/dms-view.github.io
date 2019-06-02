@@ -1,9 +1,13 @@
 'use strict';
 
+// Define a global variable for protein structure application.
+var icn3dui;
+
 $(document).ready(function () {
   var options = {};
   options['proteins'] = 'sphere';
   options['color'] = 'a87a89';
+  options['pk'] = 'residue';
 
   var cfg = {
     divid: 'icn3dwrap',
@@ -11,22 +15,19 @@ $(document).ready(function () {
     height: 400,
     resize: false,
     rotate: 'none',
-    pdbid: '1RUZ',
+    url: "4O5N_trimer.pdb",
+    type: "pdb",
+    //pdbid: '1TUP',
     showcommand: true
   };
 
   if (Object.keys(options).length > 0) cfg['options'] = options;
-  var icn3dui = new iCn3DUI(cfg);
+  icn3dui = new iCn3DUI(cfg);
 
-  $.when(icn3dui.show3DStructure(), icn3dui.hideMenu()).then(function () {
-    icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
+  $.when(icn3dui.show3DStructure(), icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb"), icn3dui.hideMenu()).then(function () {
+    icn3dui.selectByCommand(".A,B");
     icn3dui.showSelection();
-    document.getElementById("line_plot").addEventListener("click", function () {
-      icn3dui.selectByCommand("$1RUZ.H:" + xx, "test2", "test sel");
-      icn3dui.setOption('color', document.getElementById("myColor").value);
-    });
     document.getElementById("remove_selections").addEventListener("click", function () {
-      icn3dui.selectByCommand("$1RUZ.H", "test", "test sel");
       icn3dui.setOption('color', 'a87a89');
     });
     // the below button allows a png export of the protein structure
@@ -35,6 +36,9 @@ $(document).ready(function () {
     });
     document.getElementById("send_state").addEventListener("click", function () {
       icn3dui.shareLink();
+    });
+    document.getElementById("upload_pdb").addEventListener("click", function () {
+      icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb");
     });
   });
 });

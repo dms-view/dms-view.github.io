@@ -165,7 +165,7 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
         const selectedSite = parseInt(d.site);
 
         // Highlight the selected site on the protein structure.
-        icn3dui.selectByCommand("$1RUZ.H:" + selectedSite, "test2", "test sel");
+        icn3dui.selectByCommand(".A,B:" + selectedSite);
         icn3dui.setOption('color',  document.getElementById("myColor").value);
 
         // Update frequencies, if any exist for the selected site.

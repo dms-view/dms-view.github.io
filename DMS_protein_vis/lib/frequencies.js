@@ -44,6 +44,9 @@ function plotSiteMutations(dataset) {
     console.log(a);
   }).on("mouseout", function () {});
   dots.exit().remove();
+
+  // Update the legend to reflect the mutations at the selected site.
+  d3.select("svg").select(".legend").call(legend);
 }
 
 // Selection site from dropdown.
@@ -57,15 +60,6 @@ function selectSite(data) {
   // Update the legend to reflect the mutations at the selected site.
   d3.select("svg").select(".legend").call(legend);
 }
-
-document.getElementById("line_plot").addEventListener("click", function () {
-  console.log("Select site: " + xx);
-  var siteFrequencies = frequenciesBySite.get(xx);
-  plotSiteMutations(siteFrequencies);
-
-  // Update the legend to reflect the mutations at the selected site.
-  d3.select("svg").select(".legend").call(legend);
-});
 
 // Setup plot and window margins.
 var plotWidth = 1024;
@@ -97,28 +91,28 @@ var line = d3.line().x(function (d) {
 }).curve(d3.curveMonotoneX);
 
 // Setup the plot container.
-var svg = d3.select("#frequencies").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+var frequencies_svg = d3.select("#frequencies").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
 // Add the x-axis.
-svg.append("g").attr("class", "x_axis").attr("transform", "translate(0, " + height + ")").call(d3.axisBottom(xScale));
+frequencies_svg.append("g").attr("class", "x_axis").attr("transform", "translate(0, " + height + ")").call(d3.axisBottom(xScale));
 
 // Add an x-axis title. Why is this so complicated?
-svg.append("text").attr("transform", "translate(" + width / 2 + ", " + (height + 40) + ")").style("text-anchor", "middle").text("Date");
+frequencies_svg.append("text").attr("transform", "translate(" + width / 2 + ", " + (height + 40) + ")").style("text-anchor", "middle").text("Date");
 
 // Add the y-axis.
-svg.append("g").attr("class", "y_axis").call(d3.axisLeft(yScale));
+frequencies_svg.append("g").attr("class", "y_axis").call(d3.axisLeft(yScale));
 
 // Add an y-axis title. Again: why is this so complicated?
-svg.append("text").attr("transform", "translate(" + margin.left / -2 + ", " + height / 2 + ") rotate(-90)").style("text-anchor", "middle").text("Frequency");
+frequencies_svg.append("text").attr("transform", "translate(" + margin.left / -2 + ", " + height / 2 + ") rotate(-90)").style("text-anchor", "middle").text("Frequency");
 
 // Add a legend using Susie Lu's d3-legend:
 // https://d3-legend.susielu.com/#color
-svg.append("g").attr("class", "legend").attr("transform", "translate(" + (width - 100) + ", " + "20)");
+frequencies_svg.append("g").attr("class", "legend").attr("transform", "translate(" + (width - 100) + ", " + "20)");
 
 var legend = d3.legendColor().title("Mutation").scale(colorScale);
 
 // Create a group to store the line and dots in.
-var g = svg.append("g").attr("class", "frequencies");
+var g = frequencies_svg.append("g").attr("class", "frequencies");
 
 // Setup variables to store data.
 var frequencies;
@@ -149,5 +143,5 @@ d3.json("_data/frequencies.json").then(function (data) {
   var siteFrequencies = frequenciesBySite.get(sites[0]);
   plotSiteMutations(siteFrequencies);
 
-  svg.select(".legend").call(legend);
+  frequencies_svg.select(".legend").call(legend);
 });
