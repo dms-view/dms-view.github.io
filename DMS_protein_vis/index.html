@@ -40,70 +40,63 @@
     </div>
   </section>
   <section class="section">
-    <div class="container">
+    <div class="container level-item">
       <div class="columns">
-        <div class="column is-12-desktop">
+        <div class="column is-12-tablet is-moble">
           <div class="column">
-            <div class="column is-moble">
+            <div class="column">
               <div class="tile is-parent ">
-                <div class="tile is-parent is-vertical">
+                <div class="tile is-parent is-horizontal">
                   <div class="tile is-parent box is-vertical">
                     <div class="tile is-child has-text-centered">
                       <div id="myBtn" class="button">Open Modal</div>
-
                       <div class="modal" id="myModal">
-                         <div class="modal-background"></div>
-                         <div class="modal-content">
-                           <section></section>
-                           <div class="notification is-danger">
-                             <button class="delete"></button>
-                             <p class="is-size-4">This is an example of a pop-up warning we could create.</p>
-                           </div>
-                         </div>
-                       </div>
-                       <div id="line_plot"></div>
+                        <div class="modal-background"></div>
+                        <div class="modal-content">
+                          <section></section>
+                          <div class="notification is-danger">
+                            <button class="delete"></button>
+                            <p class="is-size-4">This is an example of a pop-up warning we could create.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="line_plot"></div>
                     </div>
                     <!-- we need ot debug this ... I have to switch to a different d3 here -->
                     <div class="tile is-child has-text-centered is-moble">
                       <div id="frequencies"></div>
                     </div>
 
-                    <div class="tile is-child has-text-centered is-moble">
-                      <!--color selection widget.. this will get removed eventually-->
-                      <input type="color" id="myColor" value="#ff0080">
-                      <!--color legend that still needs to be encoorporated better so that the colors on the protein structure correspond to selection values
-                      <script src="https://d3js.org/d3.v4.min.js"></script>
-                      <div id="color-legend"></div>
-                      <script src="_javascript/color-legend.js"></script>
-                      -->
-
-                      <!--protein structure visualization-->
+                  </div>
+                  <div class="tile is-parent is-vertical">
+                    <!--protein structure visualization-->
+                    <div class="tile is-child has-text-centered">
                       <div class="card">
                         <header class="card-header">
                           <div class="dropdown is-hoverable">
                             <div class="dropdown-trigger">
                               <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span class="icon is-small">
-                                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                              </button>
+                            <span class="icon is-small">
+                              <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                          </button>
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                               <div class="dropdown-content">
                                 <a id="save_image" class="dropdown-item">
-                                  Save Image
-                                </a>
+                              Save Image
+                            </a>
                                 <a id ="remove_selections" class="dropdown-item">
-                                  Remove All Selections
-                                </a>
+                              Remove All Selections
+                            </a>
                                 <a id="send_state" class="dropdown-item">
-                                  Share a Link to Your Visualization
-                                </a>
+                              Share a Link to Your Visualization
+                            </a>
                                 <a id="upload_pdb" class="dropdown-item">
-                                  Load a custom PDB file
-                                </a>
+                              Load a custom PDB file
+                            </a>
                               </div>
-                          </div>
+                            </div>
                         </header>
 
                         <div class="card-content">
@@ -115,29 +108,20 @@
                           </div>
                         </div>
                       </div>
+                      <!--color selection widget.. this will get removed eventually-->
+                      <input type="color" id="myColor" value="#ff0080">
                     </div>
                   </div>
+
+
+                    <!--color legend that still needs to be encoorporated better so that the colors on the protein structure correspond to selection values
+                    <script src="https://d3js.org/d3.v4.min.js"></script>
+                    <div id="color-legend"></div>
+                    <script src="_javascript/color-legend.js"></script>
+                    -->
+
                 </div>
-                <div class="tile is-parent is-vertical">
-                  <div class="tile is-child box has-text-centered">
-                    <!--table for data of brushed elements-->
-                    <div id="table">
-                      <table class="table is-striped is-hoverable is-size-5">
-                        <!--This table is set up to get populated with selected residues form a plot that Sarah made -->
-                        <tr>
-                          <th>site</th>
-                          <th>abs_diffsel</th>
-                        </tr>
-                      </table>
-                      <div class="notification is-danger">
-                        <!--this is just an example of a notificaiton that the use cna delet after reading. -->
-                        <button class="delete"></button>
-                        <p>This table will update when you select points on a future chart.
-                          Click the x to delete.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </div>
           </div>
