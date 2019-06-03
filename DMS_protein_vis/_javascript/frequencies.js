@@ -4,7 +4,20 @@
 function plotSiteMutations(dataset) {
   // Create the line plot itself by adding a path, binding data, and running the line generator.
   // Group site data by mutation in arrays to enable plotting one line per mutation.
-  dataset_by_mutation = d3.groups(dataset, d => d.mutation);
+  if (dataset != undefined) {
+    dataset_by_mutation = d3.groups(dataset, d => d.mutation);
+  }
+  else {
+    dataset_by_mutation = [];
+    dataset = [];
+  }
+
+  if (dataset.length == 0) {
+    d3.select("#missing_data_warning").style("display", "inline");
+  }
+  else {
+    d3.select("#missing_data_warning").style("display", "none");
+  }
 
   var colorScale = d3.scaleOrdinal(d3.schemeAccent);
 
@@ -111,7 +124,17 @@ var frequencies_svg = d3.select("#frequencies").append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
   .append("g")
+  .attr("id", "frequencies_panel")
   .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+
+// Add a warning message for missing data.
+var warning_rect = d3.select("#frequencies_panel")
+  .append("text")
+  .attr("id", "missing_data_warning")
+  .attr("transform", "translate(" + ((width / 2) - margin.left) + ", " + (height / 2) + ")")
+  .text("No frequency data available")
+  .style("font-size", "20px")
+  .style("display", "none");
 
 // Add the x-axis.
 frequencies_svg.append("g")

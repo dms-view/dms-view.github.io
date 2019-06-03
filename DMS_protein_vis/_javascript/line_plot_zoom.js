@@ -170,12 +170,10 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
 
         // Update frequencies, if any exist for the selected site.
         var siteFrequencies = frequenciesBySite.get(selectedSite);
-        if (siteFrequencies != undefined) {
-          plotSiteMutations(siteFrequencies);
-        }
-        else {
+        if (siteFrequencies === undefined) {
           console.warn("No mutation frequencies are defined for site " + selectedSite);
         }
+        plotSiteMutations(siteFrequencies);
       });
 
   focus.append("g")
