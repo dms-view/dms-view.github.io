@@ -94,7 +94,6 @@ var parseTime = d3.timeParse("%Y-%m-%d");
 
 // Setup plot scales, axes, legend, and line generators.
 var xScale = d3.scaleTime()
-  .domain([parseTime("2010-10-01"), parseTime("2012-10-01")])
   .range([0, width]);
 
 var yScale = d3.scaleLinear()
@@ -122,8 +121,7 @@ var frequencies_svg = d3.select("#frequencies").append("svg")
 // Add the x-axis.
 frequencies_svg.append("g")
   .attr("class", "x_axis")
-  .attr("transform", "translate(0, " + height + ")")
-  .call(d3.axisBottom(xScale));
+  .attr("transform", "translate(0, " + height + ")");
 
 // Add an x-axis title. Why is this so complicated?
 frequencies_svg.append("text")
@@ -166,9 +164,14 @@ var dropdown;
 d3.json("_data/frequencies.json").then(function(data) {
   // Plot one line per amino acid at a specified site with different color per line.
   // Multi-line plot based on http://bl.ocks.org/d3noob/88d2a87b72ea894c285c
-  frequencies = data["frequencies"];
-  frequenciesBySite = d3.group(data["frequencies"], d => d.site);
+  frequencies = data;
+  frequenciesBySite = d3.group(frequencies, d => d.site);
   sites = Array.from(frequenciesBySite.keys());
+
+  // Update x-axis scale to the domain of the given data.
+  xScale.domain(d3.extent(frequencies, d => parseTime(d.timepoint)));
+  d3.select(".x_axis")
+    .call(d3.axisBottom(xScale));
 
   // Create a dropdown menu to populate with data.
   dropdown = d3.select("#frequencies").append("select");
