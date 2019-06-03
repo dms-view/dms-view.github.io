@@ -8,6 +8,8 @@ function plotSiteMutations(dataset) {
   // Group site data by mutation in arrays to enable plotting one line per mutation.
   dataset_by_mutation = d3.groups(dataset, d => d.mutation);
 
+  var colorScale = d3.scaleOrdinal(d3.schemeAccent);
+
   var line = d3.line()
     .x(function(d) {
       return xScale(parseTime(d.timepoint));
@@ -56,10 +58,13 @@ function plotSiteMutations(dataset) {
     .on("mouseout", function() {});
     dots.exit().remove();
 
-    // Update the legend to reflect the mutations at the selected site.
-    d3.select("svg")
-      .select(".legend")
-      .call(legend);
+  var legend = d3.legendColor()
+    .title("Mutation")
+    .scale(colorScale);
+
+  // Update the legend to reflect the mutations at the selected site.
+  d3.select(".legend")
+    .call(legend);
 }
 
 // Selection site from dropdown.
@@ -69,11 +74,6 @@ function selectSite(data) {
   console.log("Select site: " + selectedSite);
   var siteFrequencies = frequenciesBySite.get(selectedSite);
   plotSiteMutations(siteFrequencies);
-
-  // Update the legend to reflect the mutations at the selected site.
-  d3.select("svg")
-    .select(".legend")
-    .call(legend);
 }
 
 // Setup plot and window margins.
@@ -99,8 +99,6 @@ var xScale = d3.scaleTime()
 var yScale = d3.scaleLinear()
   .domain([0, 1])
   .range([height, 0]);
-
-var colorScale = d3.scaleOrdinal(d3.schemeAccent);
 
 var line = d3.line()
   .x(function(d) {
@@ -144,11 +142,7 @@ frequencies_svg.append("text")
 // https://d3-legend.susielu.com/#color
 frequencies_svg.append("g")
   .attr("class", "legend")
-  .attr("transform", "translate(" + (width - 100) + ", " + "20)");
-
-var legend = d3.legendColor()
-  .title("Mutation")
-  .scale(colorScale);
+  .attr("transform", "translate(" + (width + 20) + ", " + "20)");
 
 // Create a group to store the line and dots in.
 var g = frequencies_svg.append("g")
@@ -191,7 +185,4 @@ d3.json("_data/frequencies.json").then(function(data) {
   // Plot frequencies for the first site by default.
   var siteFrequencies = frequenciesBySite.get(sites[0]);
   plotSiteMutations(siteFrequencies);
-
-  frequencies_svg.select(".legend")
-    .call(legend);
 });
