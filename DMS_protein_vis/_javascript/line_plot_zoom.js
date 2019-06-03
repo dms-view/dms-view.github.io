@@ -138,7 +138,7 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
 
   function showTooltip (d) {
     mousePosition = d3.mouse(d3.event.target);
-    d3.select(this).attr("fill", "red").attr("r", 8);
+    d3.select(this).classed("selected", true);
 
     return tooltip
       .style("visibility", "visible")
@@ -148,7 +148,7 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
   }
 
   function hideTooltip (d) {
-    d3.select(this).attr("fill", "black").attr("r", 5);
+    d3.select(this).classed("selected", false);
     return tooltip.style("visibility", "hidden");
   }
 

@@ -185,4 +185,12 @@ d3.json("_data/frequencies.json").then(function(data) {
   // Plot frequencies for the first site by default.
   var siteFrequencies = frequenciesBySite.get(sites[0]);
   plotSiteMutations(siteFrequencies);
+
+  // Update circles in the line plot to reflect which sites have frequency data or not.
+  d3.select(".focus")
+    .selectAll(".non_brushed")
+    .classed(
+      "has_data",
+      function (d) { return frequenciesBySite.has(+d.site); }
+    );
 });
