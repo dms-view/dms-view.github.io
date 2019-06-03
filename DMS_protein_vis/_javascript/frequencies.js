@@ -3,8 +3,6 @@
 // Define functions for plotting.
 function plotSiteMutations(dataset) {
   // Create the line plot itself by adding a path, binding data, and running the line generator.
-  console.log(dataset);
-
   // Group site data by mutation in arrays to enable plotting one line per mutation.
   dataset_by_mutation = d3.groups(dataset, d => d.mutation);
 
@@ -21,7 +19,6 @@ function plotSiteMutations(dataset) {
   var mutations = d3.select(".frequencies")
     .selectAll(".line")
     .data(dataset_by_mutation, function(key, values) {
-      console.log("key: " + key[1][0].site);
       return key[1][0].site;
     });
 
