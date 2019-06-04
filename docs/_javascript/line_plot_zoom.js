@@ -116,6 +116,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   var d_extent_x = d3.extent(d, d => +d.site),
       d_extent_y = d3.extent(d, d => +d.abs_diffsel);
 
+
   // set the domains
   x.domain(d_extent_x);
   y.domain(d_extent_y);
@@ -179,6 +180,8 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
         }
         plotSiteMutations(siteFrequencies);
       });
+
+  // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
 
   focus.append("g")
     .attr("class", "axis axis--x")
