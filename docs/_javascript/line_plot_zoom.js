@@ -161,6 +161,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
       .on("mouseover", showTooltip)
       .on("mouseout", hideTooltip)
       .on("click", function(d) {
+        d3.select(this).style("fill", document.getElementById("myColor").value);
         console.log("Select site: " + d.site);
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
