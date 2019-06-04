@@ -99,6 +99,7 @@ var valueline = d3.line()
 var tooltip = d3.select("#line_plot")
   .append("div")
   .style("font-family", "'Open Sans', sans-serif")
+  .style("text-align", "left")
   .style("position", "absolute")
   .style("font-size", "20px")
   .style("z-index", "20")
@@ -139,17 +140,21 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
   function showTooltip (d) {
     mousePosition = d3.mouse(d3.event.target);
-    d3.select(this).classed("selected", true);
+    d3.select(this).classed("hovered", true);
 
     return tooltip
       .style("visibility", "visible")
       .style("left", mousePosition[0]+"px")
       .style("top", mousePosition[1] + 50 +"px")
-      .text("Immune selection of "+ d.site +": "+ parseFloat(d.abs_diffsel).toFixed(2));
+      .html("Site: (" + d.domain + ")" + d.chain_site + " <br/> "+
+           "abs_diffsel: " + parseFloat(d.abs_diffsel).toFixed(2) + " <br/> "+
+           "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
+           "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
+           "seq number: " + d.site)
   }
 
   function hideTooltip (d) {
-    d3.select(this).classed("selected", false);
+    d3.select(this).classed("hovered", false);
     return tooltip.style("visibility", "hidden");
   }
 
@@ -166,6 +171,9 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
+
+        d3.select(".focus").selectAll("circle").classed("selected", false);
+        d3.select(this).classed("selected", true);
 
         // Highlight the selected site on the protein structure.
         icn3dui.selectByCommand(".A,B");
