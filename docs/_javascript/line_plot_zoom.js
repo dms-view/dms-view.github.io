@@ -109,7 +109,7 @@ var tooltip = d3.select("#line_plot")
   .style("visibility", "hidden");
 
 // Here is where we read in the data and create the plot
-d3.csv("_data/line-data-PGT151.csv").then(d => {
+d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   var n = d.length;
 
   // find the min and the max of x/y
@@ -163,11 +163,13 @@ d3.csv("_data/line-data-PGT151.csv").then(d => {
       .on("click", function(d) {
         console.log("Select site: " + d.site);
         const selectedSite = parseInt(d.site);
+        const selectedChain = d.chain;
+        const selectedChainSite = d.chain_site;
 
         // Highlight the selected site on the protein structure.
         icn3dui.selectByCommand(".A,B");
         icn3dui.setOption('color', 'a87a89');
-        icn3dui.selectByCommand(".A,B:" + selectedSite);
+        icn3dui.selectByCommand("."+ selectedChain +":"+ selectedChainSite);
         icn3dui.setOption('color',  document.getElementById("myColor").value);
 
         // Update frequencies, if any exist for the selected site.
