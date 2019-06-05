@@ -171,7 +171,9 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
-
+        var colors = sessionStorage.getItem("colorTest")
+        color_key = JSON.parse(colors);
+        console.log(color_key[1])
         d3.select(".focus").selectAll("circle").classed("selected", false);
         d3.select(this).classed("selected", true);
 
@@ -180,6 +182,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
         icn3dui.setOption('color', 'a87a89');
         icn3dui.selectByCommand("."+ selectedChain +":"+ selectedChainSite);
         icn3dui.setOption('color',  document.getElementById("myColor").value);
+        icn3dui.setOption('color',  color_key[1]);
 
         // Update frequencies, if any exist for the selected site.
         var siteFrequencies = frequenciesBySite.get(selectedSite);

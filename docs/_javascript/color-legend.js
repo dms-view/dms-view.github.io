@@ -14,7 +14,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .domain(d3.extent(d, d=>+d.abs_diffsel))
     .range([-width, width]);
 
-  var svg = d3.select("#colorKey").append("svg")
+  var svg = d3.select("#colorKeydiv").append("svg")
     .attr("width", 500)
     .attr("height", 300);
 
@@ -37,12 +37,14 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
   }
   // create a color key based on the bar and attach it to a list to use a reference
-  const colorKey = {};
+  var colorKey = {};
   for (var i = 0; i < numStops; i++) {
     //console.log(i);
     colorKey["" + Math.ceil(countPoint[i]) + ""] = colorScale(countPoint[i]);
     //console.log(colorKey[""+i+""]);
   }
+
+  sessionStorage.setItem("colorTest",JSON.stringify(colorKey));
 
   console.log(colorKey);
   // create gradient stops, at the same time also create a key for the amaino acid preferences
