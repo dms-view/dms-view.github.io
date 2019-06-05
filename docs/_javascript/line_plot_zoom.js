@@ -20,9 +20,9 @@ var margin = {
   plot_dy2 = svg_dy - margin2.top - margin2.bottom;
 
 var x = d3.scaleLinear().range([0, plot_dx]),
-    x2 = d3.scaleLinear().range([0, plot_dx]),
-    y = d3.scaleLinear().range([plot_dy, margin.top]),
-    y2 = d3.scaleLinear().range([plot_dy2, margin.top]);
+  x2 = d3.scaleLinear().range([0, plot_dx]),
+  y = d3.scaleLinear().range([plot_dy, margin.top]),
+  y2 = d3.scaleLinear().range([plot_dy2, margin.top]);
 
 // actually create the chart
 var svg = d3.select("#line_plot")
@@ -33,10 +33,10 @@ var svg = d3.select("#line_plot")
 // Add a clipping box to prevent focus plot from extending beyond the x-axis
 // domain.
 svg.append("defs").append("clipPath")
-    .attr("id", "clip")
+  .attr("id", "clip")
   .append("rect")
-    .attr("width", plot_dx)
-    .attr("height", plot_dy);
+  .attr("width", plot_dx)
+  .attr("height", plot_dy);
 
 // define the axis. There are two xAxes for the two plots but the context plot
 // does not have a y axis
@@ -111,159 +111,176 @@ var tooltip = d3.select("#line_plot")
 
 // Here is where we read in the data and create the plot
 d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
-  var n = d.length;
+      var n = d.length;
 
-  // find the min and the max of x/y
-  var d_extent_x = d3.extent(d, d => +d.site),
-      d_extent_y = d3.extent(d, d => +d.abs_diffsel);
+      // find the min and the max of x/y
+      var d_extent_x = d3.extent(d, d => +d.site),
+        d_extent_y = d3.extent(d, d => +d.abs_diffsel);
 
 
-  // set the domains
-  x.domain(d_extent_x);
-  y.domain(d_extent_y);
-  x2.domain(x.domain());
-  y2.domain(y.domain());
+      // set the domains
+      x.domain(d_extent_x);
+      y.domain(d_extent_y);
+      x2.domain(x.domain());
+      y2.domain(y.domain());
 
-  // make the context plot
-  // Add the valueline path.
-  focus.append("path")
-    .datum(d)
-    .attr("class", "line")
-    .style("clip-path", "url(#clip)")
-    .attr("d", valueline);
+      // make the context plot
+      // Add the valueline path.
+      focus.append("path")
+        .datum(d)
+        .attr("class", "line")
+        .style("clip-path", "url(#clip)")
+        .attr("d", valueline);
 
-  var circlePoint = focus.append("g")
-      .selectAll("circle")
-      .data(d)
-      .enter()
-      .append("circle");
+      var circlePoint = focus.append("g")
+        .selectAll("circle")
+        .data(d)
+        .enter()
+        .append("circle");
 
-  function showTooltip (d) {
-    mousePosition = d3.mouse(d3.event.target);
-    d3.select(this).classed("hovered", true);
+      function showTooltip(d) {
+        mousePosition = d3.mouse(d3.event.target);
+        d3.select(this).classed("hovered", true);
 
-    return tooltip
-      .style("visibility", "visible")
-      .style("left", mousePosition[0]+"px")
-      .style("top", mousePosition[1] + 50 +"px")
-      .html("Site: (" + d.domain + ")" + d.chain_site + " <br/> "+
-           "abs_diffsel: " + parseFloat(d.abs_diffsel).toFixed(2) + " <br/> "+
-           "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
-           "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
-           "seq number: " + d.site)
-  }
+        return tooltip
+          .style("visibility", "visible")
+          .style("left", mousePosition[0] + "px")
+          .style("top", mousePosition[1] + 50 + "px")
+          .html("Site: (" + d.domain + ")" + d.chain_site + " <br/> " +
+            "abs_diffsel: " + parseFloat(d.abs_diffsel).toFixed(2) + " <br/> " +
+            "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
+            "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
+            "seq number: " + d.site)
+      }
 
-  function hideTooltip (d) {
-    d3.select(this).classed("hovered", false);
-    return tooltip.style("visibility", "hidden");
-  }
+      function hideTooltip(d) {
+        d3.select(this).classed("hovered", false);
+        return tooltip.style("visibility", "hidden");
+      }
 
-  var circleAttributes = circlePoint
-      .attr("r", 5)
-      .attr("cx", (d) => x(+d.site))
-      .attr("cy", (d) => y(+d.abs_diffsel))
-      .attr("class", "non_brushed")
-      .style("clip-path", "url(#clip)")
-      .on("mouseover", showTooltip)
-      .on("mouseout", hideTooltip)
-      .on("click", function(d) {
-        console.log("Select site: " + d.site);
-        const selectedSite = parseInt(d.site);
-        const selectedChain = d.chain;
-        const selectedChainSite = d.chain_site;
-        var colors = sessionStorage.getItem("colorTest")
-        color_key = JSON.parse(colors);
-        console.log(color_key[1])
-        d3.select(".focus").selectAll("circle").classed("selected", false);
-        d3.select(this).classed("selected", true);
+      var circleAttributes = circlePoint
+        .attr("r", 5)
+        .attr("cx", (d) => x(+d.site))
+        .attr("cy", (d) => y(+d.abs_diffsel))
+        .attr("class", "non_brushed")
+        .style("clip-path", "url(#clip)")
+        .on("mouseover", showTooltip)
+        .on("mouseout", hideTooltip)
+        .on("click", function(d) {
+            console.log("Select site: " + d.site);
+            const selectedSite = parseInt(d.site);
+            const selectedChain = d.chain;
+            const selectedChainSite = d.chain_site;
+            var colors = sessionStorage.getItem("colorTest")
+            color_key = JSON.parse(colors);
 
-        // Highlight the selected site on the protein structure.
-        icn3dui.selectByCommand(".A,B");
-        icn3dui.setOption('color', 'a87a89');
-        icn3dui.selectByCommand("."+ selectedChain +":"+ selectedChainSite);
-        icn3dui.setOption('color',  document.getElementById("myColor").value);
-        icn3dui.setOption('color',  color_key[1]);
 
-        // Update frequencies, if any exist for the selected site.
-        var siteFrequencies = frequenciesBySite.get(selectedSite);
-        if (siteFrequencies === undefined) {
-          console.warn("No mutation frequencies are defined for site " + selectedSite);
-        }
-        plotSiteMutations(siteFrequencies);
-      });
+              var rgbToHex = function(rgb) {
+                var hex = Number(rgb).toString(16);
+                if (hex.length < 2) {
+                  hex = "0" + hex;
+                }
+                return hex;
+              };
 
-  // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
 
-  focus.append("g")
-    .attr("class", "axis axis--x")
-    .attr("id", "axis_x")
-    .attr("transform", "translate(0," + plot_dy + ")")
-    .call(xAxis);
+              var fullColorHex = function(r, g, b) {
+                var red = rgbToHex(r);
+                var green = rgbToHex(g);
+                var blue = rgbToHex(b);
+                return red + green + blue;
+              };
+              console.log(d3.rgb(color_key[1]).r);
+              console.log(fullColorHex( d3.rgb(color_key[1]).r, d3.rgb(color_key[1]).g, d3.rgb(color_key[1]).b ));
+              d3.select(".focus").selectAll("circle").classed("selected", false); d3.select(this).classed("selected", true);
 
-  focus.append("g")
-    .attr("class", "axis axis--y")
-    .attr("id", "axis_y")
-    .call(yAxis);
+              // Highlight the selected site on the protein structure.
+              icn3dui.selectByCommand(".A,B");
+              icn3dui.setOption('color', 'a87a89');
+              icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
+              //icn3dui.setOption('color', document.getElementById("myColor").value);
+              icn3dui.setOption('color', fullColorHex( d3.rgb(color_key[10]).r, d3.rgb(color_key[10]).g, d3.rgb(color_key[10]).b ));
 
-  d3.select("#axis_x")
-    .append("text")
-    .attr("transform", "translate(1000, 10)")
-    .text("Site");
+              // Update frequencies, if any exist for the selected site.
+              var siteFrequencies = frequenciesBySite.get(selectedSite);
+              if (siteFrequencies === undefined) {
+                console.warn("No mutation frequencies are defined for site " + selectedSite);
+              }
+              plotSiteMutations(siteFrequencies);
+            });
 
-  d3.select("#axis_y")
-    .append("text")
-    .attr("transform", "rotate(-90) translate(-20, 15)")
-    .text("abs_diffsel Value");
+          // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
 
-  // make the smaller plot (called context in the tutorial)
-  context.append("path")
-    .datum(d)
-    .attr("class", "area")
-    .attr("d", area2);
+          focus.append("g")
+          .attr("class", "axis axis--x")
+          .attr("id", "axis_x")
+          .attr("transform", "translate(0," + plot_dy + ")")
+          .call(xAxis);
 
-  context.append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + plot_dy2 + ")")
-    .call(xAxis2);
+          focus.append("g")
+          .attr("class", "axis axis--y")
+          .attr("id", "axis_y")
+          .call(yAxis);
 
-  // add in the brush
-  context.append("g")
-    .attr("class", "brush")
-    .call(brush)
-    .call(brush.move, x.range());
+          d3.select("#axis_x")
+          .append("text")
+          .attr("transform", "translate(1000, 10)")
+          .text("Site");
 
-    // Adds a zoom box that enables Google Maps style zoom interactions with the focus plot.
-    // TODO: reenable this functionality once core functions of plot are working.
-    /* svg.append("rect")
-     *   .attr("class", "zoom")
-     *   .attr("width", plot_dx)
-     *   .attr("height", plot_dy)
-     *   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-     *   .call(zoom);*/
-});
+          d3.select("#axis_y")
+          .append("text")
+          .attr("transform", "rotate(-90) translate(-20, 15)")
+          .text("abs_diffsel Value");
 
-function brushed() {
-  if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-  var s = d3.event.selection || x2.range();
-  x.domain(s.map(x2.invert, x2));
-  focus.select(".line").attr("d", valueline);
-  focus.selectAll("circle")
-                   .attr("cx", (d) => x(+d.site))
-                   .attr("cy", (d) => y(+d.abs_diffsel))
-  focus.select(".axis--x").call(xAxis);
-  svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
-    .scale(plot_dx / (s[1] - s[0]))
-    .translate(-s[0], 0));
-}
+          // make the smaller plot (called context in the tutorial)
+          context.append("path")
+          .datum(d)
+          .attr("class", "area")
+          .attr("d", area2);
 
-function zoomed() {
-  if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
-  var t = d3.event.transform;
-  x.domain(t.rescaleX(x2).domain());
-  focus.select(".line").attr("d", valueline);
-  focus.selectAll("circle")
-                   .attr("cx", (d) => x(+d.site))
-                   .attr("cy", (d) => y(+d.abs_diffsel));
-  focus.select(".axis--x").call(xAxis);
-  context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
-}
+          context.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(0," + plot_dy2 + ")")
+          .call(xAxis2);
+
+          // add in the brush
+          context.append("g")
+          .attr("class", "brush")
+          .call(brush)
+          .call(brush.move, x.range());
+
+          // Adds a zoom box that enables Google Maps style zoom interactions with the focus plot.
+          // TODO: reenable this functionality once core functions of plot are working.
+          /* svg.append("rect")
+           *   .attr("class", "zoom")
+           *   .attr("width", plot_dx)
+           *   .attr("height", plot_dy)
+           *   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+           *   .call(zoom);*/
+        });
+
+    function brushed() {
+      if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+      var s = d3.event.selection || x2.range();
+      x.domain(s.map(x2.invert, x2));
+      focus.select(".line").attr("d", valueline);
+      focus.selectAll("circle")
+        .attr("cx", (d) => x(+d.site))
+        .attr("cy", (d) => y(+d.abs_diffsel))
+      focus.select(".axis--x").call(xAxis);
+      svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+        .scale(plot_dx / (s[1] - s[0]))
+        .translate(-s[0], 0));
+    }
+
+    function zoomed() {
+      if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+      var t = d3.event.transform;
+      x.domain(t.rescaleX(x2).domain());
+      focus.select(".line").attr("d", valueline);
+      focus.selectAll("circle")
+        .attr("cx", (d) => x(+d.site))
+        .attr("cy", (d) => y(+d.abs_diffsel));
+      focus.select(".axis--x").call(xAxis);
+      context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+    }
