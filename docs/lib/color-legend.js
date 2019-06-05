@@ -1,35 +1,21 @@
-"use strict";
+d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
-// Variable declaration
-d3.csv("_data/line-data.csv", function (error, data) {
   var width = 500;
-  if (error) throw error;
-  // Create color scale
-  var colorScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
-    return d.max;
-  }) / 2, d3.max(data, function (d) {
-    return d.max;
-  })]).range(["#ffffff", "#f77b7b", "#fa0101"]);
+  var countScale = d3.scaleLinear().domain(d3.extent(d, d => +d.abs_diffsel)).range([0, width]);
 
-  var gridSize = Math.floor(data, function (d) {
-    return width / d.max.length;
-  });
+  console.log(d3.max(d, d => +d.abs_diffsel));
+  var colorScale = d3.scaleLinear().domain([0, d3.extent(d, d => +d.abs_diffsel)[1] / 2, d3.extent(d, d => +d.abs_diffsel)[1]]).range(d3.schemeReds[3]);
 
-  var height = gridSize;
-  // Create svg
-  var svg = d3.select('#color-legend').append('svg').attr('width', width).attr('height', height).append('g');
+  var xScale = d3.scaleLinear().domain(d3.extent(d, d => +d.abs_diffsel)).range([-width, width]);
 
-  //////////////////////////////////////////
-  /// Gradient for the legend
-  //////////////////////////////////////////
+  var svg = d3.select("#colorKey").append("svg").attr("width", 500).attr("height", 300);
 
-  // Scale for workingtime
-  var countScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
-    return d.max;
-  })]).range([0, width]);
+  var defs = svg.append("defs");
 
-  // Calculate variables for the temp gradient
-  var numStops = 15;
+  var gradient = defs.append("linearGradient").attr("id", "svgGradient").attr("x1", "0%").attr("x2", "100%").attr("y1", "0%").attr("y2", "0%");
+
+  var numStops = 20;
+
   var countRange = countScale.domain();
   // index 2 is the substraction between max and min
   countRange[2] = countRange[1] - countRange[0];
@@ -37,37 +23,33 @@ d3.csv("_data/line-data.csv", function (error, data) {
   for (var i = 0; i < numStops; i++) {
     countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
   }
+  // create a color key based on the bar and attach it to a list to use a reference
+  const colorKey = {};
+  for (var i = 0; i < numStops; i++) {
+    //console.log(i);
+    colorKey["" + Math.ceil(countPoint[i]) + ""] = colorScale(countPoint[i]);
+    //console.log(colorKey[""+i+""]);
+  }
 
-  // Create the gradient
-  svg.append("defs").append("linearGradient").attr("id", "legend-traffic").attr("x1", "0%").attr("y1", "0%").attr("x2", "100%").attr("y2", "0%").selectAll("stop").data(d3.range(numStops)).enter().append("stop").attr("offset", function (d, i) {
+  console.log(colorKey);
+  // create gradient stops, at the same time also create a key for the amaino acid preferences
+
+  gradient.selectAll("stop").data(d3.range(numStops)).enter().append("stop").attr('class', 'start').attr("offset", function (d, i) {
     return countScale(countPoint[i]) / width;
   }).attr("stop-color", function (d, i) {
     return colorScale(countPoint[i]);
   });
 
-  ///////////////////////////////////////////////////////////////////////////
-  ////////////////////////// Draw the legend ////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////
-
-  var legendWidth = Math.min(1000);
-
-  // Color Legend container
-  var legendsvg = svg.append("g").attr("class", "legendWrapper").attr("transform", "translate(" + width + "," + gridSize + ")");
+  svg.append("rect").attr("class", "legendRect").attr("x", 20).attr("y", 35).attr("width", 380).attr("height", 25).style("fill", "url(#svgGradient)");
 
   // Append title
-  legendsvg.append("text").attr("class", "legendTitle").attr("x", 250).attr("y", 30).style("text-anchor", "middle").text("Amino Acid Preference");
+  svg.append("text").attr("class", "legendTitle").attr("x", 200).attr("y", 30).style("text-anchor", "middle").style("font-family", "'Open Sans', sans-serif").text("Amino Acid Preference");
 
-  // Draw the Rectangle
-  legendsvg.append("rect").attr("class", "legendRect").attr("x", -legendWidth / 2).attr("y", 40).attr("width", legendWidth).attr("height", 20).style("fill", "url(#legend-traffic)");
-
-  // Set scale for x-axis
-  var xScale = d3.scaleLinear().range([-legendWidth / 15, legendWidth / 2]).domain([0, d3.max(data, function (d) {
-    return d.max;
-  })]);
+  // x axis scale
+  var xScale = d3.scaleLinear().range([20, 400]).domain([0, Math.ceil(d3.extent(d, d => +d.abs_diffsel)[1])]);
 
   // Define x-axis
-  var xAxis = d3.axisBottom().ticks(15).scale(xScale);
+  var xAxis = d3.axisBottom().ticks(20).scale(xScale);
 
-  // Set up X axis
-  legendsvg.append("g").attr("class", "axis").attr("transform", "translate(0," + 72 + ")").call(xAxis);
+  svg.append("g").attr("class", "axis").attr("transform", "translate(0," + 60 + ")").call(xAxis).selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
 });

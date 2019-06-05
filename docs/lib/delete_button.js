@@ -1,9 +1,7 @@
-'use strict';
-
-document.addEventListener('DOMContentLoaded', function () {
-  (document.querySelectorAll('.notification .delete') || []).forEach(function ($delete) {
+document.addEventListener('DOMContentLoaded', () => {
+  (document.querySelectorAll('.notification .delete') || []).forEach($delete => {
     $notification = $delete.parentNode;
-    $delete.addEventListener('click', function () {
+    $delete.addEventListener('click', () => {
       $notification.parentNode.removeChild($notification);
     });
   });

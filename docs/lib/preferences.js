@@ -1,4 +1,3 @@
-"use strict";
 
 // Setup plot and window margins.
 var containerWidth = 700;
@@ -43,13 +42,9 @@ var sitePreferenceData = [{
     "value": 0.8
 }];
 
-var xScale = d3.scaleBand().domain(sitePreferenceData.map(function (d) {
-    return d.site;
-})).rangeRound([0, plotWidth]).padding(0.05);
+var xScale = d3.scaleBand().domain(sitePreferenceData.map(d => d.site)).rangeRound([0, plotWidth]).padding(0.05);
 
-var yScale = d3.scaleLinear().domain([0, d3.max(sitePreferenceData, function (d) {
-    return d.value;
-})]).nice().range([plotHeight, 0]); //this is backwards because SVG 0,0 is at top left
+var yScale = d3.scaleLinear().domain([0, d3.max(sitePreferenceData, d => d.value)]).nice().range([plotHeight, 0]); //this is backwards because SVG 0,0 is at top left
 
 //build up the tool tip for looking at the histogram interactively
 // Define the div for the tooltip, and set it to be hidden to start.

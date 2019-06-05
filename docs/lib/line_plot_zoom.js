@@ -1,5 +1,3 @@
-"use strict";
-
 // set up the margins in the plot
 // at one point the `svg_dy` was too small and the curve was under the
 // axis and the brush box was not showing up.
@@ -66,19 +64,15 @@ var valueline = d3.line().x(function (d) {
 });
 
 // define tooltip not working currently
-var tooltip = d3.select("#line_plot").append("div").style("font-family", "'Open Sans', sans-serif").style("position", "absolute").style("font-size", "20px").style("z-index", "20").style("background", "white").style("padding", "5px").style("border", "1px solid #cccccc").style("border-radius", "10px").style("visibility", "hidden");
+var tooltip = d3.select("#line_plot").append("div").style("font-family", "'Open Sans', sans-serif").style("text-align", "left").style("position", "absolute").style("font-size", "20px").style("z-index", "20").style("background", "white").style("padding", "5px").style("border", "1px solid #cccccc").style("border-radius", "10px").style("visibility", "hidden");
 
 // Here is where we read in the data and create the plot
-d3.csv("_data/line-data-PGT151.csv").then(function (d) {
+d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   var n = d.length;
 
   // find the min and the max of x/y
-  var d_extent_x = d3.extent(d, function (d) {
-    return +d.site;
-  }),
-      d_extent_y = d3.extent(d, function (d) {
-    return +d.abs_diffsel;
-  });
+  var d_extent_x = d3.extent(d, d => +d.site),
+      d_extent_y = d3.extent(d, d => +d.abs_diffsel);
 
   // set the domains
   x.domain(d_extent_x);
@@ -94,36 +88,40 @@ d3.csv("_data/line-data-PGT151.csv").then(function (d) {
 
   function showTooltip(d) {
     mousePosition = d3.mouse(d3.event.target);
-    d3.select(this).attr("fill", "red").attr("r", 8);
+    d3.select(this).classed("hovered", true);
 
-    return tooltip.style("visibility", "visible").style("left", mousePosition[0] + "px").style("top", mousePosition[1] + 50 + "px").text("Immune selection of " + d.site + ": " + parseFloat(d.abs_diffsel).toFixed(2));
+    return tooltip.style("visibility", "visible").style("left", mousePosition[0] + "px").style("top", mousePosition[1] + 50 + "px").html("Site: (" + d.domain + ")" + d.chain_site + " <br/> " + "abs_diffsel: " + parseFloat(d.abs_diffsel).toFixed(2) + " <br/> " + "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " + "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " + "seq number: " + d.site);
   }
 
   function hideTooltip(d) {
-    d3.select(this).attr("fill", "black").attr("r", 5);
+    d3.select(this).classed("hovered", false);
     return tooltip.style("visibility", "hidden");
   }
 
-  var circleAttributes = circlePoint.attr("r", 5).attr("cx", function (d) {
-    return x(+d.site);
-  }).attr("cy", function (d) {
-    return y(+d.abs_diffsel);
-  }).attr("class", "non_brushed").style("clip-path", "url(#clip)").on("mouseover", showTooltip).on("mouseout", hideTooltip).on("click", function (d) {
+  var circleAttributes = circlePoint.attr("r", 5).attr("cx", d => x(+d.site)).attr("cy", d => y(+d.abs_diffsel)).attr("class", "non_brushed").style("clip-path", "url(#clip)").on("mouseover", showTooltip).on("mouseout", hideTooltip).on("click", function (d) {
     console.log("Select site: " + d.site);
-    var selectedSite = parseInt(d.site);
+    const selectedSite = parseInt(d.site);
+    const selectedChain = d.chain;
+    const selectedChainSite = d.chain_site;
+
+    d3.select(".focus").selectAll("circle").classed("selected", false);
+    d3.select(this).classed("selected", true);
 
     // Highlight the selected site on the protein structure.
-    icn3dui.selectByCommand(".A,B:" + selectedSite);
+    icn3dui.selectByCommand(".A,B");
+    icn3dui.setOption('color', 'a87a89');
+    icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
     icn3dui.setOption('color', document.getElementById("myColor").value);
 
     // Update frequencies, if any exist for the selected site.
     var siteFrequencies = frequenciesBySite.get(selectedSite);
-    if (siteFrequencies != undefined) {
-      plotSiteMutations(siteFrequencies);
-    } else {
+    if (siteFrequencies === undefined) {
       console.warn("No mutation frequencies are defined for site " + selectedSite);
     }
+    plotSiteMutations(siteFrequencies);
   });
+
+  // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
 
   focus.append("g").attr("class", "axis axis--x").attr("id", "axis_x").attr("transform", "translate(0," + plot_dy + ")").call(xAxis);
 
@@ -156,11 +154,7 @@ function brushed() {
   var s = d3.event.selection || x2.range();
   x.domain(s.map(x2.invert, x2));
   focus.select(".line").attr("d", valueline);
-  focus.selectAll("circle").attr("cx", function (d) {
-    return x(+d.site);
-  }).attr("cy", function (d) {
-    return y(+d.abs_diffsel);
-  });
+  focus.selectAll("circle").attr("cx", d => x(+d.site)).attr("cy", d => y(+d.abs_diffsel));
   focus.select(".axis--x").call(xAxis);
   svg.select(".zoom").call(zoom.transform, d3.zoomIdentity.scale(plot_dx / (s[1] - s[0])).translate(-s[0], 0));
 }
@@ -170,11 +164,7 @@ function zoomed() {
   var t = d3.event.transform;
   x.domain(t.rescaleX(x2).domain());
   focus.select(".line").attr("d", valueline);
-  focus.selectAll("circle").attr("cx", function (d) {
-    return x(+d.site);
-  }).attr("cy", function (d) {
-    return y(+d.abs_diffsel);
-  });
+  focus.selectAll("circle").attr("cx", d => x(+d.site)).attr("cy", d => y(+d.abs_diffsel));
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 }

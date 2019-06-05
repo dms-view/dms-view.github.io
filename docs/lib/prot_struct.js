@@ -1,5 +1,3 @@
-'use strict';
-
 // Define a global variable for protein structure application.
 var icn3dui;
 

@@ -10,23 +10,20 @@
 
 <body>
   <script>
-    var yellow = d3.interpolateYlGn(0), // "rgb(255, 255, 229)"
-      yellowGreen = d3.interpolateYlGn(0.5), // "rgb(120, 197, 120)"
-      green = d3.interpolateYlGn(1); // "rgb(0, 69, 41)"
-    var t = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]
-    var width = 500
-    console.log(d3.extent(t))
+  d3.csv("2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
+    var width = 500
     var countScale = d3.scaleLinear()
-      .domain(d3.extent(t))
+      .domain(d3.extent(d, d=>d.abs_diffsel))
       .range([0, width]);
 
+    console.log(d3.extent(d, d=>d.abs_diffsel));
     var colorScale = d3.scaleLinear()
-      .domain([0, d3.extent(t)[1] / 2, d3.extent(t)[1]])
+      .domain([0, d3.extent(d, d=>d.abs_diffsel)[1] / 2, d3.extent(d, d=>d.abs_diffsel)[1]])
       .range(d3.schemeReds[3]);
 
     var xScale = d3.scaleLinear()
-      .domain(d3.extent(t))
+      .domain(d3.extent(d, d=>d.abs_diffsel))
       .range([-width, width]);
 
     var svg = d3.select("body").append("svg")
@@ -42,7 +39,7 @@
       .attr("y1", "0%")
       .attr("y2", "0%");
 
-    var numStops = 10;
+    var numStops = 20;
 
     var countRange = countScale.domain();
     // index 2 is the substraction between max and min
@@ -51,31 +48,67 @@
     for (var i = 0; i < numStops; i++) {
       countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
     }
-    // create a color key based on the bar and attach it to a list to use a reference 
-    var colorKey = []
+    // create a color key based on the bar and attach it to a list to use a reference
+    var colorKey = {};
     for (var i = 0; i < numStops; i++) {
-      countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
+      //console.log(i);
+      colorKey["" + countPoint[i] + ""] = colorScale(countPoint[i]);
+      //console.log(colorKey[""+i+""]);
     }
+
+    console.log(colorKey);
+    // create gradient stops, at the same time also create a key for the amaino acid preferences
+
     gradient.selectAll("stop")
-      .data(d3.range(numStops))
-      .enter()
-      .append("stop")
-      .attr('class', 'start')
-      .attr("offset", function(d, i) {
-        return countScale(countPoint[i]) / width;
-      })
-      .attr("stop-color", function(d, i) {
-        return colorScale(countPoint[i]);
-      });
+    .data(d3.range(numStops))
+    .enter()
+    .append("stop")
+    .attr('class', 'start')
+    .attr("offset", function(d, i) {
+      return countScale(countPoint[i]) / width;
+    })
+    .attr("stop-color", function(d, i) {
+      return colorScale(countPoint[i]);
+    });
 
     svg.append("rect")
-      .attr("class", "legendRect")
-      .attr("x", 10)
-      .attr("y", 35)
-      .attr("width", 400)
-      .attr("height", 25)
-      .style("fill", "url(#svgGradient)");
+    .attr("class", "legendRect")
+    .attr("x", 20)
+    .attr("y", 35)
+    .attr("width", 380)
+    .attr("height", 25)
+    .style("fill", "url(#svgGradient)");
 
+
+    // Append title
+    svg.append("text")
+    .attr("class", "legendTitle")
+    .attr("x", 200)
+    .attr("y", 30)
+    .style("text-anchor", "middle")
+    .style("font-family", "'Open Sans', sans-serif")
+    .text("Amino Acid Preference");
+
+    // x axis scale
+    var xScale = d3.scaleLinear()
+      .range([20, 400])
+      .domain([0, Math.ceil(d3.extent(d, d=>d.abs_diffsel)[1])]);
+
+    // Define x-axis
+    var xAxis = d3.axisBottom()
+      .ticks(20)
+      .scale(xScale);
+
+    svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + (60) + ")")
+    .call(xAxis)
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-65)");
+    });
   </script>
 </body>
 

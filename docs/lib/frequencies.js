@@ -1,16 +1,23 @@
-"use strict";
-
 // Initial code based on https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89
 
 // Define functions for plotting.
 function plotSiteMutations(dataset) {
   // Create the line plot itself by adding a path, binding data, and running the line generator.
-  console.log(dataset);
-
   // Group site data by mutation in arrays to enable plotting one line per mutation.
-  dataset_by_mutation = d3.groups(dataset, function (d) {
-    return d.mutation;
-  });
+  if (dataset != undefined) {
+    dataset_by_mutation = d3.groups(dataset, d => d.mutation);
+  } else {
+    dataset_by_mutation = [];
+    dataset = [];
+  }
+
+  if (dataset.length == 0) {
+    d3.select("#missing_data_warning").style("display", "inline");
+  } else {
+    d3.select("#missing_data_warning").style("display", "none");
+  }
+
+  var colorScale = d3.scaleOrdinal(d3.schemeAccent);
 
   var line = d3.line().x(function (d) {
     return xScale(parseTime(d.timepoint));
@@ -19,7 +26,6 @@ function plotSiteMutations(dataset) {
   });
 
   var mutations = d3.select(".frequencies").selectAll(".line").data(dataset_by_mutation, function (key, values) {
-    console.log("key: " + key[1][0].site);
     return key[1][0].site;
   });
 
@@ -38,15 +44,27 @@ function plotSiteMutations(dataset) {
     return xScale(parseTime(d.timepoint));
   }).attr("cy", function (d) {
     return yScale(d.frequency);
-  }).attr("r", 7).attr("fill", function (d) {
-    return colorScale(d.mutation);
-  }).on("mouseover", function (a, b, c) {
+  }).attr("r", 7).attr("fill", d => colorScale(d.mutation)).on("mouseover", function (a, b, c) {
     console.log(a);
   }).on("mouseout", function () {});
   dots.exit().remove();
 
+  if (dataset.length > 0) {
+    legendTitle = "Mutations at " + dataset[0].gene + ":" + dataset[0].gene_site;
+  } else {
+    legendTitle = "";
+  }
+
+  var legend = d3.legendColor().title(legendTitle).scale(colorScale);
+
   // Update the legend to reflect the mutations at the selected site.
-  d3.select("svg").select(".legend").call(legend);
+  d3.select(".legend").call(legend);
+
+  if (dataset.length > 0) {
+    d3.select(".legendTitle").style("visibility", "visible").attr("transform", "translate(-100,0)");
+  } else {
+    d3.select(".legendTitle").style("visibility", "hidden");
+  }
 }
 
 // Selection site from dropdown.
@@ -56,9 +74,6 @@ function selectSite(data) {
   console.log("Select site: " + selectedSite);
   var siteFrequencies = frequenciesBySite.get(selectedSite);
   plotSiteMutations(siteFrequencies);
-
-  // Update the legend to reflect the mutations at the selected site.
-  d3.select("svg").select(".legend").call(legend);
 }
 
 // Setup plot and window margins.
@@ -78,11 +93,9 @@ var height = plotHeight - margin.top - margin.bottom;
 var parseTime = d3.timeParse("%Y-%m-%d");
 
 // Setup plot scales, axes, legend, and line generators.
-var xScale = d3.scaleTime().domain([parseTime("2010-10-01"), parseTime("2012-10-01")]).range([0, width]);
+var xScale = d3.scaleTime().range([0, width]);
 
 var yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
-
-var colorScale = d3.scaleOrdinal(d3.schemeAccent);
 
 var line = d3.line().x(function (d) {
   return xScale(parseTime(d.timepoint));
@@ -91,10 +104,13 @@ var line = d3.line().x(function (d) {
 }).curve(d3.curveMonotoneX);
 
 // Setup the plot container.
-var frequencies_svg = d3.select("#frequencies").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+var frequencies_svg = d3.select("#frequencies").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("id", "frequencies_panel").attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+
+// Add a warning message for missing data.
+var warning_rect = d3.select("#frequencies_panel").append("text").attr("id", "missing_data_warning").attr("transform", "translate(" + (width / 2 - margin.left) + ", " + height / 2 + ")").text("No frequency data available").style("font-size", "20px").style("display", "none");
 
 // Add the x-axis.
-frequencies_svg.append("g").attr("class", "x_axis").attr("transform", "translate(0, " + height + ")").call(d3.axisBottom(xScale));
+frequencies_svg.append("g").attr("class", "x_axis").attr("transform", "translate(0, " + height + ")");
 
 // Add an x-axis title. Why is this so complicated?
 frequencies_svg.append("text").attr("transform", "translate(" + width / 2 + ", " + (height + 40) + ")").style("text-anchor", "middle").text("Date");
@@ -107,9 +123,7 @@ frequencies_svg.append("text").attr("transform", "translate(" + margin.left / -2
 
 // Add a legend using Susie Lu's d3-legend:
 // https://d3-legend.susielu.com/#color
-frequencies_svg.append("g").attr("class", "legend").attr("transform", "translate(" + (width - 100) + ", " + "20)");
-
-var legend = d3.legendColor().title("Mutation").scale(colorScale);
+frequencies_svg.append("g").attr("class", "legend").attr("transform", "translate(" + (width + 20) + ", " + "20)");
 
 // Create a group to store the line and dots in.
 var g = frequencies_svg.append("g").attr("class", "frequencies");
@@ -124,11 +138,13 @@ var dropdown;
 d3.json("_data/frequencies.json").then(function (data) {
   // Plot one line per amino acid at a specified site with different color per line.
   // Multi-line plot based on http://bl.ocks.org/d3noob/88d2a87b72ea894c285c
-  frequencies = data["frequencies"];
-  frequenciesBySite = d3.group(data["frequencies"], function (d) {
-    return d.site;
-  });
+  frequencies = data;
+  frequenciesBySite = d3.group(frequencies, d => d.site);
   sites = Array.from(frequenciesBySite.keys());
+
+  // Update x-axis scale to the domain of the given data.
+  xScale.domain(d3.extent(frequencies, d => parseTime(d.timepoint)));
+  d3.select(".x_axis").call(d3.axisBottom(xScale));
 
   // Create a dropdown menu to populate with data.
   dropdown = d3.select("#frequencies").append("select");
@@ -143,5 +159,8 @@ d3.json("_data/frequencies.json").then(function (data) {
   var siteFrequencies = frequenciesBySite.get(sites[0]);
   plotSiteMutations(siteFrequencies);
 
-  frequencies_svg.select(".legend").call(legend);
+  // Update circles in the line plot to reflect which sites have frequency data or not.
+  d3.select(".focus").selectAll(".non_brushed").classed("has_data", function (d) {
+    return frequenciesBySite.has(+d.site);
+  });
 });

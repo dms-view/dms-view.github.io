@@ -1,5 +1,3 @@
-"use strict";
-
 var margin = {
   top: 20,
   right: 0,
@@ -16,7 +14,7 @@ var y = d3.scaleLinear().range([plot_dy, margin.top]);
 
 var svg = d3.select("#selection_chart").selectAll('div').append("svg").attr("width", svg_dx).attr("height", svg_dy);
 
-d3.csv("_data/line-data.csv", function (d) {
+d3.csv("_data/line-data.csv", d => {
 
   // define the line
   var valueline = d3.line().x(function (d) {
@@ -27,12 +25,8 @@ d3.csv("_data/line-data.csv", function (d) {
 
   var n = d.length;
 
-  var d_extent_x = d3.extent(d, function (d) {
-    return +d.site;
-  });
-  var d_extent_y = d3.extent(d, function (d) {
-    return +d.abs_diffsel;
-  });
+  var d_extent_x = d3.extent(d, d => +d.site);
+  var d_extent_y = d3.extent(d, d => +d.abs_diffsel);
 
   x.domain(0, d_extent_x);
   y.domain(0, d_extent_y);
@@ -51,11 +45,7 @@ d3.csv("_data/line-data.csv", function (d) {
   // Add the valueline path.
   svg.append("path").data([d]).attr("class", "line").attr("d", valueline);
 
-  var circles = svg.append("g").selectAll("circle").data(d).enter().append("circle").attr("r", 5).attr("cx", function (d) {
-    return x(+d.site);
-  }).attr("cy", function (d) {
-    return y(+d.abs_diffsel);
-  }).attr("class", "non_brushed");
+  var circles = svg.append("g").selectAll("circle").data(d).enter().append("circle").attr("r", 5).attr("cx", d => x(+d.site)).attr("cy", d => y(+d.abs_diffsel)).attr("class", "non_brushed");
 
   function highlightBrushedCircles() {
 
@@ -90,9 +80,7 @@ d3.csv("_data/line-data.csv", function (d) {
     // populate table if one or more elements is brushed
     if (d_brushed.length > 0) {
       clearTableRows();
-      d_brushed.forEach(function (d_row) {
-        return populateTableRow(d_row);
-      });
+      d_brushed.forEach(d_row => populateTableRow(d_row));
     } else {
       clearTableRows();
     }
@@ -132,9 +120,5 @@ function populateTableRow(d_row) {
 
   var d_row_filter = [d_row.site, d_row.abs_diffsel];
 
-  d3.select("#table").append("tr").attr("class", "row_data").selectAll("td").data(d_row_filter).enter().append("td").attr("align", function (d, i) {
-    return i == 0 ? "left" : "right";
-  }).text(function (d) {
-    return d;
-  });
+  d3.select("#table").append("tr").attr("class", "row_data").selectAll("td").data(d_row_filter).enter().append("td").attr("align", (d, i) => i == 0 ? "left" : "right").text(d => d);
 }
