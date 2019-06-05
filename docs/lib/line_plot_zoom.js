@@ -103,6 +103,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     const selectedSite = parseInt(d.site);
     const selectedChain = d.chain;
     const selectedChainSite = d.chain_site;
+    const selectedAbsDiffsel = Math.ceil(d.abs_diffsel);
     var colors = sessionStorage.getItem("colorTest");
     color_key = JSON.parse(colors);
 
@@ -120,8 +121,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
       var blue = rgbToHex(b);
       return red + green + blue;
     };
-    console.log(d3.rgb(color_key[1]).r);
-    console.log(fullColorHex(d3.rgb(color_key[1]).r, d3.rgb(color_key[1]).g, d3.rgb(color_key[1]).b));
+
     d3.select(".focus").selectAll("circle").classed("selected", false);d3.select(this).classed("selected", true);
 
     // Highlight the selected site on the protein structure.
@@ -129,7 +129,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     icn3dui.setOption('color', 'a87a89');
     icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
     //icn3dui.setOption('color', document.getElementById("myColor").value);
-    icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[10]).r, d3.rgb(color_key[10]).g, d3.rgb(color_key[10]).b));
+    icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
 
     // Update frequencies, if any exist for the selected site.
     var siteFrequencies = frequenciesBySite.get(selectedSite);
