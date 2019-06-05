@@ -25,6 +25,8 @@ $(document).ready(function () {
   $.when(icn3dui.show3DStructure(), icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb"), icn3dui.hideMenu()).then(function () {
     icn3dui.selectByCommand(".A,B");
     icn3dui.showSelection();
+    icn3dui.rotStruc("right");
+    icn3dui.rotStruc("down");
     document.getElementById("remove_selections").addEventListener("click", function () {
       icn3dui.setOption('color', 'a87a89');
     });
