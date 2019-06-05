@@ -66,15 +66,31 @@ function plotSiteMutations(dataset) {
       console.log(a);
     })
     .on("mouseout", function() {});
-    dots.exit().remove();
+  dots.exit().remove();
+
+  if (dataset.length > 0) {
+    legendTitle = "Mutations at " + dataset[0].gene + ":" + dataset[0].gene_site;
+  }
+  else {
+    legendTitle = "";
+  }
 
   var legend = d3.legendColor()
-    .title("Mutation")
+    .title(legendTitle)
     .scale(colorScale);
 
   // Update the legend to reflect the mutations at the selected site.
   d3.select(".legend")
     .call(legend);
+
+  if (dataset.length > 0) {
+    d3.select(".legendTitle")
+      .style("visibility", "visible")
+      .attr("transform", "translate(-100,0)");
+  }
+  else {
+    d3.select(".legendTitle").style("visibility", "hidden");
+  }
 }
 
 // Selection site from dropdown.
