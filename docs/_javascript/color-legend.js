@@ -1,6 +1,6 @@
 d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
-  var width = 300;
+  var width = 380;
   var countScale = d3.scaleLinear()
     .domain(d3.extent(d, d=>+d.abs_diffsel))
     .range([0, width]);
@@ -16,8 +16,8 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .range([-width, width]);
 
   var svg = d3.select("#colorKeydiv").append("svg")
-    .attr("width", 350)
-    .attr("height", 300);
+    .attr("width", 380)
+    .attr("height", 100);
 
   var defs = svg.append("defs");
 
@@ -66,7 +66,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   .attr("class", "legendRect")
   .attr("x", 20)
   .attr("y", 20)
-  .attr("width", 300)
+  .attr("width", 350)
   .attr("height", 25)
   .style("fill", "url(#svgGradient)");
 
@@ -82,7 +82,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
   // x axis scale
   var xScale = d3.scaleLinear()
-    .range([20, 300])
+    .range([20, 350])
     .domain([0, Math.ceil(d3.extent(d, d=>+d.abs_diffsel)[1])]);
 
   // Define x-axis
@@ -92,11 +92,12 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
   svg.append("g")
   .attr("class", "axis")
-  .attr("transform", "translate(0," + (50) + ")")
+  .style("width", 350)
+  .attr("transform", "translate(10," + (50) + ")")
   .call(xAxis)
   .selectAll("text")
-  .style("text-anchor", "end")
+  .style("text-anchor", "middle")
   .attr("dx", "-.8em")
   .attr("dy", ".15em")
-  .attr("transform", "rotate(-65)");
+  .attr("transform", "translate(8, 5)");
   });

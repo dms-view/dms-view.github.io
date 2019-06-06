@@ -38,6 +38,12 @@ tr:nth-child(even) {
 }
 
 #icn3dwrap_viewer {
-  height: 500px!important;
-  width: 350px;
+  height: 475px!important;
+  width: 375;
+}
+
+.list-group-item {
+    font-size: 12px;
+    padding: 0;
+    padding-left: 0.25em;
 }
