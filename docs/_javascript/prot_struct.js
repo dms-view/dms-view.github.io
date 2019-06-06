@@ -3,8 +3,8 @@ var icn3dui;
 
 $(document).ready(function() {
     var options = {};
-    options['proteins'] = 'sphere';
-    options['color'] = 'a87a89';
+    options['proteins'] = 'ribbon';
+    options['color'] = 'grey';
     options['pk'] = 'residue';
 
     var cfg = {
