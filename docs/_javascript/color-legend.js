@@ -5,10 +5,11 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .domain(d3.extent(d, d=>+d.abs_diffsel))
     .range([0, width]);
 
-  console.log(d3.max(d, d=>+d.abs_diffsel));
-  var colorScale = d3.scaleLinear()
-    .domain([0, d3.extent(d, d=>+d.abs_diffsel)[1] / 2, d3.extent(d, d=>+d.abs_diffsel)[1]])
-    .range(d3.schemeReds[3]);
+
+  var colorScale = d3.scaleSequential()
+    .domain([0, d3.extent(d, d=>+d.abs_diffsel)[1]])
+    .interpolator(d3.interpolateViridis);
+    //range(d3.schemeBuPu[6]);
 
   var xScale = d3.scaleLinear()
     .domain(d3.extent(d, d=>+d.abs_diffsel))
@@ -27,7 +28,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .attr("y1", "0%")
     .attr("y2", "0%");
 
-  var numStops = 20;
+  var numStops = 16;
 
   var countRange = countScale.domain();
   // index 2 is the substraction between max and min

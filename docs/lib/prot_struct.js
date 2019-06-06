@@ -4,8 +4,9 @@ var icn3dui;
 $(document).ready(function () {
   var options = {};
   options['proteins'] = 'sphere';
-  options['color'] = 'a87a89';
+  options['color'] = 'grey';
   options['pk'] = 'residue';
+  options['background'] = 'white';
 
   var cfg = {
     divid: 'icn3dwrap',
@@ -13,11 +14,11 @@ $(document).ready(function () {
     height: 400,
     resize: false,
     rotate: 'none',
-    url: "4O5N_trimer.pdb",
-    type: "pdb",
-    //pdbid: '1TUP',
+    url: "?type=pdb&url=https%3A%2F%2Fwww.rcsb.org%2Fstructure%2F4O5N",
+    //pdbid: '4O5N',
     showcommand: true
   };
+  cfg;
 
   if (Object.keys(options).length > 0) cfg['options'] = options;
   icn3dui = new iCn3DUI(cfg);
@@ -28,7 +29,7 @@ $(document).ready(function () {
     icn3dui.rotStruc("right");
     icn3dui.rotStruc("down");
     document.getElementById("remove_selections").addEventListener("click", function () {
-      icn3dui.setOption('color', 'a87a89');
+      icn3dui.setOption('color', "grey");
     });
     // the below button allows a png export of the protein structure
     document.getElementById("save_image").addEventListener("click", function () {

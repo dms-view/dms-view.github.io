@@ -197,8 +197,10 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
               // Highlight the selected site on the protein structure.
               icn3dui.selectByCommand(".A,B");
               icn3dui.setOption('color', 'grey');
+              icn3dui.setStyle("proteins", "sphere");
               icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
               //icn3dui.setOption('color', document.getElementById("myColor").value);
+              icn3dui.setStyle("prtoeins", "sphere");
               icn3dui.setOption('color', fullColorHex( d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b ));
 
               // Update frequencies, if any exist for the selected site.
