@@ -38,7 +38,7 @@ tr:nth-child(even) {
 }
 
 #icn3dwrap_viewer {
-  height: 475px!important;
+  height: 455px!important;
   width: 375;
 }
 
@@ -46,4 +46,8 @@ tr:nth-child(even) {
     font-size: 12px;
     padding: 0;
     padding-left: 0.25em;
+}
+
+.frequencies .dot {
+    opacity: 0.75;
 }

@@ -76,6 +76,8 @@ function plotSiteMutations(dataset) {
   }
 
   var legend = d3.legendColor()
+    .shapeWidth(30)
+    .orient("horizontal")
     .title(legendTitle)
     .scale(colorScale);
 
@@ -86,7 +88,10 @@ function plotSiteMutations(dataset) {
   if (dataset.length > 0) {
     d3.select(".legendTitle")
       .style("visibility", "visible")
-      .attr("transform", "translate(-100,0)");
+      .attr("transform", "translate(-100,-7)");
+
+    d3.select(".legendCells")
+      .attr("transform", "translate(65,-20)");
   }
   else {
     d3.select(".legendTitle").style("visibility", "hidden");
@@ -109,7 +114,7 @@ var plotHeight = 250;
 var margin = ({
   top: 10,
   right: 20,
-  bottom: 50,
+  bottom: 70,
   left: 45
 });
 var width = plotWidth - margin.left - margin.right;
@@ -179,7 +184,7 @@ frequencies_svg.append("text")
 // https://d3-legend.susielu.com/#color
 frequencies_svg.append("g")
   .attr("class", "legend")
-  .attr("transform", "translate(" + (width - 50) + ", " + "20)");
+  .attr("transform", "translate(" + (margin.left + 55) + ", " + (height + 50) + ")");
 
 // Create a group to store the line and dots in.
 var g = frequencies_svg.append("g")
