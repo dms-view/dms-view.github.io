@@ -103,14 +103,14 @@ function selectSite(data) {
 }
 
 // Setup plot and window margins.
-var plotWidth = 1024;
-var plotHeight = 400;
+var plotWidth = 760;
+var plotHeight = 250;
 
 var margin = ({
-  top: 50,
-  right: 100,
+  top: 10,
+  right: 20,
   bottom: 50,
-  left: 100
+  left: 45
 });
 var width = plotWidth - margin.left - margin.right;
 var height = plotHeight - margin.top - margin.bottom;
@@ -147,7 +147,8 @@ var frequencies_svg = d3.select("#frequencies").append("svg")
 var warning_rect = d3.select("#frequencies_panel")
   .append("text")
   .attr("id", "missing_data_warning")
-  .attr("transform", "translate(" + ((width / 2) - margin.left) + ", " + (height / 2) + ")")
+  .attr("transform", "translate(" + ((width / 2)) + ", " + (height / 2) + ")")
+  .style("text-anchor", "middle")
   .text("No frequency data available")
   .style("font-size", "20px")
   .style("display", "none");
@@ -170,7 +171,7 @@ frequencies_svg.append("g")
 
 // Add an y-axis title. Again: why is this so complicated?
 frequencies_svg.append("text")
-  .attr("transform", "translate(" + (margin.left / -2) + ", " + (height / 2) + ") rotate(-90)")
+  .attr("transform", "translate(" + -(margin.left - 12) + ", " + (height / 2) + ") rotate(-90)")
   .style("text-anchor", "middle")
   .text("Frequency");
 
@@ -178,7 +179,7 @@ frequencies_svg.append("text")
 // https://d3-legend.susielu.com/#color
 frequencies_svg.append("g")
   .attr("class", "legend")
-  .attr("transform", "translate(" + (width + 20) + ", " + "20)");
+  .attr("transform", "translate(" + (width - 50) + ", " + "20)");
 
 // Create a group to store the line and dots in.
 var g = frequencies_svg.append("g")
@@ -204,19 +205,19 @@ d3.json("_data/frequencies.json").then(function(data) {
     .call(d3.axisBottom(xScale));
 
   // Create a dropdown menu to populate with data.
-  dropdown = d3.select("#frequencies").append("select");
-  dropdown.selectAll("option")
-    .data(sites)
-    .enter()
-    .append("option")
-    .text(function(d) {
-      return d;
-    })
-    .attr("value", function(d) {
-      return d;
-    });
-  dropdown.on("change", selectSite);
-
+    /* dropdown = d3.select("#frequencies").append("select");
+     * dropdown.selectAll("option")
+     *   .data(sites)
+     *   .enter()
+     *   .append("option")
+     *   .text(function(d) {
+     *     return d;
+     *   })
+     *   .attr("value", function(d) {
+     *     return d;
+     *   });
+     * dropdown.on("change", selectSite);
+     */
 
   // Plot frequencies for the first site by default.
   var siteFrequencies = frequenciesBySite.get(sites[0]);

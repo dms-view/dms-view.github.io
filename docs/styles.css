@@ -1,0 +1,43 @@
+.line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 2px;
+}
+
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
+tr:nth-child(even) {
+    background-color: #d9d9d9;
+}
+
+.focus circle.non_brushed {
+  fill: #999999;
+}
+
+.focus circle.has_data {
+  fill: #000000;
+}
+
+.focus circle.hovered {
+  r: 8;
+  fill: blue;
+}
+
+.focus circle.selected {
+  r: 8;
+  fill: red;
+}
+
+#icn3dwrap_viewer {
+  height: 500px!important;
+  width: 350px;
+}

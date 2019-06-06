@@ -1,6 +1,6 @@
 d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
-  var width = 500
+  var width = 300;
   var countScale = d3.scaleLinear()
     .domain(d3.extent(d, d=>+d.abs_diffsel))
     .range([0, width]);
@@ -16,7 +16,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .range([-width, width]);
 
   var svg = d3.select("#colorKeydiv").append("svg")
-    .attr("width", 500)
+    .attr("width", 350)
     .attr("height", 300);
 
   var defs = svg.append("defs");
@@ -65,8 +65,8 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   svg.append("rect")
   .attr("class", "legendRect")
   .attr("x", 20)
-  .attr("y", 35)
-  .attr("width", 380)
+  .attr("y", 20)
+  .attr("width", 300)
   .attr("height", 25)
   .style("fill", "url(#svgGradient)");
 
@@ -74,15 +74,15 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   // Append title
   svg.append("text")
   .attr("class", "legendTitle")
-  .attr("x", 200)
-  .attr("y", 30)
+  .attr("x", 175)
+  .attr("y", 85)
   .style("text-anchor", "middle")
   .style("font-family", "'Open Sans', sans-serif")
-  .text("Amino Acid Preference");
+  .text("Absolute differential selection");
 
   // x axis scale
   var xScale = d3.scaleLinear()
-    .range([20, 400])
+    .range([20, 300])
     .domain([0, Math.ceil(d3.extent(d, d=>+d.abs_diffsel)[1])]);
 
   // Define x-axis
@@ -92,7 +92,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
   svg.append("g")
   .attr("class", "axis")
-  .attr("transform", "translate(0," + (60) + ")")
+  .attr("transform", "translate(0," + (50) + ")")
   .call(xAxis)
   .selectAll("text")
   .style("text-anchor", "end")

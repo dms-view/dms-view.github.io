@@ -10,13 +10,13 @@ $(document).ready(function() {
 
     var cfg = {
       divid: 'icn3dwrap',
-      width: 600,
-      height: 400,
+      width: 350,
+      height: 500,
       resize: false,
       rotate: 'none',
       url:"?type=pdb&url=https%3A%2F%2Fwww.rcsb.org%2Fstructure%2F4O5N",
       //pdbid: '4O5N',
-      showcommand: true,
+      showcommand: false,
     };
     cfg
 
@@ -33,20 +33,20 @@ $(document).ready(function() {
       icn3dui.showSelection();
       icn3dui.rotStruc("right");
       icn3dui.rotStruc("down");
-      document.getElementById("remove_selections").addEventListener("click", function() {
-        icn3dui.setOption('color', "grey");
-      });
-      // the below button allows a png export of the protein structure
-      document.getElementById("save_image").addEventListener("click", function() {
-        icn3dui.saveFile("test.png", 'png');
-      });
-      document.getElementById("send_state").addEventListener("click", function() {
-        icn3dui.shareLink();
-      });
-      document.getElementById("upload_pdb").addEventListener("click", function() {
-        icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb");
-      });
 
+        /* document.getElementById("remove_selections").addEventListener("click", function() {
+         *   icn3dui.setOption('color', "grey");
+         * });
+         * // the below button allows a png export of the protein structure
+         * document.getElementById("save_image").addEventListener("click", function() {
+         *   icn3dui.saveFile("test.png", 'png');
+         * });
+         * document.getElementById("send_state").addEventListener("click", function() {
+         *   icn3dui.shareLink();
+         * });
+         * document.getElementById("upload_pdb").addEventListener("click", function() {
+         *   icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb");
+         * });*/
     });
 
   });

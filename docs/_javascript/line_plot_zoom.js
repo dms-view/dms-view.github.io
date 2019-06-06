@@ -1,20 +1,26 @@
+// Dynamically get the width of the line plot's parent div.
+//var divWidth = +d3.select("#line_plot").style("width").slice(0, -2) * 0.9;
+//var divHeight = divWidth / 1.61;
+var divWidth = 760;
+var divHeight = 350;
+
 // set up the margins in the plot
 // at one point the `svg_dy` was too small and the curve was under the
 // axis and the brush box was not showing up.
 var margin = {
-    top: 20,
+    top: divHeight * 0.04,
     right: 20,
-    bottom: 150,
+    bottom: divHeight * (1 / 3),
     left: 40
   },
   margin2 = {
-    top: 400,
+    top: divHeight * (4 / 5),
     right: 20,
-    bottom: 20,
+    bottom: divHeight * 0.1,
     left: 40
   },
-  svg_dx = 1050,
-  svg_dy = 500,
+  svg_dx = divWidth,
+  svg_dy = divHeight,
   plot_dx = svg_dx - margin.right - margin.left,
   plot_dy = svg_dy - margin.top - margin.bottom,
   plot_dy2 = svg_dy - margin2.top - margin2.bottom;
@@ -192,7 +198,8 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
                 return red + green + blue;
               };
 
-              d3.select(".focus").selectAll("circle").classed("selected", false); d3.select(this).classed("selected", true);
+            d3.select(".focus").selectAll("circle").classed("selected", false);
+            d3.select(this).classed("selected", true);
 
               // Highlight the selected site on the protein structure.
               icn3dui.selectByCommand(".A,B");
@@ -200,7 +207,6 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
               icn3dui.setStyle("proteins", "sphere");
               icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
               //icn3dui.setOption('color', document.getElementById("myColor").value);
-              icn3dui.setStyle("prtoeins", "sphere");
               icn3dui.setOption('color', fullColorHex( d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b ));
 
               // Update frequencies, if any exist for the selected site.
@@ -224,15 +230,16 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
           .attr("id", "axis_y")
           .call(yAxis);
 
-          d3.select("#axis_x")
-          .append("text")
-          .attr("transform", "translate(1000, 10)")
-          .text("Site");
+          svg
+            .append("text")
+            .attr("transform", "translate(" + (svg_dx / 2) + ", " + (plot_dy + 50)  + ")")
+            .style("text-anchor", "middle")
+            .text("Site");
 
-          d3.select("#axis_y")
+          svg
           .append("text")
-          .attr("transform", "rotate(-90) translate(-20, 15)")
-          .text("abs_diffsel Value");
+          .attr("transform", "translate(" + (12) + ", " + (plot_dy + 30)  + ") rotate(-90)")
+          .text("Absolute differential selection");
 
           // make the smaller plot (called context in the tutorial)
           context.append("path")
