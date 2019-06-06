@@ -1,6 +1,6 @@
 d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
-  var width = 500;
+  var width = 380;
   var countScale = d3.scaleLinear().domain(d3.extent(d, d => +d.abs_diffsel)).range([0, width]);
 
   var colorScale = d3.scaleSequential().domain([0, d3.extent(d, d => +d.abs_diffsel)[1]]).interpolator(d3.interpolateViridis);
@@ -8,7 +8,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
   var xScale = d3.scaleLinear().domain(d3.extent(d, d => +d.abs_diffsel)).range([-width, width]);
 
-  var svg = d3.select("#colorKeydiv").append("svg").attr("width", 500).attr("height", 300);
+  var svg = d3.select("#colorKeydiv").append("svg").attr("width", 380).attr("height", 100);
 
   var defs = svg.append("defs");
 
@@ -42,16 +42,17 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     return colorScale(countPoint[i]);
   });
 
-  svg.append("rect").attr("class", "legendRect").attr("x", 20).attr("y", 35).attr("width", 380).attr("height", 25).style("fill", "url(#svgGradient)");
+  svg.append("rect").attr("class", "legendRect").attr("x", 20).attr("y", 20).attr("width", 350).attr("height", 25).style("fill", "url(#svgGradient)");
 
   // Append title
-  svg.append("text").attr("class", "legendTitle").attr("x", 200).attr("y", 30).style("text-anchor", "middle").style("font-family", "'Open Sans', sans-serif").text("Amino Acid Preference");
+  svg.append("text").attr("class", "legendTitle").attr("x", 175).attr("y", 85).style("text-anchor", "middle").style("font-family", "'Open Sans', sans-serif").text("Absolute differential selection");
 
   // x axis scale
-  var xScale = d3.scaleLinear().range([20, 400]).domain([0, Math.ceil(d3.extent(d, d => +d.abs_diffsel)[1])]);
+  var xScale = d3.scaleLinear().range([20, 350]);
+  //.domain([0, Math.ceil(d3.extent(d, d=>+d.abs_diffsel)[1])]);
 
   // Define x-axis
   var xAxis = d3.axisBottom().ticks(20).scale(xScale);
 
-  svg.append("g").attr("class", "axis").attr("transform", "translate(0," + 60 + ")").call(xAxis).selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+  svg.append("g").attr("class", "axis").style("width", 350).attr("transform", "translate(10," + 50 + ")").call(xAxis).selectAll("text").style("text-anchor", "middle").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "translate(8, 5)");
 });

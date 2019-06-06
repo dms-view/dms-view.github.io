@@ -5,7 +5,6 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .domain(d3.extent(d, d=>+d.abs_diffsel))
     .range([0, width]);
 
-
   var colorScale = d3.scaleSequential()
     .domain([0, d3.extent(d, d=>+d.abs_diffsel)[1]])
     .interpolator(d3.interpolateViridis);
@@ -81,14 +80,15 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   .text("Absolute differential selection");
 
   // x axis scale
-  var xScale = d3.scaleLinear()
+  var xScale = d3.scaleOrdinal()
     .range([20, 350])
-    .domain([0, Math.ceil(d3.extent(d, d=>+d.abs_diffsel)[1])]);
+    .domain([Math.ceil(d3.extent(d, d=>+d.abs_diffsel))]);
 
   // Define x-axis
   var xAxis = d3.axisBottom()
-    .ticks(20)
-    .scale(xScale);
+  .ticks(2)
+  .tickValues(["HIGH", "LOW"])
+  .scale(xScale);
 
   svg.append("g")
   .attr("class", "axis")
@@ -97,7 +97,8 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   .call(xAxis)
   .selectAll("text")
   .style("text-anchor", "middle")
+  .style("font-size", "16px")
   .attr("dx", "-.8em")
-  .attr("dy", ".15em")
+  .attr("dy", ".40em")
   .attr("transform", "translate(8, 5)");
   });
