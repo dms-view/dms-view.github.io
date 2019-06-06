@@ -173,6 +173,11 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
         .on("mouseover", showTooltip)
         .on("mouseout", hideTooltip)
         .on("click", function(d) {
+            if (!d3.select(".focus .selected").empty() && d3.select(".focus .selected").datum().site == d.site) {
+                console.log("Site " + d.site + " already selected, doing nothing.");
+                return;
+            }
+
             console.log("Select site: " + d.site);
             const selectedSite = parseInt(d.site);
             const selectedChain = d.chain;
