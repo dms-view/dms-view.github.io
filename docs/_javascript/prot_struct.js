@@ -25,8 +25,9 @@ $(document).ready(function() {
 
     $.when(
       icn3dui.show3DStructure(),
-      icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb"),
-      icn3dui.hideMenu()
+      icn3dui.hideMenu(),
+      icn3dui.setLogWindow(),
+      icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb")
     ).then(function() {
       icn3dui.selectByCommand(".A,B");
       icn3dui.showSelection();
@@ -45,7 +46,7 @@ $(document).ready(function() {
         icn3dui.shareLink();
       });
       document.getElementById("upload_pdb").addEventListener("click", function() {
-        icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb");
+        icn3dui.saveFile("test_file.txt", "text");
       });
     });
 
