@@ -1,7 +1,7 @@
 .line {
   fill: none;
   stroke: grey;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
 
 .area {
@@ -20,11 +20,15 @@ tr:nth-child(even) {
 }
 
 .focus circle.non_brushed {
-  fill: #999999;
+    fill: #999999;
+    opacity: 0.5;
+    r: 4;
 }
 
 .focus circle.has_data {
-  fill: #000000;
+    fill: #000000;
+    opacity: 1;
+    r: 5;
 }
 
 .focus circle.hovered {
