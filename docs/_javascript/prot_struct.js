@@ -16,7 +16,8 @@ $(document).ready(function() {
       rotate: 'none',
       url:"?type=pdb&url=https%3A%2F%2Fwww.rcsb.org%2Fstructure%2F4O5N",
       //pdbid: '4O5N',
-      showcommand: false,
+      showmenu:false,
+      showcommand: false
     };
     cfg
 
@@ -25,8 +26,6 @@ $(document).ready(function() {
 
     $.when(
       icn3dui.show3DStructure(),
-      icn3dui.hideMenu(),
-      icn3dui.setLogWindow(),
       icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb")
     ).then(function() {
       icn3dui.selectByCommand(".A,B");
@@ -45,8 +44,15 @@ $(document).ready(function() {
       document.getElementById("send_state").addEventListener("click", function() {
         icn3dui.shareLink();
       });
-      document.getElementById("upload_pdb").addEventListener("click", function() {
-        icn3dui.saveFile("test_file.txt", "text");
+      document.getElementById("confirm").addEventListener("click", function() {
+        cfg['showcommand'] = true;
+        cfg['options'] = options
+        icn3dui = new iCn3DUI(cfg);
+        icn3dui.show3DStructure();
+        icn3dui.downloadUrl("_data/4O5N_trimer.pdb", "pdb");
+        icn3dui.selectByCommand(".A,B");
+        icn3dui.showSelection();
+        //icn3dui.saveFile("test_file.txt", "text");
       });
     });
 

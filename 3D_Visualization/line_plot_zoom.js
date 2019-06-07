@@ -25,7 +25,7 @@ var x = d3.scaleLinear().range([margin.left, plot_dx]),
 y2 = d3.scaleLinear().range([plot_dy2, margin.top]);
 
 // actually create the chart
-var svg = d3.select("#chart")
+var svg = d3.select("#line_plot")
   .append("svg")
   .attr("width", svg_dx)
   .attr("height", svg_dy);
@@ -88,7 +88,7 @@ var valueline = d3.line()
   });
 
 // define tooltip not working currently
-var tooltip = d3.select("#chart")
+var tooltip = d3.select("#line_plot")
   .append("div")
   .style("font-family", "'Open Sans', sans-serif")
   .style("position", "relative")
@@ -174,6 +174,12 @@ var circleAttributes = circlePoint
     .attr("class", "brush")
     .call(brush)
     .call(brush.move, x.range());
+
+  context.append("rect")
+  .attr("height", 50)
+  .attr("width", 20)
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  .style("fill", "grey");
 
   svg.append("rect")
     .attr("class", "zoom")

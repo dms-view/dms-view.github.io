@@ -54,3 +54,6 @@ tr:nth-child(even) {
 .frequencies .dot {
     opacity: 0.75;
 }
+.rect {
+    fill: #ffab00;
+}
