@@ -17,7 +17,3 @@ document.getElementById("confirm").onclick = function() {
 document.getElementById("cancel").onclick = function(event) {
     modal.style.display = "none";
 }
-
-document.getElementById("close").onclick = function(event) {
-    modal.style.display = "none";
-}
