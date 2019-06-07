@@ -178,6 +178,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
                 return;
             }
 
+
             console.log("Select site: " + d.site);
             const selectedSite = parseInt(d.site);
             const selectedChain = d.chain;
@@ -204,7 +205,9 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
               };
 
             d3.select(".focus").selectAll("circle").classed("selected", false);
-            d3.select(this).classed("selected", true);
+            d3.select(".focus").selectAll("circle").style("fill","#999999" );
+            d3.select(this).classed("selected", true).style("fill",color_key[selectedAbsDiffsel] );
+            //d3.select(this)
 
               // Highlight the selected site on the protein structure.
               icn3dui.selectByCommand(".A,B");

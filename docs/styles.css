@@ -36,6 +36,9 @@ tr:nth-child(even) {
   r: 8;
   fill: red;
 }
+.focus circle.deselected {
+  fill: #999999;
+}
 
 #icn3dwrap_viewer {
   height: 455px!important;
