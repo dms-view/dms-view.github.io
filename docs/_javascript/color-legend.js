@@ -72,8 +72,8 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
   // Append title
   svg.append("text")
-  .attr("class", "legendTitle")
-  .attr("x", 175)
+  .attr("class", "colorLegendTitle")
+  .attr("x", 200)
   .attr("y", 85)
   .style("text-anchor", "middle")
   .style("font-family", "'Open Sans', sans-serif")

@@ -26,17 +26,17 @@ function plotSiteMutations(dataset) {
       return xScale(parseTime(d.timepoint));
     })
     .y(function(d) {
-      return yScale(d.frequency);
+      return yScale(d.frequency * 100);
     });
 
   var mutations = d3.select(".frequencies")
-    .selectAll(".line")
+    .selectAll(".frequency_line")
     .data(dataset_by_mutation, function(key, values) {
       return key[1][0].site;
     });
 
   mutations.enter().append("path")
-    .attr("class", "line")
+    .attr("class", "frequency_line")
     .attr("stroke-width", 2)
     .attr("stroke", function(d) {
       return colorScale(d[1][0].mutation);
@@ -48,25 +48,38 @@ function plotSiteMutations(dataset) {
   mutations.exit().remove();
 
   // Add a circle for each observed data point.
-  var dots = d3.select(".frequencies").selectAll(".dot")
-    .data(dataset, function(d) {
-      return d.site;
-    });
-  dots.enter().append("circle")
-    .attr("class", "dot")
-    .attr("cx", function(d) {
-      return xScale(parseTime(d.timepoint));
-    })
-    .attr("cy", function(d) {
-      return yScale(d.frequency);
-    })
-    .attr("r", 7)
-    .attr("fill", d => colorScale(d.mutation))
-    .on("mouseover", function(a, b, c) {
-      console.log(a);
-    })
-    .on("mouseout", function() {});
-  dots.exit().remove();
+    var dots = d3.select(".frequencies").selectAll(".label")
+                 .data(dataset, function(d) {
+                     return d.site;
+                 });
+
+    var labels = dots
+        .enter().append("g")
+        .attr("class", "label")
+        .attr("transform", function (d) { return "translate(" + xScale(parseTime(d.timepoint)) + "," + yScale(d.frequency * 100) + ")"; });
+
+    labels
+        .append("text")
+        .attr("dx", "-0.5em")
+        .attr("dy", "0.35em")
+        .text(function (d) { return parseFloat(d.frequency * 100).toFixed(0); })
+        .filter(function (d) { return (d.timepoint == dataset[dataset.length - 1].timepoint) | (d.timepoint == dataset[0].timepoint); })
+        .append("tspan")
+        .attr("class", "label-key")
+        .attr("dy", "0.05em")
+        .style("fill", function (d) { return colorScale(d.mutation); } )
+        .text(function (d) { return d.mutation; });
+
+    var labelPadding = 3;
+    labels.insert("rect", "text")
+        .datum(function () { return this.nextSibling.getBBox(); } )
+        .attr("dy", "0.35em")
+        .attr("x", function (d) { return d.x - labelPadding; })
+        .attr("y", function (d) { return d.y / 2 - labelPadding; })
+        .attr("width", function (d) { return d.width + 2 * labelPadding; })
+        .attr("height", function (d) { return d.height - 2 * labelPadding; });
+
+    dots.exit().remove();
 
   if (dataset.length > 0) {
     legendTitle = "Mutations at " + dataset[0].gene + ":" + dataset[0].gene_site;
@@ -82,8 +95,8 @@ function plotSiteMutations(dataset) {
     .scale(colorScale);
 
   // Update the legend to reflect the mutations at the selected site.
-  d3.select(".legend")
-    .call(legend);
+  //d3.select(".legend")
+  //  .call(legend);
 
   if (dataset.length > 0) {
     d3.select(".legendTitle")
@@ -113,8 +126,8 @@ var plotHeight = 250;
 
 var margin = ({
   top: 10,
-  right: 20,
-  bottom: 70,
+  right: 40,
+  bottom: 40,
   left: 45
 });
 var width = plotWidth - margin.left - margin.right;
@@ -128,7 +141,7 @@ var xScale = d3.scaleTime()
   .range([0, width]);
 
 var yScale = d3.scaleLinear()
-  .domain([0, 1])
+  .domain([0, 100])
   .range([height, 0]);
 
 var line = d3.line()
@@ -136,7 +149,7 @@ var line = d3.line()
     return xScale(parseTime(d.timepoint));
   })
   .y(function(d) {
-    return yScale(d.frequency);
+    return yScale(d.frequency * 100);
   })
   .curve(d3.curveMonotoneX);
 
@@ -178,7 +191,7 @@ frequencies_svg.append("g")
 frequencies_svg.append("text")
   .attr("transform", "translate(" + -(margin.left - 12) + ", " + (height / 2) + ") rotate(-90)")
   .style("text-anchor", "middle")
-  .text("Frequency");
+  .text("Frequency (%)");
 
 // Add a legend using Susie Lu's d3-legend:
 // https://d3-legend.susielu.com/#color
@@ -205,24 +218,9 @@ d3.json("_data/frequencies.json").then(function(data) {
   sites = Array.from(frequenciesBySite.keys());
 
   // Update x-axis scale to the domain of the given data.
-  xScale.domain(d3.extent(frequencies, d => parseTime(d.timepoint)));
+  xScale.domain(d3.extent(frequencies, d => parseTime(d.timepoint))).nice(d3.timeMonth.every(3));
   d3.select(".x_axis")
     .call(d3.axisBottom(xScale));
-
-  // Create a dropdown menu to populate with data.
-    /* dropdown = d3.select("#frequencies").append("select");
-     * dropdown.selectAll("option")
-     *   .data(sites)
-     *   .enter()
-     *   .append("option")
-     *   .text(function(d) {
-     *     return d;
-     *   })
-     *   .attr("value", function(d) {
-     *     return d;
-     *   });
-     * dropdown.on("change", selectSite);
-     */
 
   // Plot frequencies for the first site by default.
   var siteFrequencies = frequenciesBySite.get(sites[0]);

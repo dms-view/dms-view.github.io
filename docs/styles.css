@@ -54,6 +54,25 @@ tr:nth-child(even) {
 .frequencies .dot {
     opacity: 0.75;
 }
+
+.label {
+    font-size: 12px;
+    text-anchor: middle;
+    vertical-align: middle;
+}
+
+.label rect {
+    fill: white;
+    opacity: 0.75;
+}
+
+.label-key {
+    font-size: 14px;
+    font-weight: bold;
+    text-anchor: middle;
+    vertical-align: middle;
+}
+
 .rect {
     fill: #ffab00;
 }
