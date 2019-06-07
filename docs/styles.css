@@ -57,3 +57,17 @@ tr:nth-child(even) {
 .rect {
     fill: #ffab00;
 }
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 80%;
+  transform: translate(-50%, -50%);
+}
+.modal-header{
+    background-color: grey;
+    opacity:1;
+}
+.modal-footer{
+    background-color: grey;
+    opacity:1;
+}

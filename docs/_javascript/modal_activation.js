@@ -7,6 +7,7 @@ var btn = document.getElementById("load_command");
 
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
+  //$('#myModal').modal('show');
   modal.style.display = "block";
 }
 
