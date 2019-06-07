@@ -187,7 +187,6 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
             var colors = sessionStorage.getItem("colorTest")
             color_key = JSON.parse(colors);
 
-
               var rgbToHex = function(rgb) {
                 var hex = Number(rgb).toString(16);
                 if (hex.length < 2) {
@@ -206,8 +205,10 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
 
             d3.select(".focus").selectAll("circle").classed("selected", false);
             d3.select(".focus").selectAll("circle").style("fill","#999999" );
+            // Update circles in the line plot to reflect which sites have frequency data or not.
+            d3.select(".focus").selectAll(".non_brushed").style("fill", function(d){});
+
             d3.select(this).classed("selected", true).style("fill",color_key[selectedAbsDiffsel] );
-            //d3.select(this)
 
               // Highlight the selected site on the protein structure.
               icn3dui.selectByCommand(".A,B");
