@@ -117,8 +117,10 @@ var tooltip = d3.select("#line_plot")
   .style("visibility", "hidden");
 
 // Here is where we read in the data and create the plot
+var lineData;
 d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   var n = d.length;
+  lineData = d;
 
   // find the min and the max of x/y
   var d_extent_x = d3.extent(d, d => +d.site),
@@ -169,6 +171,7 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .attr("r", 5)
     .attr("cx", (d) => x(+d.site))
     .attr("cy", (d) => y(+d.abs_diffsel))
+    .attr("id", d => "site_" + d.site)
     .attr("class", "non_brushed")
     .style("clip-path", "url(#clip)")
     .on("mouseover", showTooltip)

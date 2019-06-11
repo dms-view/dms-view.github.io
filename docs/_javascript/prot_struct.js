@@ -54,6 +54,15 @@ $(document).ready(function() {
         icn3dui.showSelection();
         //icn3dui.saveFile("test_file.txt", "text");
       });
+
+      // Select the site with the maximum y value by default.
+      var max_y_value = d3.max(lineData, d => +d.abs_diffsel);
+      var max_y_record = lineData.filter(d => +d.abs_diffsel == max_y_value);
+
+      if (max_y_record.length > 0) {
+        console.log("click site " + max_y_record[0].site);
+        d3.select("#site_" + max_y_record[0].site).dispatch("click");
+      }
     });
 
 });
