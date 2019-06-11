@@ -65,7 +65,8 @@
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{Visualizing seasonal influenza evolution}
+\title{Unified visualization of seasonal influenza evolution in the laboratory and in nature.
+}
 
 %%
 %% The "author" command and its associated commands are used to define
@@ -90,7 +91,7 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-  Abstract.
+One of the fundamental goals of laboratory biologists is to understand the way a process works in a controlled setting, and then see if and/or how that process holds true in nature. As computational and laboratory biologists interested in influenza, we want to understand how flu evolves to escape human immunity, a process that means that the flu vaccine needs to be updated every few years. New experimental approaches have allowed us to make and view the effect of every possible amino acid mutation to the HA gene, one of the primary immune targets of the virus. These laboratory assays allow us to infer which sites within the protein are changeable, while allowing the virus to maintain its ability to infect cells, as well as which sites change in order to evade the immune system. While these data are valuable, they are not intuitive to interpret, and without effective systems for visualizing these data, it's challenging to look for patterns of which types of mutations, in which parts of the protein, matter for both protein function and immune escape. In addition, there are no current platforms that pull together this lab data with data about what types of mutations occur and circulate in nature, which means that researchers are often left unsure of the utility of these data for describing real world influenza dynamics. To fill this gap, we built a visualization platform that unifies protein structure data, laboratory data, and data on influenza variants in nature. Our tool provides an interactive way to display where the protein is mutationally tolerant, both in sequence space and on the protein's 3D conformation, and which mutations facilitate immune evasion. We also integrate in frequency data that describes which influenza variants circulate in nature, thus providing a unified way of exploring whether laboratory data recapitulates evolution in nature.
 \end{abstract}
 
 %%
@@ -138,11 +139,6 @@
 
 %% Assignment:
 %% The paper should present your goals, related work, a detailed description of your system, and a discussion of your design.
-\maketitle
-
-\section{Abstrac}
-One of the fundamental goals of laboratory biologists is to understand the way a process works in a controlled setting, and then see if and/or how that process holds true in nature. As computational and laboratory biologists interested in influenza, we want to understand how flu evolves to escape human immunity, a process that means that the flu vaccine needs to be updated every few years. New experimental approaches have allowed us to make and view the effect of every possible amino acid mutation to the HA gene, one of the primary immune targets of the virus. These laboratory assays allow us to infer which sites within the gene are changeable, while allowing the virus to maintain its ability to infect cells, as well as which sites change in order to evade the immune system. While these data are valuable, they are not intuitive to interpret, and without effective systems for visualizing these data, it’s challenging to look for patterns in terms of which types of mutations, in which parts of the protein, matter for both protein function and immune escape. In addition, there are no current platforms that pull together this lab data with data about what types of mutations occur and circulate in nature, which means that researchers are often left unsure of the utility of these data for describing real world flu dynamics. For this project, we propose to build a visualization that fills this gap. Our tool will integrate both lab assay and natural influenza data, showing in an interactive and site-specific manner where these mutations are on the influenza protein structure, and also what types of patterns observed in the lab are also observed in nature.
-
 \section{Introduction}
 
 Seasonal influenza is an infectious disease that infects between 10 and 20% of the world’s population every year \cite{neher2015nextflu}. For some diseases, infection confers immunity that protects that person from subsequent infections for many years. In other cases, such as with influenza virus, the surface proteins on the pathogen change quickly, thereby escaping recognition by antibodies elicited by the previous infection. It is for this reason that the influenza vaccine must be updated almost annually, since the immune response elicited by  the vaccine needs to match whichever viruses we expect to circulate during the next influenza season. Vaccination remains the primary public health response effort to control the spread of influenza.
@@ -158,6 +154,14 @@ The Bloom lab at Fred Hutch performs are large amount of DMS work to investigate
 \section{Methods}
 
 This visualization platform links three data views together by their common shared element, site in the protein. The three data streams are: 1) DMS differential selection value, which is a quantitative measure of the preference for a certain amino acid at a specific site in the protein, 2) the natural amino acid frequencies of a site, a quantitative variable the describes what proportion of all sampled strains of influenza at time T have a specific amino acid at a site, and 3) the 3-D structure of protein itself, which takes linear sequence space and folds that up to reflect where certain sites of the sequence fall on the protein structure. We describe design decisions about how to visualize these data streams below. Our visualization was implemented using D3 \cite{bostock2011d3}
+
+\begin{figure}[H]
+	\includegraphics[width=1.0\textwidth]{viz-overview.png}
+	\caption{\textbf{Full view of visualization platform}
+   The initial view of the visualization shows three panels: the laboratory-based DMS data, influenza variant frequencies in nature, and the 3D protein structure.
+	}
+	\label{clade-2-detail}
+\end{figure}
 
 \subsection{DMS differential selection preferences}
 Navigation of our visualization begins with the user selecting a site in the gene that they would like to explore. Because the gene segments can be long, and many measurements are highly similar, it would be challenging to observe all measurements at once and interact with them. To address this challenge, we have two plots within this data stream’s panel, one that gives context about the overall positioning in the gene segment, and one that is the zoomed view that can be interacted with.  To zoom in, the context panel can be brushed, and this will select the portion of the gene segment that the user would like to zoom in on. Within the zoom panel, the DMS preferences by site, encoded using position, can be interacted with by mousing over the data points. Mousing over brings up a tooltip providing additional details about the DMS data at that site. In particular, the tooltip gives the exact value of the differential selection measurement, since this might be hard to read from looking at the y-axis. The points can also be selected by clicking on them, which allows the user to enter the linked visualization, whereby the natural amino acid frequencies for that site, and that site in the 3D protein structure, will be selected.
