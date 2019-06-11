@@ -11,7 +11,7 @@ $(document).ready(function() {
     var cfg = {
       divid: 'icn3dwrap',
       width: 375,
-      height: 455,
+      height: 468,
       resize: false,
       rotate: 'none',
       url:"?type=pdb&url=https%3A%2F%2Fwww.rcsb.org%2Fstructure%2F4O5N",

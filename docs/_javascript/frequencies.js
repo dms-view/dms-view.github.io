@@ -125,7 +125,7 @@ var plotWidth = 760;
 var plotHeight = 250;
 
 var margin = ({
-  top: 10,
+  top: 15,
   right: 40,
   bottom: 40,
   left: 45
@@ -160,6 +160,13 @@ var frequencies_svg = d3.select("#frequencies").append("svg")
   .append("g")
   .attr("id", "frequencies_panel")
   .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+
+// Add an x-axis title. Why is this so complicated?
+frequencies_svg.append("text")
+  .attr("transform", "translate(" + (width / 2) + ", " + (0) + ")")
+  .style("text-anchor", "middle")
+  .text("Evolution in nature")
+  .style("font-weight", "bold");
 
 // Add a warning message for missing data.
 var warning_rect = d3.select("#frequencies_panel")

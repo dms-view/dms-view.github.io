@@ -236,6 +236,12 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .attr("id", "axis_y")
     .call(yAxis);
 
+  svg.append("text")
+    .attr("transform", "translate(" + (svg_dx / 2) + ", " + (15) + ")")
+    .style("text-anchor", "middle")
+    .text("Evolution in the lab")
+    .style("font-weight", "bold");
+
   svg
     .append("text")
     .attr("transform", "translate(" + (svg_dx / 2) + ", " + (plot_dy + 50) + ")")
