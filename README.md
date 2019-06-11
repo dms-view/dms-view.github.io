@@ -7,7 +7,8 @@ Team members:
 * Khrystyna North
 
 Project page: https://cse512-19s.github.io/FP-Influenza-Evolution/
-Poster: ./final/poster.pdf
+
+Poster: file://./final/poster.pdf
 
 ### Breakdown of work and commentary on the research/development process:
 
