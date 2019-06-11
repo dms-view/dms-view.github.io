@@ -183,20 +183,20 @@ Importantly, the development of such atlases, and the visualization of these dat
 By default these images also do not link a third relevant data stream, and that is the frequencies of amino acids observed at different sites of the protein in nature.
 Thus the task of our visualization platform is to provide an easy way to view and interact with these three data streams in a linked fashion that is also easy to use in the absence of coding expertise.
 
+\begin{figure}[h]
+	\includegraphics[width=\columnwidth]{viz-overview.png}
+	\caption{\textbf{Full view of visualization platform.}
+   The initial view of the visualization shows three panels: the laboratory-based DMS data, influenza variant frequencies in nature, and the 3D protein structure.
+	}
+	\label{overview}
+\end{figure}
+
 \section{Methods}
 
 This visualization platform links three data views together by their common shared element, site in the protein.
 The three data streams are: 1) DMS differential selection value, which is a quantitative measure of the preference for a certain amino acid at a specific site in the protein, 2) the natural amino acid frequencies of a site, a quantitative variable the describes what proportion of all sampled strains of influenza at time T have a specific amino acid at a site, and 3) the 3-D structure of protein itself, which takes linear sequence space and folds that up to reflect where certain sites of the sequence fall on the protein structure.
 We describe design decisions about how to visualize these data streams below.
 Our visualization was implemented using D3 \cite{bostock2011d3}
-
-\begin{figure}[H]
-	\includegraphics[width=1.0\textwidth]{viz-overview.png}
-	\caption{\textbf{Full view of visualization platform.}
-   The initial view of the visualization shows three panels: the laboratory-based DMS data, influenza variant frequencies in nature, and the 3D protein structure.
-	}
-	\label{overview}
-\end{figure}
 
 \subsection{DMS differential selection preferences}
 Navigation of our visualization begins with the user selecting a site in the gene that they would like to explore.
@@ -208,8 +208,8 @@ Mousing over brings up a tooltip providing additional details about the DMS data
 In particular, the tooltip gives the exact value of the differential selection measurement, since this might be hard to read from looking at the y-axis.
 The points can also be selected by clicking on them, which allows the user to enter the linked visualization, whereby the natural amino acid frequencies for that site, and that site in the 3D protein structure, will be selected.
 
-\begin{figure}[H]
-	\includegraphics[width=1.0\textwidth]{dms-brushed-tooltip.png}
+\begin{figure}[h]
+	\includegraphics[width=\columnwidth]{dms-brushed-tooltip.png}
 	\caption{\textbf{Visualization of differential selection data generated from DMS experiments.}
   The laboratory data can be explored and zoomed in on by brushing the context panel below the primary panel, giving both detail and overview to the user.
 Sites that are colored black in this panel represent sites for which there is natural frequency data.
@@ -227,8 +227,8 @@ In our visualization, we have encoded these frequencies using position.
 Selection of a site from the DMS preferences panel brings up a plotting space that shows which amino acids were observed at that position over time, and how those data changed through time.
 We use position to encode the frequencies value, and color to differentiate between different amino acid residues.
 
-\begin{figure}[H]
-	\includegraphics[width=1.0\textwidth]{frequencies-panel.png}
+\begin{figure}[h]
+	\includegraphics[width=\columnwidth]{frequencies-panel.png}
 	\caption{\textbf{Frequencies of influenza variants in nature.}
   Once a site has been selected from the laboratory data panel, this panel shows the frequencies of influenza viruses with different amino acids at that site over the last three years.
 In this example, at site 193 we see that there are two variants circulating, one has a phenylalanine (F) at this site, while the other has a serine (S).
@@ -242,8 +242,8 @@ Here, a selected site is differentiated from unselected sites by color.
 All unselected sites are uniformly grey, and the selected site is colored.
 The highlight color of the selected site is chosen according to the differential selection value of that site observed in the DMS data.
 
-\begin{figure}[H]
-	\includegraphics[width=1.0\textwidth]{3d-structure-panel.png}
+\begin{figure}[h]
+	\includegraphics[width=\columnwidth]{3d-structure-panel.png}
 	\caption{\textbf{3D protein structure with selected site highlighted.}
   3D protein structure panel, with the selected site colored according to its differential selection value.
 The tooltip also provides information about which amino acid is at highest frequency at the site.
