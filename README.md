@@ -9,7 +9,11 @@ Team members:
 Project page: https://cse512-19s.github.io/FP-Influenza-Evolution/
 
 Poster: [Poster Link](/final/poster.pdf)
+
 Paper: [Paper Link](/final/paper.pdf)
+
+### Summary Image of Visualization
+![Alt text](docs/summary_image.png?raw=true "Title")
 
 ### Abstract
 One of the fundamental goals of laboratory biologists is to understand the way a process works in a controlled setting, and then see if and/or how that process holds true in nature. As computational and laboratory biologists interested in influenza, we want to understand how flu evolves to escape human immunity, a process that means that the flu vaccine needs to be updated every few years. New experimental approaches have allowed us to make and view the effect of every possible amino acid mutation to the HA gene, one of the primary immune targets of the virus. These laboratory assays allow us to infer which sites within the gene are changeable, while allowing the virus to maintain its ability to infect cells, as well as which sites change in order to evade the immune system. While these data are valuable, they are not intuitive to interpret, and without effective systems for visualizing these data, it\textquotesingle s challenging to look for patterns in terms of which types of mutations, in which parts of the protein, matter for both protein function and immune escape. In addition, there are no current platforms that pull together this lab data with data about what types of mutations occur and circulate in nature, which means that researchers are often left unsure of the utility of these data for describing real world flu dynamics. For this project, we propose to build a visualization that fills this gap. Our tool will integrate both lab assay and natural influenza data, showing in an interactive and site-specific manner where these mutations are on the influenza protein structure, and also what types of patterns observed in the lab are also observed in nature.
