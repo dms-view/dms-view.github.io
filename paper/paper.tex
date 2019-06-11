@@ -148,29 +148,51 @@ While the surface proteins are the main target for immune response, they are als
 Despite the value of these data, they are not intuitive to interpret. Sequencing produces linear sequences, yet the protein conformation may have amino acid residues that are close together in 3D space that are quite distant from each other in linear sequence space. Thus it can be hard to interpret how changes visible on a sequence map onto the protein structure. Additionally, as DMS experiments represent controlled laboratory experiments looking at infection in cell culture, there are questions regarding how well DMS results reflect the patterns of influenza evolution that we observe in nature. Here, we introduce an interactive visualization platform that allows unified display of DMS differential selection data, 3-D protein structure, and information about amino acid preferences observed in nature, as unified by their common variable: site in the the sequence.
 
 \section{Related Work}
-
 The Bloom lab at Fred Hutch performs are large amount of DMS work to investigate functional stability and immune escape and selection for important human pathogens such as HIV, influenza, and Zika virus. Originally developed by Thyagarajan and Bloom \cite{thyagarajan2014inherent}, initial DMS experiments on influenza virus hemagglutinin focused on understanding which sites of the protein could tolerate multiple amino acids and cause a functional infection. These studies have been extended to include not only purifying selective forces, but also immune selection as well, by innate immunity \cite{ashenberg2017deep} and adaptive immunity involving antibody response \cite{Lee2018}. In total, these experiments have helped us to define broad atlases of paths for escaping immunity \cite{dingens2019antigenic}. Importantly, the development of such atlases, and the visualization of these data, requires an intensive computational workflow that involves iteratively generating static graphs for the relevant streams of data: immune selection as measured by the DMS experiment and the 3D structure of the protein. By default these images also do not link a third relevant data stream, and that is the frequencies of amino acids observed at different sites of the protein in nature. Thus the task of our visualization platform is to provide an easy way to view and interact with these three data streams in a linked fashion that is also easy to use in the absence of coding expertise.
 
 \section{Methods}
-
 This visualization platform links three data views together by their common shared element, site in the protein. The three data streams are: 1) DMS differential selection value, which is a quantitative measure of the preference for a certain amino acid at a specific site in the protein, 2) the natural amino acid frequencies of a site, a quantitative variable the describes what proportion of all sampled strains of influenza at time T have a specific amino acid at a site, and 3) the 3-D structure of protein itself, which takes linear sequence space and folds that up to reflect where certain sites of the sequence fall on the protein structure. We describe design decisions about how to visualize these data streams below. Our visualization was implemented using D3 \cite{bostock2011d3}
 
 \begin{figure}[H]
 	\includegraphics[width=1.0\textwidth]{viz-overview.png}
-	\caption{\textbf{Full view of visualization platform}
+	\caption{\textbf{Full view of visualization platform.}
    The initial view of the visualization shows three panels: the laboratory-based DMS data, influenza variant frequencies in nature, and the 3D protein structure.
 	}
-	\label{clade-2-detail}
+	\label{overview}
 \end{figure}
 
 \subsection{DMS differential selection preferences}
 Navigation of our visualization begins with the user selecting a site in the gene that they would like to explore. Because the gene segments can be long, and many measurements are highly similar, it would be challenging to observe all measurements at once and interact with them. To address this challenge, we have two plots within this data stream’s panel, one that gives context about the overall positioning in the gene segment, and one that is the zoomed view that can be interacted with.  To zoom in, the context panel can be brushed, and this will select the portion of the gene segment that the user would like to zoom in on. Within the zoom panel, the DMS preferences by site, encoded using position, can be interacted with by mousing over the data points. Mousing over brings up a tooltip providing additional details about the DMS data at that site. In particular, the tooltip gives the exact value of the differential selection measurement, since this might be hard to read from looking at the y-axis. The points can also be selected by clicking on them, which allows the user to enter the linked visualization, whereby the natural amino acid frequencies for that site, and that site in the 3D protein structure, will be selected.
 
+\begin{figure}[H]
+	\includegraphics[width=1.0\textwidth]{dms-brushed-tooltip.png}
+	\caption{\textbf{Visualization of differential selection data generated from DMS experiments.}
+  The laboratory data can be explored and zoomed in on by brushing the context panel below the primary panel, giving both detail and overview to the user. Sites that are colored black in this panel represent sites for which there is natural frequency data. For all grey sites, only one variant of influenza at that site is found to circulate naturally. Mousing over a tip brings up details on demand, and clicking on a data point selects that site for visualization in the other panels, and colors the point according to it's maximal differential selection value.
+	}
+	\label{dms-data}
+\end{figure}
+
 \subsection{Amino acid frequencies observed in nature}
 The natural amino acid frequencies are quantitative-ratio data that vary from 0 to 1 over time. They are derived by asking, at different points in time, what proportion of all circulating influenza viruses have a specific amino acid at this site in the gene. Given that these data are proportions, they take on values between 0 and 1, and data at cross-sectional time points sum to 1. In our visualization, we have encoded these frequencies using position. Selection of a site from the DMS preferences panel brings up a plotting space that shows which amino acids were observed at that position over time, and how those data changed through time. We use position to encode the frequencies value, and color to differentiate between different amino acid residues.
 
+\begin{figure}[H]
+	\includegraphics[width=1.0\textwidth]{frequencies-panel.png}
+	\caption{\textbf{Frequencies of influenza variants in nature.}
+  Once a site has been selected from the laboratory data panel, this panel shows the frequencies of influenza viruses with different amino acids at that site over the last three years. In this example, at site 193 we see that there are two variants circulating, one has a phenylalanine (F) at this site, while the other has a serine (S). We can see that the phenyalanine variant is at higher frequencies, but that the serine variant is rising in frequency.
+  }
+	\label{frequencies-panel}
+\end{figure}
+
 \subsection{3D protein structure}
 Here, a selected site is differentiated from unselected sites by color. All unselected sites are uniformly grey, and the selected site is colored. The highlight color of the selected site is chosen according to the differential selection value of that site observed in the DMS data.
+
+\begin{figure}[H]
+	\includegraphics[width=1.0\textwidth]{3d-structure-panel.png}
+	\caption{\textbf{3D protein structure with selected site highlighted.}
+  3D protein structure panel, with the selected site colored according to it's differential selection value. The tooltip also provides information about which amino acid is at highest frequency at the site. In this image, site 193 has a PHE, or phenylalanine.
+  }
+	\label{3d-structure}
+\end{figure}
 
 \section{Results}
 
