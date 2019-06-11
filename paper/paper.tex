@@ -170,7 +170,7 @@ Despite the value of these data, they are not intuitive to interpret.
 Sequencing produces linear sequences, yet the protein conformation may have amino acid residues that are close together in 3D space that are quite distant from each other in linear sequence space.
 Thus it can be hard to interpret how changes visible on a sequence map onto the protein structure.
 Additionally, as DMS experiments represent controlled laboratory experiments looking at infection in cell culture, there are questions regarding how well DMS results reflect the patterns of influenza evolution that we observe in nature.
-Here, we introduce an interactive visualization platform that allows unified display of DMS differential selection data, 3-D protein structure, and information about amino acid preferences observed in nature, as unified by their common variable: site in the the sequence.
+Here, we introduce an interactive visualization platform that allows unified display of DMS differential selection data, 3D protein structure, and information about amino acid preferences observed in nature, as unified by their common variable: site in the the sequence.
 
 \section{Related Work}
 
@@ -193,7 +193,7 @@ Thus the task of our visualization platform is to provide an easy way to view an
 \section{Methods}
 
 This visualization platform links three data views together by their common shared element, site in the protein.
-The three data streams are: 1) DMS differential selection value, which is a quantitative measure of the preference for a certain amino acid at a specific site in the protein, 2) the natural amino acid frequencies of a site, a quantitative variable the describes what proportion of all sampled strains of influenza at time T have a specific amino acid at a site, and 3) the 3-D structure of protein itself, which takes linear sequence space and folds that up to reflect where certain sites of the sequence fall on the protein structure.
+The three data streams are: 1) DMS differential selection value, which is a quantitative measure of the preference for a certain amino acid at a specific site in the protein, 2) the natural amino acid frequencies of a site, a quantitative variable the describes what proportion of all sampled strains of influenza at time T have a specific amino acid at a site, and 3) the 3D structure of protein itself, which takes linear sequence space and folds that up to reflect where certain sites of the sequence fall on the protein structure.
 We describe design decisions about how to visualize these data streams below.
 Our visualization was implemented using D3 \cite{bostock2011d3}
 
