@@ -125,7 +125,7 @@ var plotWidth = 760;
 var plotHeight = 250;
 
 var margin = ({
-  top: 15,
+  top: 30,
   right: 40,
   bottom: 40,
   left: 45
@@ -163,7 +163,7 @@ var frequencies_svg = d3.select("#frequencies").append("svg")
 
 // Add an x-axis title. Why is this so complicated?
 frequencies_svg.append("text")
-  .attr("transform", "translate(" + (width / 2) + ", " + (0) + ")")
+  .attr("transform", "translate(" + (width / 2) + ", " + (-10) + ")")
   .style("text-anchor", "middle")
   .text("Evolution in nature")
   .style("font-weight", "bold");
