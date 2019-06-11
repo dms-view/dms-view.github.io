@@ -37,7 +37,7 @@ function plotSiteMutations(dataset) {
 
   mutations.enter().append("path")
     .attr("class", "frequency_line")
-    .attr("stroke-width", 2)
+    .attr("stroke-width", 3)
     .attr("stroke", function(d) {
       return colorScale(d[1][0].mutation);
     })
