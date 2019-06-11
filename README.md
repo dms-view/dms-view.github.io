@@ -8,7 +8,7 @@ Team members:
 
 Project page: https://cse512-19s.github.io/FP-Influenza-Evolution/
 
-Poster: file://./final/poster.pdf
+Poster: [Poster Link](/final/poster.pdf)
 
 ### Breakdown of work and commentary on the research/development process:
 
