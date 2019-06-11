@@ -272,15 +272,6 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .attr("class", "brush")
     .call(brush)
     .call(brush.move, x.range());
-
-  // Adds a zoom box that enables Google Maps style zoom interactions with the focus plot.
-  // TODO: reenable this functionality once core functions of plot are working.
-  /* svg.append("rect")
-   *   .attr("class", "zoom")
-   *   .attr("width", plot_dx)
-   *   .attr("height", plot_dy)
-   *   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-   *   .call(zoom);*/
 });
 
 function brushed() {
