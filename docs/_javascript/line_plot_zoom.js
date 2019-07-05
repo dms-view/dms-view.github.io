@@ -177,15 +177,16 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .on("mouseover", showTooltip)
     .on("mouseout", hideTooltip)
     .on("click", function(d) {
+      console.log("Select site: " + d.site);
+      const selectedSite = parseInt(d.site);
+      const selectedChain = d.chain;
+      const selectedChainSite = d.chain_site;
+
       if (!d3.select(".focus .selected").empty() && d3.select(".focus .selected").datum().site == d.site) {
         console.log("Site " + d.site + " already selected, doing nothing.");
         return;
       }
 
-      console.log("Select site: " + d.site);
-      const selectedSite = parseInt(d.site);
-      const selectedChain = d.chain;
-      const selectedChainSite = d.chain_site;
       const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
       var colors = sessionStorage.getItem("colorTest")
       color_key = JSON.parse(colors);
@@ -206,16 +207,12 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
         return red + green + blue;
       };
 
-      d3.select(".focus").selectAll("circle").classed("selected", false);
       d3.select(".focus").selectAll("circle").style("fill", "#999999");
       // Update circles in the line plot to reflect which sites have frequency data or not.
       d3.select(".focus").selectAll(".non_brushed").style("fill", function(d) {});
       d3.select(this).classed("selected", true).style("fill", color_key[selectedAbsDiffsel]);
 
       // Highlight the selected site on the protein structure.
-      icn3dui.selectByCommand(".A,B");
-      icn3dui.setOption('color', 'grey');
-      icn3dui.setStyle("proteins", "sphere");
       icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
       icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
       // Update frequencies, if any exist for the selected site.
