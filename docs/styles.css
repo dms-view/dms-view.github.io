@@ -25,12 +25,6 @@ tr:nth-child(even) {
     r: 4;
 }
 
-.focus circle.has_data {
-    fill: #000000;
-    opacity: 1;
-    r: 5;
-}
-
 .focus circle.hovered {
   r: 8;
   fill: blue;

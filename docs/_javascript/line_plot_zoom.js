@@ -218,12 +218,6 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
       icn3dui.setStyle("proteins", "sphere");
       icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
       icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
-      // Update frequencies, if any exist for the selected site.
-      var siteFrequencies = frequenciesBySite.get(selectedSite);
-      if (siteFrequencies === undefined) {
-        console.warn("No mutation frequencies are defined for site " + selectedSite);
-      }
-      plotSiteMutations(siteFrequencies);
     });
 
   // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
