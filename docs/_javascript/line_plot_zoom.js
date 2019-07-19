@@ -18,17 +18,19 @@ function genomeLineChart() {
       svg_dy = divHeight,
       plot_dx = svg_dx - margin.right - margin.left,
       plot_dy = svg_dy - margin.top - margin.bottom,
-      plot_dy2 = svg_dy - margin2.top - margin2.bottom;
+      plot_dy2 = svg_dy - margin2.top - margin2.bottom,
+      xScaleFocus = d3.scaleLinear().range([0, plot_dx]),
+      xScaleContext = d3.scaleLinear().range([0, plot_dx]),
+      yScaleFocus = d3.scaleLinear().range([plot_dy, margin.top]),
+      yScaleContext = d3.scaleLinear().range([plot_dy2, margin.top]),
+      xAxis = d3.axisBottom(xScaleFocus),
+      xAxis2 = d3.axisBottom(xScaleContext),
+      yAxis = d3.axisLeft(yScaleFocus);
 
   function chart(selection) {
-    selection.each(function (d) {
-      var x = d3.scaleLinear().range([0, plot_dx]),
-        x2 = d3.scaleLinear().range([0, plot_dx]),
-        y = d3.scaleLinear().range([plot_dy, margin.top]),
-        y2 = d3.scaleLinear().range([plot_dy2, margin.top]);
-
+    selection.each(function (data) {
       // actually create the chart
-      var svg = d3.select("#line_plot")
+      var svg = d3.select(this)
         .append("svg")
         .attr("width", svg_dx)
         .attr("height", svg_dy);
@@ -40,12 +42,6 @@ function genomeLineChart() {
         .append("rect")
         .attr("width", plot_dx)
         .attr("height", plot_dy);
-
-      // define the axis. There are two xAxes for the two plots but the context plot
-      // does not have a y axis
-      var xAxis = d3.axisBottom(x),
-        xAxis2 = d3.axisBottom(x2),
-        yAxis = d3.axisLeft(y);
 
       // This defines the brush. It should only be on the context plot
       var brush = d3.brushX()
@@ -77,13 +73,12 @@ function genomeLineChart() {
       var area2 = d3.area()
         .curve(d3.curveMonotoneX)
         .x(function(d) {
-          return x2(d.site);
+          return xScaleContext(d.site);
         })
         .y0(plot_dy2)
         .y1(function(d) {
-          return y2(d.abs_diffsel);
+          return yScaleContext(d.abs_diffsel);
         });
-
 
       // this defines the focus (large) portion of the graph
       var focus = svg.append("g")
@@ -93,14 +88,13 @@ function genomeLineChart() {
       // define the line
       var valueline = d3.line()
         .x(function(d) {
-          return x(d.site);
+          return xScaleFocus(d.site);
         })
         .y(function(d) {
-          return y(d.abs_diffsel);
+          return yScaleFocus(d.abs_diffsel);
         });
 
-      // define tooltip not working currently
-      var tooltip = d3.select("#line_plot")
+      var tooltip = d3.select(this)
         .append("div")
         .style("font-family", "'Open Sans', sans-serif")
         .style("text-align", "left")
@@ -113,32 +107,23 @@ function genomeLineChart() {
         .style("border-radius", "10px")
         .style("visibility", "hidden");
 
-      // Here is where we read in the data and create the plot
-      var n = d.length;
-      var lineData = d;
-
-      // find the min and the max of x/y
-      var d_extent_x = d3.extent(d, d => +d.site),
-        d_extent_y = d3.extent(d, d => +d.abs_diffsel);
-
-
-      // set the domains
-      x.domain(d_extent_x);
-      y.domain(d_extent_y);
-      x2.domain(x.domain());
-      y2.domain(y.domain());
+      // Update the x and y domains to match the extent of the incoming data.
+      xScaleFocus.domain(d3.extent(data, d => +d.site));
+      yScaleFocus.domain(d3.extent(data, d => +d.abs_diffsel));
+      xScaleContext.domain(xScaleFocus.domain());
+      yScaleContext.domain(yScaleFocus.domain());
 
       // make the context plot
       // Add the valueline path.
       focus.append("path")
-        .datum(d)
+        .datum(data)
         .attr("class", "line")
         .style("clip-path", "url(#clip)")
         .attr("d", valueline);
 
       var circlePoint = focus.append("g")
         .selectAll("circle")
-        .data(d)
+        .data(data)
         .enter()
         .append("circle");
 
@@ -164,8 +149,8 @@ function genomeLineChart() {
 
       var circleAttributes = circlePoint
         .attr("r", 5)
-        .attr("cx", (d) => x(+d.site))
-        .attr("cy", (d) => y(+d.abs_diffsel))
+        .attr("cx", (d) => xScaleFocus(+d.site))
+        .attr("cy", (d) => yScaleFocus(+d.abs_diffsel))
         .attr("id", d => "site_" + d.site)
         .attr("class", "non_brushed")
         .style("clip-path", "url(#clip)")
@@ -254,7 +239,7 @@ function genomeLineChart() {
 
       // make the smaller plot (called context in the tutorial)
       context.append("path")
-        .datum(d)
+        .datum(data)
         .attr("class", "area")
         .attr("d", area2);
 
@@ -267,16 +252,16 @@ function genomeLineChart() {
       context.append("g")
         .attr("class", "brush")
         .call(brush)
-        .call(brush.move, x.range());
+        .call(brush.move, xScaleFocus.range());
 
       function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-        var s = d3.event.selection || x2.range();
-        x.domain(s.map(x2.invert, x2));
+        var s = d3.event.selection || xScaleContext.range();
+        xScaleFocus.domain(s.map(xScaleContext.invert, xScaleContext));
         focus.select(".line").attr("d", valueline);
         focus.selectAll("circle")
-          .attr("cx", (d) => x(+d.site))
-          .attr("cy", (d) => y(+d.abs_diffsel))
+          .attr("cx", (d) => xScaleFocus(+d.site))
+          .attr("cy", (d) => yScaleFocus(+d.abs_diffsel))
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
           .scale(plot_dx / (s[1] - s[0]))
@@ -286,11 +271,11 @@ function genomeLineChart() {
       function zoomed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
         var t = d3.event.transform;
-        x.domain(t.rescaleX(x2).domain());
+        x.domain(t.rescaleX(xScaleContext).domain());
         focus.select(".line").attr("d", valueline);
         focus.selectAll("circle")
-          .attr("cx", (d) => x(+d.site))
-          .attr("cy", (d) => y(+d.abs_diffsel));
+          .attr("cx", (d) => xScaleFocus(+d.site))
+          .attr("cy", (d) => yScaleFocus(+d.abs_diffsel));
         focus.select(".axis--x").call(xAxis);
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
       }
