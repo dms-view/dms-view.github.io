@@ -23,9 +23,16 @@ function genomeLineChart() {
       xScaleContext = d3.scaleLinear().range([0, plot_dx]),
       yScaleFocus = d3.scaleLinear().range([plot_dy, margin.top]),
       yScaleContext = d3.scaleLinear().range([plot_dy2, margin.top]),
-      xAxis = d3.axisBottom(xScaleFocus),
-      xAxis2 = d3.axisBottom(xScaleContext),
-      yAxis = d3.axisLeft(yScaleFocus);
+      xAxisFocus = d3.axisBottom(xScaleFocus),
+      xAxisContext = d3.axisBottom(xScaleContext),
+      yAxis = d3.axisLeft(yScaleFocus),
+      lineFocus = d3.line().x(XFocus).y(YFocus),
+      areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(plot_dy2).y1(YContext),
+      brushContext = d3.brushX().extent([[0, 0], [plot_dx, plot_dy2]]),
+      zoomContext = d3.zoom()
+        .scaleExtent([1, Infinity])
+        .translateExtent([[0, 0], [plot_dx, plot_dy]])
+        .extent([[0, 0], [plot_dx, plot_dy2]]);
 
   function chart(selection) {
     selection.each(function (data) {
@@ -43,56 +50,19 @@ function genomeLineChart() {
         .attr("width", plot_dx)
         .attr("height", plot_dy);
 
-      // This defines the brush. It should only be on the context plot
-      var brush = d3.brushX()
-        .extent([
-          [0, 0],
-          [plot_dx, plot_dy2]
-        ])
-        .on("brush end", brushed);
-
-      // This defines the zoom. The zoom should on the min/max of the context plot?
-      var zoom = d3.zoom()
-        .scaleExtent([1, Infinity])
-        .translateExtent([
-          [0, 0],
-          [plot_dx, plot_dy]
-        ])
-        .extent([
-          [0, 0],
-          [plot_dx, plot_dy2]
-        ])
-        .on("zoom", zoomed);
+      // Update the context brush and zoom.
+      brushContext.on("brush end", brushed);
+      zoomContext.on("zoom", zoomed);
 
       // define context which is the smaller plot underneath
       var context = svg.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-      // the context plot is an area plot right now
-      var area2 = d3.area()
-        .curve(d3.curveMonotoneX)
-        .x(function(d) {
-          return xScaleContext(d.site);
-        })
-        .y0(plot_dy2)
-        .y1(function(d) {
-          return yScaleContext(d.abs_diffsel);
-        });
-
       // this defines the focus (large) portion of the graph
       var focus = svg.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      // define the line
-      var valueline = d3.line()
-        .x(function(d) {
-          return xScaleFocus(d.site);
-        })
-        .y(function(d) {
-          return yScaleFocus(d.abs_diffsel);
-        });
 
       var tooltip = d3.select(this)
         .append("div")
@@ -114,12 +84,12 @@ function genomeLineChart() {
       yScaleContext.domain(yScaleFocus.domain());
 
       // make the context plot
-      // Add the valueline path.
+      // Add the lineFocus path.
       focus.append("path")
         .datum(data)
         .attr("class", "line")
         .style("clip-path", "url(#clip)")
-        .attr("d", valueline);
+        .attr("d", lineFocus);
 
       var circlePoint = focus.append("g")
         .selectAll("circle")
@@ -149,8 +119,8 @@ function genomeLineChart() {
 
       var circleAttributes = circlePoint
         .attr("r", 5)
-        .attr("cx", (d) => xScaleFocus(+d.site))
-        .attr("cy", (d) => yScaleFocus(+d.abs_diffsel))
+        .attr("cx", XFocus)
+        .attr("cy", YFocus)
         .attr("id", d => "site_" + d.site)
         .attr("class", "non_brushed")
         .style("clip-path", "url(#clip)")
@@ -213,7 +183,7 @@ function genomeLineChart() {
         .attr("class", "axis axis--x")
         .attr("id", "axis_x")
         .attr("transform", "translate(0," + plot_dy + ")")
-        .call(xAxis);
+        .call(xAxisFocus);
 
       focus.append("g")
         .attr("class", "axis axis--y")
@@ -241,29 +211,29 @@ function genomeLineChart() {
       context.append("path")
         .datum(data)
         .attr("class", "area")
-        .attr("d", area2);
+        .attr("d", areaContext);
 
       context.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + plot_dy2 + ")")
-        .call(xAxis2);
+        .call(xAxisContext);
 
       // add in the brush
       context.append("g")
         .attr("class", "brush")
-        .call(brush)
-        .call(brush.move, xScaleFocus.range());
+        .call(brushContext)
+        .call(brushContext.move, xScaleFocus.range());
 
       function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || xScaleContext.range();
         xScaleFocus.domain(s.map(xScaleContext.invert, xScaleContext));
-        focus.select(".line").attr("d", valueline);
+        focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
           .attr("cy", (d) => yScaleFocus(+d.abs_diffsel))
-        focus.select(".axis--x").call(xAxis);
-        svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+        focus.select(".axis--x").call(xAxisFocus);
+        svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
           .scale(plot_dx / (s[1] - s[0]))
           .translate(-s[0], 0));
       }
@@ -272,14 +242,32 @@ function genomeLineChart() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
         var t = d3.event.transform;
         x.domain(t.rescaleX(xScaleContext).domain());
-        focus.select(".line").attr("d", valueline);
+        focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
           .attr("cy", (d) => yScaleFocus(+d.abs_diffsel));
-        focus.select(".axis--x").call(xAxis);
-        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+        focus.select(".axis--x").call(xAxisFocus);
+        context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
       }
     });
+  }
+
+  // Define accessors for x-axis values in the focus and context panels.
+  function XFocus(d) {
+    return xScaleFocus(+d.site);
+  }
+
+  function XContext(d) {
+    return xScaleContext(+d.site);
+  }
+
+  // Define accessors for y-axis values in the focus and context panels.
+  function YFocus(d) {
+    return yScaleFocus(+d.abs_diffsel);
+  }
+
+  function YContext(d) {
+    return yScaleContext(+d.abs_diffsel);
   }
 
   return chart;
