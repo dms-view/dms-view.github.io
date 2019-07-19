@@ -177,47 +177,51 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
     .on("mouseover", showTooltip)
     .on("mouseout", hideTooltip)
     .on("click", function(d) {
-      if (!d3.select(".focus .selected").empty() && d3.select(".focus .selected").datum().site == d.site) {
-        console.log("Site " + d.site + " already selected, doing nothing.");
-        return;
-      }
-
       console.log("Select site: " + d.site);
       const selectedSite = parseInt(d.site);
       const selectedChain = d.chain;
       const selectedChainSite = d.chain_site;
-      const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
-      var colors = sessionStorage.getItem("colorTest")
-      color_key = JSON.parse(colors);
 
-      var rgbToHex = function(rgb) {
-        var hex = Number(rgb).toString(16);
-        if (hex.length < 2) {
-          hex = "0" + hex;
-        }
-        return hex;
-      };
+      // if not already selected
+      if (!d3.select(this).classed("selected")) {
+        const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
+        var colors = sessionStorage.getItem("colorTest")
+        color_key = JSON.parse(colors);
 
+        var rgbToHex = function(rgb) {
+          var hex = Number(rgb).toString(16);
+          if (hex.length < 2) {
+            hex = "0" + hex;
+          }
+          return hex;
+        };
 
-      var fullColorHex = function(r, g, b) {
-        var red = rgbToHex(r);
-        var green = rgbToHex(g);
-        var blue = rgbToHex(b);
-        return red + green + blue;
-      };
+        var fullColorHex = function(r, g, b) {
+          var red = rgbToHex(r);
+          var green = rgbToHex(g);
+          var blue = rgbToHex(b);
+          return red + green + blue;
+        };
 
-      d3.select(".focus").selectAll("circle").classed("selected", false);
-      d3.select(".focus").selectAll("circle").style("fill", "#999999");
-      // Update circles in the line plot to reflect which sites have frequency data or not.
-      d3.select(".focus").selectAll(".non_brushed").style("fill", function(d) {});
-      d3.select(this).classed("selected", true).style("fill", color_key[selectedAbsDiffsel]);
+        d3.select(".focus").selectAll("circle").style("fill", "#999999");
+        // Update circles in the line plot to reflect which sites have frequency data or not.
+        d3.select(".focus").selectAll(".non_brushed").style("fill", function(d) {});
+        d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
 
-      // Highlight the selected site on the protein structure.
-      icn3dui.selectByCommand(".A,B");
-      icn3dui.setOption('color', 'grey');
-      icn3dui.setStyle("proteins", "sphere");
-      icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-      icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
+        // Highlight the selected site on the protein structure.
+        icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
+        icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
+      }
+      // if already selected
+      else {
+        // return circle to baseline grey
+        d3.select(this)
+           .style('fill', 'grey')
+           .classed("selected",false);
+        // remove color on the protein structure.
+        icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
+        icn3dui.setOption('color', 'grey');
+      }
     });
 
   // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
