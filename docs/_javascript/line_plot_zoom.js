@@ -2,68 +2,90 @@ function genomeLineChart() {
   // Setup chart configuration.
   var divWidth = 760,
       divHeight = 350,
-      margin = {
+      marginFocus = {
         top: divHeight * 0.04,
         right: 20,
         bottom: divHeight * (1 / 3),
         left: 40
       },
-      margin2 = {
+      marginContext = {
         top: divHeight * (4 / 5),
         right: 20,
         bottom: divHeight * 0.1,
         left: 40
       },
-      svg_dx = divWidth,
-      svg_dy = divHeight,
-      plot_dx = svg_dx - margin.right - margin.left,
-      plot_dy = svg_dy - margin.top - margin.bottom,
-      plot_dy2 = svg_dy - margin2.top - margin2.bottom,
-      xScaleFocus = d3.scaleLinear().range([0, plot_dx]),
-      xScaleContext = d3.scaleLinear().range([0, plot_dx]),
-      yScaleFocus = d3.scaleLinear().range([plot_dy, margin.top]),
-      yScaleContext = d3.scaleLinear().range([plot_dy2, margin.top]),
+      plotWidth = divWidth - marginFocus.right - marginFocus.left,
+      plotHeightFocus = divHeight - marginFocus.top - marginFocus.bottom,
+      plotHeightContext = divHeight - marginContext.top - marginContext.bottom,
+      xScaleFocus = d3.scaleLinear().range([0, plotWidth]),
+      xScaleContext = d3.scaleLinear().range([0, plotWidth]),
+      yScaleFocus = d3.scaleLinear().range([plotHeightFocus, marginFocus.top]),
+      yScaleContext = d3.scaleLinear().range([plotHeightContext, marginFocus.top]),
       xAxisFocus = d3.axisBottom(xScaleFocus),
       xAxisContext = d3.axisBottom(xScaleContext),
       yAxis = d3.axisLeft(yScaleFocus),
       lineFocus = d3.line().x(XFocus).y(YFocus),
-      areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(plot_dy2).y1(YContext),
-      brushContext = d3.brushX().extent([[0, 0], [plot_dx, plot_dy2]]),
+      areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(plotHeightContext).y1(YContext),
+      brushContext = d3.brushX().extent([[0, 0], [plotWidth, plotHeightContext]]),
       zoomContext = d3.zoom()
         .scaleExtent([1, Infinity])
-        .translateExtent([[0, 0], [plot_dx, plot_dy]])
-        .extent([[0, 0], [plot_dx, plot_dy2]]);
+        .translateExtent([[0, 0], [plotWidth, plotHeightFocus]])
+        .extent([[0, 0], [plotWidth, plotHeightContext]]);
 
+  // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
-      // actually create the chart
+      // Create the base chart SVG object.
       var svg = d3.select(this)
         .append("svg")
-        .attr("width", svg_dx)
-        .attr("height", svg_dy);
+        .attr("width", divWidth)
+        .attr("height", divHeight);
 
       // Add a clipping box to prevent focus plot from extending beyond the x-axis
       // domain.
       svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
-        .attr("width", plot_dx)
-        .attr("height", plot_dy);
+        .attr("width", plotWidth)
+        .attr("height", plotHeightFocus);
 
       // Update the context brush and zoom.
       brushContext.on("brush end", brushed);
       zoomContext.on("zoom", zoomed);
 
-      // define context which is the smaller plot underneath
+      // Create the context plot which shows the whole genome view below the
+      // focus plot.
       var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+        .attr("transform", "translate(" + marginContext.left + "," + marginContext.top + ")");
 
-      // this defines the focus (large) portion of the graph
+      // Create the focus plot which shows the selected region of the whole
+      // genome from the context plot.
       var focus = svg.append("g")
         .attr("class", "focus")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + marginFocus.left + "," + marginFocus.top + ")");
 
+      // Update the x and y domains to match the extent of the incoming data.
+      xScaleFocus.domain(d3.extent(data, d => +d.site));
+      yScaleFocus.domain(d3.extent(data, d => +d.abs_diffsel));
+      xScaleContext.domain(xScaleFocus.domain());
+      yScaleContext.domain(yScaleFocus.domain());
+
+      // Create the context plot, drawing a line through all of the data points.
+      focus.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("clip-path", "url(#clip)")
+        .attr("d", lineFocus);
+
+      // Plot a circle for each site in the given data.
+      var circlePoint = focus.append("g")
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle");
+
+      // Create the base tooltip object.
       var tooltip = d3.select(this)
         .append("div")
         .style("font-family", "'Open Sans', sans-serif")
@@ -76,26 +98,6 @@ function genomeLineChart() {
         .style("border", "1px solid #cccccc")
         .style("border-radius", "10px")
         .style("visibility", "hidden");
-
-      // Update the x and y domains to match the extent of the incoming data.
-      xScaleFocus.domain(d3.extent(data, d => +d.site));
-      yScaleFocus.domain(d3.extent(data, d => +d.abs_diffsel));
-      xScaleContext.domain(xScaleFocus.domain());
-      yScaleContext.domain(yScaleFocus.domain());
-
-      // make the context plot
-      // Add the lineFocus path.
-      focus.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("clip-path", "url(#clip)")
-        .attr("d", lineFocus);
-
-      var circlePoint = focus.append("g")
-        .selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle");
 
       function showTooltip(d) {
         mousePosition = d3.mouse(d3.event.target);
@@ -179,46 +181,52 @@ function genomeLineChart() {
 
       // xAxis.tickValues(d).tickFormat(d => d.H3_numbering)
 
+      // Create the x-axis for the focus plot.
       focus.append("g")
         .attr("class", "axis axis--x")
         .attr("id", "axis_x")
-        .attr("transform", "translate(0," + plot_dy + ")")
+        .attr("transform", "translate(0," + plotHeightFocus + ")")
         .call(xAxisFocus);
 
+      // Create the y-axis for the focus plot.
       focus.append("g")
         .attr("class", "axis axis--y")
         .attr("id", "axis_y")
         .call(yAxis);
 
+      // Set chart title.
       svg.append("text")
-        .attr("transform", "translate(" + (svg_dx / 2) + ", " + (15) + ")")
+        .attr("transform", "translate(" + (divWidth / 2) + ", " + (15) + ")")
         .style("text-anchor", "middle")
         .text("Evolution in the lab")
         .style("font-weight", "bold");
 
+      // Set x-axis label for the focus plot.
       svg
         .append("text")
-        .attr("transform", "translate(" + (svg_dx / 2) + ", " + (plot_dy + 50) + ")")
+        .attr("transform", "translate(" + (divWidth / 2) + ", " + (plotHeightFocus + 50) + ")")
         .style("text-anchor", "middle")
         .text("Site");
 
+      // Set y-axis label for the focus plot.
       svg
         .append("text")
-        .attr("transform", "translate(" + (12) + ", " + (plot_dy + 30) + ") rotate(-90)")
+        .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 30) + ") rotate(-90)")
         .text("Absolute differential selection");
 
-      // make the smaller plot (called context in the tutorial)
+      // Create the context plot.
       context.append("path")
         .datum(data)
         .attr("class", "area")
         .attr("d", areaContext);
 
+      // Create the x-axis for the context plot.
       context.append("g")
         .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + plot_dy2 + ")")
+        .attr("transform", "translate(0," + plotHeightContext + ")")
         .call(xAxisContext);
 
-      // add in the brush
+      // Enable brushing in the context plot.
       context.append("g")
         .attr("class", "brush")
         .call(brushContext)
@@ -234,7 +242,7 @@ function genomeLineChart() {
           .attr("cy", (d) => yScaleFocus(+d.abs_diffsel))
         focus.select(".axis--x").call(xAxisFocus);
         svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
-          .scale(plot_dx / (s[1] - s[0]))
+          .scale(plotWidth / (s[1] - s[0]))
           .translate(-s[0], 0));
       }
 
