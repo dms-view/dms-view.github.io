@@ -290,6 +290,19 @@ function genomeLineChart() {
     return yScaleContext(+d.abs_diffsel);
   }
 
+  // Define getters and setters for chart dimensions using Mike Bostock's idiom.
+  chart.width = function(_) {
+    if (!arguments.length) return divWidth;
+    divWidth = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return divHeight;
+    divHeight = _;
+    return chart;
+  };
+
   return chart;
 }
 
