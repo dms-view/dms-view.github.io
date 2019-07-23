@@ -50,6 +50,9 @@ function genomeLineChart() {
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
+      // Bind the data to the chart function.
+      chart.data = data;
+
       // Create the base chart SVG object.
       var svg = d3.select(this)
         .append("svg")
