@@ -1,3 +1,4 @@
+/* Styles for genome line chart. */
 .line {
   fill: none;
   stroke: grey;
@@ -35,6 +36,18 @@ tr:nth-child(even) {
   fill: red;
 }
 
+.tooltip {
+  text-align: left;
+  position: absolute;
+  font-size: 20px;
+  z-index: 20;
+  background: white;
+  padding: 5px;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+}
+
+/* Styles for protein viewer chart. */
 
 #icn3dwrap_viewer {
   height: 468px!important;
@@ -45,28 +58,6 @@ tr:nth-child(even) {
     font-size: 12px;
     padding: 0;
     padding-left: 0.25em;
-}
-
-.frequencies .dot {
-    opacity: 0.75;
-}
-
-.label {
-    font-size: 12px;
-    text-anchor: middle;
-    vertical-align: middle;
-}
-
-.label rect {
-    fill: white;
-    opacity: 0.75;
-}
-
-.label-key {
-    font-size: 16px;
-    font-weight: bold;
-    text-anchor: middle;
-    vertical-align: middle;
 }
 
 .rect {

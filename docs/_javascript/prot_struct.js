@@ -56,8 +56,8 @@ $(document).ready(function() {
       });
 
       // Select the site with the maximum y value by default.
-      var max_y_value = d3.max(lineData, d => +d.abs_diffsel);
-      var max_y_record = lineData.filter(d => +d.abs_diffsel == max_y_value);
+      var max_y_value = d3.max(chart.data, d => +d.abs_diffsel);
+      var max_y_record = chart.data.filter(d => +d.abs_diffsel == max_y_value);
 
       if (max_y_record.length > 0) {
         console.log("click site " + max_y_record[0].site);
