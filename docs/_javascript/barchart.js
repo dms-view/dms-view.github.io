@@ -25,13 +25,13 @@ function stackedBarChart() {
         .attr("width", divWidth)
         .attr("height", divHeight);
 
-    	var sites = [...new Set(data.map(d => d.site))];
-      var mutations = [...new Set(data.map(d => d.mutation))];
+      var sites = [...new Set(data.map(d => d.site))].sort();
+      var mutations = [...new Set(data.map(d => d.mutation))].sort();
       console.log(sites);
       console.log(mutations);
 
     	var x = d3.scaleBand(
-        data.map(d => d.site),
+        sites,
     		[margin.left, width - margin.right]
       ).padding(0.1);
     	var y = d3.scaleLinear()
@@ -46,8 +46,7 @@ function stackedBarChart() {
     		.attr("class", "y-axis");
 
     	var z = d3.scaleOrdinal()
-    		.domain(mutations)
-        .range(d3.schemeCategory10);
+    		.domain(mutations);
 
       // Set x-axis label.
       svg
@@ -62,54 +61,48 @@ function stackedBarChart() {
         .attr("transform", "translate(" + (12) + ", " + (height + 10) + ") rotate(-90)")
         .text("Absolute differential selection");
 
-      //x.domain();
+      // Convert long data to wide format for stacking.
+      var siteMap = new Map();
+      barChart.data.forEach(function (d) {
+        if (siteMap.get(d.site) === undefined) {
+          siteMap.set(d.site, {"site": d.site});
+        }
 
-      diffselBySite = d3.rollups(
-        data,
-        v => d3.sum(v, d => d.absmutdiffsel),
-        d => d.site
-      );
-      maxDiffselBySite = d3.max(diffselBySite, d => d[1]);
-  		y.domain([0, maxDiffselBySite]).nice();
-      console.log(diffselBySite);
+        siteMap.get(d.site)[d.mutation] = d.absmutdiffsel;
+      });
 
-  		svg.selectAll(".y-axis")
+      // Convert wide data map to an array.
+      var wideData = Array.from(siteMap.values());
+
+      // Stack the wide data by mutations for plotting a stacked barchart.
+      var series = d3.stack().keys(mutations)(wideData);
+
+      // Calculate the y domain from the maximum stack position.
+      y.domain([0, d3.max(series, d => d3.max(d, d => d[1]))]);
+
+      // Calculate the color domain.
+      z.range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), series.length).reverse())
+       .unknown("#cccccc");
+
+      svg.append("g")
+        .selectAll("g")
+        .data(series)
+        .join("g")
+          .attr("fill", d => z(d.key))
+        .selectAll("rect")
+        .data(d => d)
+        .join("rect")
+          .attr("x", (d, i) => x(d.data.site))
+          .attr("y", d => y(d[1]))
+          .attr("height", d => y(d[0]) - y(d[1]))
+          .attr("width", x.bandwidth());
+
+      svg.selectAll(".y-axis")
   			.call(d3.axisLeft(y).ticks(null, "s"));
 
   		svg.selectAll(".x-axis")
   			.call(d3.axisBottom(x).tickSizeOuter(0));
 
-      // svg.selectAll("bars")
-      //   .data(diffselBySite)
-      //   .enter()
-      //   .append("rect")
-      //     .attr("x", d => x(d[0]))
-      //     .attr("y", d => y(+d[1]))
-      //     .attr("width", x.bandwidth())
-      //     .attr("height", d => height - y(+d[1]))
-      //     .attr("fill", "#cccccc");
-
-      var dataBySite = d3.groups(data, d => d.site);
-  		var group = svg.selectAll("g.layer")
-  			.data(dataBySite);
-
-  		group.exit().remove();
-
-  		group.enter().append("g")
-  			.classed("layer", true)
-  			.attr("fill", "#999999");
-
-  		var bars = svg.selectAll("g.layer").selectAll("rect")
-  			.data(d => d, e => e[0]);
-
-  		bars.exit().remove();
-
-  		bars.enter().append("rect")
-  			.attr("width", x.bandwidth())
-  			.merge(bars)
-  			.attr("x", d => x(d[0]))
-  			.attr("y", d => y(d[1]))
-  			.attr("height", d => y(d[0]) - y(d[1]));
     });
   };
 
