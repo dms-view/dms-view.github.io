@@ -1,4 +1,4 @@
-d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
+d3.csv("https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/2009-age-65-sitediffsel-median_processed.csv?token=ADDHJTRXCEDDBHI7BM2GQH25JH6CU").then(d => {
 
   var width = 380;
   var countScale = d3.scaleLinear()

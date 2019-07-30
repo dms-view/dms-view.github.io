@@ -307,7 +307,7 @@ function genomeLineChart() {
 }
 
 var chart = genomeLineChart();
-d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(data =>
+d3.csv("https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/2009-age-65-sitediffsel-median_processed.csv?token=ADDHJTRXCEDDBHI7BM2GQH25JH6CU").then(data =>
   d3.select("#line_plot")
     .data([data])
     .call(chart)
