@@ -145,10 +145,11 @@ function genomeLineChart() {
 
         // if not already selected
         if (!d3.select(this).classed("selected")) {
-          loadStructure("rcsb://4O5N.cif", ":"+selectedChain+ " and "+ selectedSite)
           const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
+          loadStructure("rcsb://4O5N.cif", ":"+selectedChain+ " and "+ selectedSite, color_key[selectedAbsDiffsel])
+
 
           d3.select(".focus").selectAll("circle").style("fill", "#999999");
           // Update circles in the line plot to reflect which sites have frequency data or not.
@@ -162,6 +163,7 @@ function genomeLineChart() {
              .style('fill', 'grey')
              .classed("selected",false);
           // remove color on the protein structure.
+          loadStructure("rcsb://4O5N.cif", ":"+selectedChain+ " and "+ selectedSite, greyColor)
         }
       }
 
