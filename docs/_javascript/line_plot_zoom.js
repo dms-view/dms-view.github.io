@@ -145,6 +145,7 @@ function genomeLineChart() {
 
         // if not already selected
         if (!d3.select(this).classed("selected")) {
+          loadStructure("rcsb://4O5N.cif", ":"+selectedChain+ " and "+ selectedSite)
           const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
@@ -153,17 +154,6 @@ function genomeLineChart() {
           // Update circles in the line plot to reflect which sites have frequency data or not.
           d3.select(".focus").selectAll(".non_brushed").style("fill", function(d) {});
           d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
-
-          // Highlight the selected site on the protein structure.
-          icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-          icn3dui.setOption(
-            'color',
-            fullColorHex(
-              d3.rgb(color_key[selectedAbsDiffsel]).r,
-              d3.rgb(color_key[selectedAbsDiffsel]).g,
-              d3.rgb(color_key[selectedAbsDiffsel]).b
-            )
-          );
         }
         // if already selected
         else {
@@ -172,11 +162,6 @@ function genomeLineChart() {
              .style('fill', 'grey')
              .classed("selected",false);
           // remove color on the protein structure.
-          icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-          icn3dui.setOption('color', 'grey');
-            icn3dui.setStyle("proteins", "sphere");
-            icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-            icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
         }
       }
 
