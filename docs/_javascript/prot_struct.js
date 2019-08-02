@@ -43,9 +43,10 @@ function createSelect (options, properties, style) {
 }
 
 // main function
-function loadStructure (input, siteString, color) {
+function loadStructure (input) {
   stage.removeAllComponents()
   return stage.loadFile(input).then(function (o) {
+    protein = o;
     o.setRotation([ 2, 0, 0 ])
     o.autoView()
     o.addRepresentation(polymerSelect.value, {
@@ -53,11 +54,20 @@ function loadStructure (input, siteString, color) {
       name: "polymer",
       color: greyColor
     })
-    o.addRepresentation("spacefill", {
-      color: color,
-    }, false).setSelection(siteString)
   })
 }
+
+function selectSite (siteString, color) {
+    protein.addRepresentation("spacefill", {
+      color: color,
+    }, false).setSelection(siteString)
+  }
+
+  function deselectSite (siteString, color) {
+      protein.addRepresentation("spacefill", {
+        color: color,
+      }, false).setSelection(siteString)
+    }
 
 // select protein display type
 var polymerSelect = createSelect([
@@ -80,7 +90,7 @@ var polymerSelect = createSelect([
 addElement(polymerSelect)
 
 // load structure to start
-loadStructure("rcsb://4O5N.cif", "", "#9900FF")
+loadStructure("rcsb://4O5N.cif")
 //need the site paired with its color
 //then loop through and add them all?
 //if so, can we send in the list of sites to pick?

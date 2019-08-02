@@ -133,7 +133,7 @@ function genomeLineChart() {
           const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
-          loadStructure("rcsb://4O5N.cif", ":"+selectedChain+ " and "+ selectedSite, color_key[selectedAbsDiffsel])
+          selectSite(":"+selectedChain+ " and "+ selectedSite, color_key[selectedAbsDiffsel])
 
 
           d3.select(".focus").selectAll("circle").style("fill", "#999999");
@@ -148,7 +148,7 @@ function genomeLineChart() {
              .style('fill', 'grey')
              .classed("selected",false);
           // remove color on the protein structure.
-          loadStructure("rcsb://4O5N.cif", ":"+selectedChain+ " and "+ selectedSite, greyColor)
+          deselectSite(":"+selectedChain+ " and "+ selectedSite, greyColor)
         }
       }
 
@@ -279,7 +279,7 @@ function genomeLineChart() {
 }
 
 var chart = genomeLineChart();
-d3.csv("https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/2009-age-65-sitediffsel-median_processed.csv?token=ADDHJTRXCEDDBHI7BM2GQH25JH6CU").then(data =>
+d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(data =>
   d3.select("#line_plot")
     .data([data])
     .call(chart)
