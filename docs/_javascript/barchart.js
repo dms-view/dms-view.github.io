@@ -97,6 +97,21 @@ function stackedBarChart() {
           .attr("height", d => y(d[0]) - y(d[1]))
           .attr("width", x.bandwidth());
 
+      svg.append("g")
+        .selectAll("g")
+        .data(series)
+        .join("g")
+        .selectAll("text")
+        .data(d => d)
+        .join("text")
+          .attr("x", (d, i) => x(d.data.site) + (x.bandwidth() / 2))
+          .attr("y", d => y(d[1]) + y(d[0]) - y(d[1]))
+          .attr("font-family", "monospace")
+          .attr("font-size", d => y(d[0]) - y(d[1]))
+          .attr("text-anchor", "middle")
+          .attr("fill", "#000000")
+          .text(function (d) { return d3.select(this.parentNode).datum().key; });
+
       svg.selectAll(".y-axis")
   			.call(d3.axisLeft(y).ticks(null, "s"));
 
