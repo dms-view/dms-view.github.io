@@ -123,7 +123,7 @@ function genomeLineChart() {
       }
 
       function selectPoint(d) {
-        console.log("Select site: " + d.site);
+        console.log("Select site: " + d.site + " " +d.chain_site);
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
@@ -133,14 +133,16 @@ function genomeLineChart() {
           const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
-          selectSite(":"+selectedChain+ " and "+ selectedSite, color_key[selectedAbsDiffsel])
-
 
           d3.select(".focus").selectAll("circle").style("fill", "#999999");
           // Update circles in the line plot to reflect which sites have frequency data or not.
           d3.select(".focus").selectAll(".non_brushed").style("fill", function(d) {});
           d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
+          d3.selectAll(".selected").data().forEach(function(element) {
+            selectSite(":"+element.chain+ " and "+ element.chain_site, color_key[Math.ceil(element.abs_diffsel)])
+          });
         }
+
         // if already selected
         else {
           // return circle to baseline grey
