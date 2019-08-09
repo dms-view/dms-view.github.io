@@ -76,6 +76,7 @@ function stackedBarChart() {
 
       // Stack the wide data by mutations for plotting a stacked barchart.
       var series = d3.stack().keys(mutations)(wideData);
+      chart.series = series;
 
       // Calculate the y domain from the maximum stack position.
       y.domain([0, d3.max(series, d => d3.max(d, d => d[1]))]);
