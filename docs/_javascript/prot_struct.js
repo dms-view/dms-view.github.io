@@ -56,7 +56,12 @@ function loadStructure (input) {
 }
 
 function selectSite (siteString, color) {
-    protein.addRepresentation("spacefill", {
+  if (polymerSelect.value == "cartoon") {
+   fill = "spacefill";
+ }else{
+   fill = polymerSelect.value
+ }
+    protein.addRepresentation(fill, {
       color: color,
       name: siteString
     }).setSelection(siteString)
