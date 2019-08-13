@@ -150,7 +150,7 @@ function genomeLineChart() {
              .style('fill', 'grey')
              .classed("selected",false);
           // remove color on the protein structure.
-          deselectSite(":"+selectedChain+ " and "+ selectedChainSite, greyColor)
+          deselectSite(":"+selectedChain+ " and "+ selectedChainSite)
         }
       }
 
