@@ -1,7 +1,8 @@
+// Code for example: interactive/simple-viewer
 var protein;
 var greyColor = "#999999";
 // Create NGL Stage object
-var stage = new NGL.Stage( "protein" );
+var stage = new NGL.Stage("protein");
 stage.setParameters({
   backgroundColor: "white"
 });
@@ -10,9 +11,6 @@ stage.setParameters({
 window.addEventListener( "resize", function( event ){
     stage.handleResize();
 }, false );
-
-
-// Code for example: interactive/simple-viewer
 
 // add button to the screen
 function addElement (el) {
@@ -58,22 +56,20 @@ function loadStructure (input) {
 }
 
 function selectSite (siteString, color) {
-    protein.addRepresentation("spacefill", {
+    protein.addRepresentation("surface", {
       color: color,
-    }, false).setSelection(siteString)
+      name: siteString
+    }).setSelection(siteString)
   }
 
-  function deselectSite (siteString, color) {
-      protein.addRepresentation("spacefill", {
-        color: color,
-      }, false).setSelection(siteString)
+  function deselectSite (siteString) {
+    stage.getRepresentationsByName(siteString).dispose()
     }
 
 // select protein display type
 var polymerSelect = createSelect([
   [ "cartoon", "cartoon" ],
   [ "spacefill", "spacefill" ],
-  [ "licorice", "licorice" ],
   [ "surface", "surface" ]
 ], {
   onchange: function (e) {
@@ -91,7 +87,3 @@ addElement(polymerSelect)
 
 // load structure to start
 loadStructure("rcsb://4O5N.cif")
-//need the site paired with its color
-//then loop through and add them all?
-//if so, can we send in the list of sites to pick?
-//this will probably mean re-loading the structure each time but maybe that's okay?
