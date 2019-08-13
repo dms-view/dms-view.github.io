@@ -56,7 +56,7 @@ function loadStructure (input) {
 }
 
 function selectSite (siteString, color) {
-    protein.addRepresentation("surface", {
+    protein.addRepresentation("spacefill", {
       color: color,
       name: siteString
     }).setSelection(siteString)
