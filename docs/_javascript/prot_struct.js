@@ -80,10 +80,13 @@ var polymerSelect = createSelect([
         name: "polymer",
         color: greyColor
       })
+      d3.selectAll(".selected").data().forEach(function(element) {
+        selectSite(":"+element.chain+ " and "+ element.chain_site, color_key[Math.ceil(element.abs_diffsel)])
+      });
     })
   }
 }, { top: "36px", left: "12px" })
 addElement(polymerSelect)
 
 // load structure to start
-loadStructure("rcsb://4O5N.cif")
+loadStructure("_data/4O5N_trimer.pdb")
