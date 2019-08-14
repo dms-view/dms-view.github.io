@@ -127,10 +127,10 @@ function genomeLineChart() {
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
+        const selectedAbsDiffsel = Math.ceil(d.abs_diffsel);
 
         // if not already selected
         if (!d3.select(this).classed("selected")) {
-          const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
 
@@ -150,6 +150,13 @@ function genomeLineChart() {
           // remove color on the protein structure.
           deselectSite(":"+selectedChain+ " and "+ selectedChainSite)
         }
+
+        chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
+        console.log("Selected sites: " + chart.selectedSites);
+        // TODO: Resolve off-by-one mismatch between per-site and per site-mutation datasets.
+        d3.select("#punchcard_chart")
+          .data([perSiteData.filter(d => chart.selectedSites.includes(+d.isite + 1))])
+          .call(punchCard);
       }
 
       var circleAttributes = circlePoint
