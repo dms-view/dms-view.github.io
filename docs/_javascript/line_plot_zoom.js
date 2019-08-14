@@ -150,6 +150,12 @@ function genomeLineChart() {
           // remove color on the protein structure.
           deselectSite(":"+selectedChain+ " and "+ selectedChainSite)
         }
+
+        chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
+        console.log("Selected sites: " + chart.selectedSites);
+        d3.select("#punchcard_chart")
+          .data([perSiteData.filter(d => chart.selectedSites.includes(d.isite))])
+          .call(punchCard);
       }
 
       var circleAttributes = circlePoint
