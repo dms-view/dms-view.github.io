@@ -1,6 +1,7 @@
 // Code for example: interactive/simple-viewer
 var protein;
 var greyColor = "#999999";
+
 // Create NGL Stage object
 var stage = new NGL.Stage("protein");
 stage.setParameters({
@@ -45,9 +46,9 @@ function loadStructure (input) {
   stage.removeAllComponents()
   return stage.loadFile(input).then(function (o) {
     protein = o;
-    o.setRotation([ 2, 0, 0 ])
-    o.autoView()
-    o.addRepresentation(polymerSelect.value, {
+    protein.setRotation([ 2, 0, 0 ])
+    protein.autoView()
+    protein.addRepresentation(polymerSelect.value, {
       sele: "polymer",
       name: "polymer",
       color: greyColor
@@ -55,21 +56,26 @@ function loadStructure (input) {
   })
 }
 
+// color a site by a certain color
 function selectSite (siteString, color) {
+  // highlighted site representation should match main representation except
+  // the highlighted site should be spacefill if main protein cartoon
   if (polymerSelect.value == "cartoon") {
    fill = "spacefill";
  }else{
    fill = polymerSelect.value
  }
-    protein.addRepresentation(fill, {
-      color: color,
-      name: siteString
-    }).setSelection(siteString)
+ // color the site
+  protein.addRepresentation(fill, {
+    color: color,
+    name: siteString
+  }).setSelection(siteString)
   }
 
-  function deselectSite (siteString) {
-    stage.getRepresentationsByName(siteString).dispose()
-    }
+// remove color from a site
+function deselectSite (siteString) {
+  stage.getRepresentationsByName(siteString).dispose()
+  }
 
 // select protein display type
 var polymerSelect = createSelect([
@@ -85,8 +91,10 @@ var polymerSelect = createSelect([
         name: "polymer",
         color: greyColor
       })
+      // on change, reselect the points so they are "on top"
       d3.selectAll(".selected").data().forEach(function(element) {
-        selectSite(":"+element.chain+ " and "+ element.chain_site, color_key[Math.ceil(element.abs_diffsel)])
+        selectSite(":"+element.chain+ " and "+ element.chain_site,
+                   color_key[Math.ceil(element.abs_diffsel)])
       });
     })
   }
