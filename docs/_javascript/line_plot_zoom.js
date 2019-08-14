@@ -1,18 +1,3 @@
-function rgbToHex(rgb) {
-  var hex = Number(rgb).toString(16);
-  if (hex.length < 2) {
-    hex = "0" + hex;
-  }
-  return hex;
-}
-
-function fullColorHex(r, g, b) {
-  var red = rgbToHex(r);
-  var green = rgbToHex(g);
-  var blue = rgbToHex(b);
-  return red + green + blue;
-}
-
 function genomeLineChart() {
   // Setup chart configuration.
   var divWidth = 760,
@@ -138,7 +123,7 @@ function genomeLineChart() {
       }
 
       function selectPoint(d) {
-        console.log("Select site: " + d.site);
+        console.log("Select site: " + d.site + " " +d.chain_site);
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
@@ -151,18 +136,11 @@ function genomeLineChart() {
 
           // Update circles in the line plot to reflect which sites have frequency data or not.
           d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
-
-          // Highlight the selected site on the protein structure.
-          icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-          icn3dui.setOption(
-            'color',
-            fullColorHex(
-              d3.rgb(color_key[selectedAbsDiffsel]).r,
-              d3.rgb(color_key[selectedAbsDiffsel]).g,
-              d3.rgb(color_key[selectedAbsDiffsel]).b
-            )
-          );
+          d3.selectAll(".selected").data().forEach(function(element) {
+            selectSite(":"+element.chain+ " and "+ element.chain_site, color_key[Math.ceil(element.abs_diffsel)])
+          });
         }
+
         // if already selected
         else {
           // return circle to baseline grey
@@ -170,11 +148,7 @@ function genomeLineChart() {
              .style('fill', 'grey')
              .classed("selected",false);
           // remove color on the protein structure.
-          icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-          icn3dui.setOption('color', 'grey');
-            icn3dui.setStyle("proteins", "sphere");
-            icn3dui.selectByCommand("." + selectedChain + ":" + selectedChainSite);
-            icn3dui.setOption('color', fullColorHex(d3.rgb(color_key[selectedAbsDiffsel]).r, d3.rgb(color_key[selectedAbsDiffsel]).g, d3.rgb(color_key[selectedAbsDiffsel]).b));
+          deselectSite(":"+selectedChain+ " and "+ selectedChainSite)
         }
       }
 

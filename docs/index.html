@@ -10,13 +10,7 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-array.v2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
-  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery.min.js"></script>
-  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery-ui.min.js"></script>
-  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/three.min.js"></script>
-  <script src="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/lib/jquery-ui.min.css" />
-  <link rel="stylesheet" href="https://www.ncbi.nlm.nih.gov/Structure/icn3d/icn3d_full_ui.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -41,44 +35,13 @@
         <div id="frequencies" class="row"></div>
       </div>
       <div class="col-4">
-        <div class="list-group list-group-horizontal-sm mb-1">
-          <button type="button" id="save_image" class="list-group-item list-group-item-action flex-fill"><strong style="color: #000000">Save Image</strong></button>
-          <button type="button" id ="remove_selections" class="list-group-item list-group-item-action flex-fill"><strong style="color: #000000">Clear Selections</strong></button>
-          <button type="button" id="send_state" class="list-group-item list-group-item-action flex-fill"><strong style="color: #000000">Share Link</strong></button>
-          <button type="button" id="load_command" class="list-group-item list-group-item-action flex-fill" data-toggle="modal" data-target="#myModal"><strong style="color: #000000">Toggle Commandline</strong></button>
+        <div id="protein" style="width:400px; height:800px;"></div>
       </div>
-
-        <div id="icn3dwrap" class="row"></div>
-        <div id="colorKeydiv" class="row"></div>
-      </div>
-
-
-    </div>
-
-    <!-- warning modal before reloading with a command line -->
-    <div class="modal" id="myModal" tabindex="1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-    <div class="modal-header">
-    <h4 id="myModalLabel"><font color="white">Clear all selections and open the interactive command line.</font></h4>
-
-    </div>
-    <div class="modal-body">
-    <p><strong style="color: red">WARNING!</strong> Clicking confirm will remove all current selections and load a new view. Are you sure you want to continue?</p>
-    </div>
-    <div class="modal-footer">
-    <button type="confirm" id = "cancel" class="btn btn-warning" data-dismiss="modal">Close</button>
-    <button type="cancel" id = "confirm" class="btn btn-danger">Yes Reload</button>
-    </div>
-    </div>
-    </div>
     </div>
   </div>
   <script src="_javascript/color-legend.js"></script>
   <script src="_javascript/line_plot_zoom.js" type="text/javascript"></script>
-  <script src="_javascript/prot_struct.js"></script>
-  <script src="_javascript/modal_activation.js" type="text/javascript"></script>
+  <script src="_javascript/ngl.js"></script>
+  <script src="_javascript/prot_struct.js" type="text/javascript"></script>
 </body>
-
-
 </html>
