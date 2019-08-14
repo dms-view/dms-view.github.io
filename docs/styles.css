@@ -33,7 +33,6 @@ tr:nth-child(even) {
 
 .focus circle.selected {
   r: 8;
-  fill: red;
 }
 
 .tooltip {

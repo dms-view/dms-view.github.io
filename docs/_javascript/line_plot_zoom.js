@@ -149,9 +149,7 @@ function genomeLineChart() {
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
 
-          d3.select(".focus").selectAll("circle").style("fill", "#999999");
           // Update circles in the line plot to reflect which sites have frequency data or not.
-          d3.select(".focus").selectAll(".non_brushed").style("fill", function(d) {});
           d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
 
           // Highlight the selected site on the protein structure.
