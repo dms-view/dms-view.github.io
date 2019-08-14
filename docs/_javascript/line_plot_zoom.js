@@ -127,10 +127,10 @@ function genomeLineChart() {
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
+        const selectedAbsDiffsel = Math.ceil(d.abs_diffsel);
 
         // if not already selected
         if (!d3.select(this).classed("selected")) {
-          const selectedAbsDiffsel = Math.ceil(d.abs_diffsel)
           var colors = sessionStorage.getItem("colorTest")
           color_key = JSON.parse(colors);
 
