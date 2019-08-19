@@ -51,4 +51,4 @@ Adam sent me this file but says that you can find it under pdb code [5FYL](https
 
 ## temporary files
 Currently, `dms-view` does not handle multiple conditions.
-I made a temp which is a subset of the main file created above called [`HIVsmall_dms-view.csv`](HIVsmall_dms-view.csv).
+The script [`process_small_HIV.py`](process_small_HIV.py) creates a temp file which is a subset of the main file created above called [`HIVsmall_dms-view.csv`](HIVsmall_dms-view.csv).

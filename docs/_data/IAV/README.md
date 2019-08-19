@@ -10,7 +10,7 @@ To create the final dataframe, I ran [`process_H3N2_sera.py`](process_H3N2_sera.
 ## final input data files
 
 In the end, `dms-view` needs two data files:  
-1. [`flu_dms-view.csv`](HIV_dms-view.csv)  
+1. [`flu_dms-view.csv`](flu_dms-view.csv)  
 2. [`4O5N_trimer.pdb`](4O5N_trimer.pdb)
 
 ### [`flu_dms-view.csv`](flu_dms-view.csv)  
