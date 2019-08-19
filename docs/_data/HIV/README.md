@@ -47,3 +47,8 @@ The final data frame has the following columns:
 
 ### [`5FYL_AbsRemoved.pdb`](5FYL_AbsRemoved.pdb)
 Adam sent me this file but says that you can find it under pdb code [5FYL](https://www.rcsb.org/structure/5fyl).
+
+
+## temporary files
+Currently, `dms-view` does not handle multiple conditions.
+I made a temp which is a subset of the main file created above called [`HIVsmall_dms-view.csv`](HIVsmall_dms-view.csv).
