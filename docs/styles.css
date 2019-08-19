@@ -35,44 +35,6 @@ tr:nth-child(even) {
   r: 8;
 }
 
-.tooltip {
-  text-align: left;
-  position: absolute;
-  font-size: 20px;
-  z-index: 20;
-  background: white;
-  padding: 5px;
-  border: 1px solid #cccccc;
-  border-radius: 10px;
-}
-
-/* Styles for protein viewer chart. */
-
-#icn3dwrap_viewer {
-  height: 468px!important;
-  width: 375;
-}
-
-.list-group-item {
-    font-size: 12px;
-    padding: 0;
-    padding-left: 0.25em;
-}
-
 .rect {
     fill: #ffab00;
-}
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 80%;
-  transform: translate(-50%, -50%);
-}
-.modal-header{
-    background-color: grey;
-    opacity:1;
-}
-.modal-footer{
-    background-color: grey;
-    opacity:1;
 }
