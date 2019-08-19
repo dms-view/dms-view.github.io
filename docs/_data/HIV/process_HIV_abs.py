@@ -57,13 +57,13 @@ def main():
     conditions = len(df["condition"].unique())
     # add in the DMS numbering
     m = (pd.read_csv(HXB2_map)
-           .rename(columns={"original": "_isite", "new": "site_label"})
-         [["_isite", "site_label"]])
-    df = pd.merge(df, m, on=["site_label"]).astype({'_isite': 'int32'})
-    df = df.sort_values("_isite", ascending=True)
+           .rename(columns={"original": "site", "new": "site_label"})
+         [["site", "site_label"]])
+    df = pd.merge(df, m, on=["site_label"]).astype({'site': 'int32'})
+    df = df.sort_values("site", ascending=True)
 
-    # add in `_isite`
-    for name, group in df.groupby(["_isite"]):
+    # check data
+    for name, group in df.groupby(["site"]):
         assert len(group) == 19 * conditions
 
     # add in the protein numbers

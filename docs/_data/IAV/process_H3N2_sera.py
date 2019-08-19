@@ -18,13 +18,14 @@ def main():
 
     # drop unnecessary columns
     df = df.drop(["serum_name_formatted", "serum_group",
-                  "serum_vaccination", "zoom_site", "isite"], axis=1)
+                  "serum_vaccination", "zoom_site"], axis=1)
 
     # rename columns
     df = df.rename(columns={"serum": "condition",
-                            "site": "_isite",
                             "pdb_chain": "protein_chain",
-                            "pdb_site": "protein_site"})
+                            "pdb_site": "protein_site",
+                            "site": "site_label",
+                            "isite": "site"})
     df = df.rename(columns={"mutdiffsel": "mut_diffsel",
                             "abs_diffsel": "site_absdiffsel",
                             "positive_diffsel": "site_posdiffsel",
@@ -32,9 +33,12 @@ def main():
                             "max_diffsel": "site_maxdiffsel",
                             "min_diffsel": "site_mindiffsel"})
 
+    # convert datatypes
+    df = df.astype({'site': 'int32'})
+
     # check the data
     # per site, there should be 20 AA and identical site-level metrics
-    for name, group in df.groupby("_isite"):
+    for name, group in df.groupby("site"):
         assert len(group) == 20
         assert len(group["wildtype"].unique()) == 1
         assert len(group["site_absdiffsel"].unique()) == 1
@@ -45,6 +49,7 @@ def main():
 
     # output the data
     df.to_csv("flu_dms-view.csv", index=False)
+    print(df["site"].unique())
 
 
 if __name__ == '__main__':

@@ -41,7 +41,7 @@ The final data frame has the following columns:
 * `mut_medianmutdiffsel`: mutational-level metric.  
 * `site_meansitediffsel`: site-level metric.
 * `site_mediansitediffsel`: site-level metric.   
-* `_isite`: internal bookkeeping. In this case, the DMS scan numbering.
+* site for the line plot (ordinal). In this case, the DMS scan numbering.  
 * `protein_chain`: which chain in the pdb the site belongs to
 * `protein_site`: which site in chain in the pdb the site belongs to
 
