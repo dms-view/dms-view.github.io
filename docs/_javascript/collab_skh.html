@@ -22,11 +22,6 @@ p {
   padding: 0;
 }
 
-.clear-button {
-  font: 14px sans-serif;
-  cursor: pointer;
-}
-
 .axis path,
 .axis line {
   fill: none;
@@ -127,27 +122,37 @@ function clickSelection(d) {
 
 function brushSelection(){
   extent = d3.event.selection
-  points.classed("selected", function(d){return isBrushed(extent, x(d.index), y(d.value))})
+  points.classed("selected", function(d){return isBrushed(extent, d)})
 }
 
 
-function isBrushed(brush_coords, cx, cy) {
+function isBrushed(brush_coords, d) {
+  cx = x(d.index);
+  cy = y(d.value);
      var x0 = brush_coords[0][0],
          x1 = brush_coords[1][0],
          y0 = brush_coords[0][1],
          y1 = brush_coords[1][1];
     return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
 }
+/*
+Currently, the `brushSelection` function goes over all of the circles in the plot
+and asks whether or not they are in the brush box.
+If the circle is in the brush box, it is classed as selected.
+If the circle is not in the brush box, it is classed as selected -> false.
 
-// points.on('mousedown', function(){
-//   brush_elm = svg.select(".brush").node();
-//   new_click_event = new Event('mousedown');
-//   new_click_event.pageX = d3.event.pageX;
-//   new_click_event.clientX = d3.event.clientX;
-//   new_click_event.pageY = d3.event.pageY;
-//   new_click_event.clientY = d3.event.clientY;
-//   brush_elm.dispatchEvent(new_click_event);
-// });
+What I really want, is to go over the points and ask two questions.
 
+1. Is it in the brush box?
+2. Is is already selected?
+
+If in the brush box - > select
+If already selected -> select
+else selected -> false
+
+Another strategy would be to keep track of which points are selected by the brush
+and which are selected by the mouse clicking.
+If selected by the mouse clicking, we don't want the brush to effect them
+*/
 
 </script>
