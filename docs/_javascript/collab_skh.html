@@ -7,7 +7,12 @@
   stroke: #afa2dc;
 }
 
-.selected {
+.brushed {
+  fill: #afa2dc;
+  stroke: #2f225d;
+}
+
+.clicked {
   fill: #afa2dc;
   stroke: #2f225d;
 }
@@ -109,20 +114,25 @@ points = svg.selectAll(".point")
     .on("click", clickSelection);
 
 function clickSelection(d) {
-  // if not already selected
-  if (!d3.select(this).classed("selected")) {
-    d3.select(this).classed("selected", true);
+  if (d3.select(this).classed("brushed") && d3.select(this).classed("clicked")){
+    d3.select(this).classed("brushed", false);
+    d3.select(this).classed("clicked", false);
+  }
+  else if (d3.select(this).classed("clicked")){
+    d3.select(this).classed("clicked", false)
+  }
+  else if (d3.select(this).classed("brushed")){
+    d3.select(this).classed("brushed", false)
   }
   else{
-    d3.select(this)
-       .classed("selected",false);
+    d3.select(this).classed("clicked", true)
   }
 }
 
 
 function brushSelection(){
   extent = d3.event.selection
-  points.classed("selected", function(d){return isBrushed(extent, d)})
+  points.classed("brushed", function(d){return isBrushed(extent, d)})
 }
 
 
