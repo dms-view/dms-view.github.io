@@ -31,8 +31,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
       // Calculate the absolute differential selection for plotting.
       data.forEach(
         function (d) {
-          d.absmutdiffsel = Math.abs(+d.mutdiffsel);
-          d.isite = +d.isite;
+          d.absmutdiffsel = Math.abs(+d.mut_diffsel);
+          d.site = +d.site;
           return d;
         }
       )
