@@ -35,6 +35,13 @@ function genomeLineChart() {
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
+      data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
+      data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
+      data.sort(function(x, y){
+        return x["site"] - y["site"]
+      })
+      console.log("here")
+      console.log(data)
       // Bind the data to the chart function.
       chart.data = data;
 
@@ -70,16 +77,16 @@ function genomeLineChart() {
 
       // Update the x and y domains to match the extent of the incoming data.
       xScaleFocus.domain(d3.extent(data, d => +d.site));
-      yScaleFocus.domain(d3.extent(data, d => +d.abs_diffsel));
+      yScaleFocus.domain(d3.extent(data, d => +d.site_absdiffsel));
       xScaleContext.domain(xScaleFocus.domain());
       yScaleContext.domain(yScaleFocus.domain());
 
       // Create the context plot, drawing a line through all of the data points.
-      focus.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("clip-path", "url(#clip)")
-        .attr("d", lineFocus);
+      // focus.append("path")
+      //   .datum(data)
+      //   .attr("class", "line")
+      //   .style("clip-path", "url(#clip)")
+      //   .attr("d", lineFocus);
 
       // Plot a circle for each site in the given data.
       var circlePoint = focus.append("g")
@@ -110,8 +117,8 @@ function genomeLineChart() {
           .style("visibility", "visible")
           .style("left", mousePosition[0] + "px")
           .style("top", mousePosition[1] + 50 + "px")
-          .html("Site: (" + d.domain + ")" + d.chain_site + " <br/> " +
-            "abs_diffsel: " + parseFloat(d.abs_diffsel).toFixed(2) + " <br/> " +
+          .html("Site: (" + d.protein_chain + ")" + d.protein_site + " <br/> " +
+            "abs_diffsel: " + parseFloat(d.site_absdiffsel).toFixed(2) + " <br/> " +
             "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
             "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
             "seq number: " + d.site)
@@ -127,7 +134,7 @@ function genomeLineChart() {
         const selectedSite = parseInt(d.site);
         const selectedChain = d.chain;
         const selectedChainSite = d.chain_site;
-        const selectedAbsDiffsel = Math.ceil(d.abs_diffsel);
+        const selectedAbsDiffsel = Math.ceil(d.site_absdiffsel);
 
         // if not already selected
         if (!d3.select(this).classed("selected")) {
@@ -137,7 +144,7 @@ function genomeLineChart() {
           // Update circles in the line plot to reflect which sites have frequency data or not.
           d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
           d3.selectAll(".selected").data().forEach(function(element) {
-            selectSite(":"+element.chain+ " and "+ element.chain_site, color_key[Math.ceil(element.abs_diffsel)])
+            selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
           });
         }
 
@@ -230,7 +237,7 @@ function genomeLineChart() {
         focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
-          .attr("cy", (d) => yScaleFocus(+d.abs_diffsel))
+          .attr("cy", (d) => yScaleFocus(+d.site_absdiffsel))
         focus.select(".axis--x").call(xAxisFocus);
         svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
           .scale(plotWidth / (s[1] - s[0]))
@@ -244,7 +251,7 @@ function genomeLineChart() {
         focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
-          .attr("cy", (d) => yScaleFocus(+d.abs_diffsel));
+          .attr("cy", (d) => yScaleFocus(+d.site_absdiffsel));
         focus.select(".axis--x").call(xAxisFocus);
         context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
       }
@@ -262,11 +269,11 @@ function genomeLineChart() {
 
   // Define accessors for y-axis values in the focus and context panels.
   function YFocus(d) {
-    return yScaleFocus(+d.abs_diffsel);
+    return yScaleFocus(+d.site_absdiffsel);
   }
 
   function YContext(d) {
-    return yScaleContext(+d.abs_diffsel);
+    return yScaleContext(+d.site_absdiffsel);
   }
 
   // Define getters and setters for chart dimensions using Mike Bostock's idiom.

@@ -6,7 +6,7 @@
 var chart;
 var perSiteData;
 var punchCard;
-var perSiteDataPath = "_data/IAV/flu_dms-view.csv";
+var dataPath = "_data/IAV/flu_dms-view.csv";
 
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
@@ -21,13 +21,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
     punchCard = punchCardChart("#punchcard_chart");
 
     // Request data for charts.
-    var promise1 = d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(data =>
+    var promise1 = d3.csv(dataPath).then(data =>
       d3.select("#line_plot")
         .data([data])
         .call(chart)
     );
 
-    var promise2 = d3.csv(perSiteDataPath).then(function (data) {
+    var promise2 = d3.csv(dataPath).then(function (data) {
       // Calculate the absolute differential selection for plotting.
       data.forEach(
         function (d) {
