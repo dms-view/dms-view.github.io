@@ -284,10 +284,3 @@ function genomeLineChart() {
 
   return chart;
 }
-
-var chart = genomeLineChart();
-d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(data =>
-  d3.select("#line_plot")
-    .data([data])
-    .call(chart)
-);

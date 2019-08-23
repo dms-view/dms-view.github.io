@@ -52,7 +52,8 @@ function loadStructure (input) {
       sele: "polymer",
       name: "polymer",
       color: greyColor
-    })
+    });
+    return protein;
   })
 }
 
@@ -99,7 +100,3 @@ var polymerSelect = createSelect([
     })
   }
 }, { top: "36px", left: "12px" })
-addElement(polymerSelect)
-
-// load structure to start
-loadStructure("_data/4O5N_trimer.pdb")

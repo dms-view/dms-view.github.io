@@ -113,20 +113,3 @@ function punchCardChart(selection) {
 
   return chart;
 }
-
-var perSiteData;
-var punchCard = punchCardChart("#punchcard_chart");
-d3.csv("_data/2009-age-65-per-site-data.csv").then(function (data) {
-  // Calculate the absolute differential selection for plotting.
-  data.forEach(
-    function (d) {
-      d.absmutdiffsel = Math.abs(+d.mutdiffsel);
-      d.isite = +d.isite;
-      return d;
-    }
-  )
-
-  // Bind the data to the chart function.
-  perSiteData = data;
-  console.log(perSiteData);
-});
