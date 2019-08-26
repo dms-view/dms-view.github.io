@@ -29,37 +29,37 @@ def main():
             df["condition"] = antibody
             df["metric"] = f"site_{metric}"
             df = df.rename(columns={"positive_diffsel": "value",
-                                    "site": "site_label"})
+                                    "site": "label_site"})
             site.append(df)
         elif "mut" in metric:
             df["condition"] = antibody
             df["metric"] = f"mut_{metric}"
             df = df.rename(columns={"mutdiffsel": "value",
-                                    "site": "site_label"})
+                                    "site": "label_site"})
             mut.append(df)
         else:
             raise ValueError(f"{metric} is neither site nor mut")
 
     # concatenate the site metrics
     site = pd.concat(site)
-    site = (site.pivot_table(index=['site_label', 'condition'],
+    site = (site.pivot_table(index=['label_site', 'condition'],
                              columns='metric',
                              values='value').reset_index())
 
     # concatenate the mutation metrics (repeat code)
     mut = pd.concat(mut)
-    mut = (mut.pivot_table(index=['site_label', 'condition',
+    mut = (mut.pivot_table(index=['label_site', 'condition',
                                   'wildtype', 'mutation'],
                            columns='metric', values='value').reset_index())
 
     # process the full dataframe
-    df = pd.merge(mut, site, on=["site_label", "condition"])
+    df = pd.merge(mut, site, on=["label_site", "condition"])
     conditions = len(df["condition"].unique())
     # add in the DMS numbering
     m = (pd.read_csv(HXB2_map)
-           .rename(columns={"original": "site", "new": "site_label"})
-         [["site", "site_label"]])
-    df = pd.merge(df, m, on=["site_label"]).astype({'site': 'int32'})
+           .rename(columns={"original": "site", "new": "label_site"})
+         [["site", "label_site"]])
+    df = pd.merge(df, m, on=["label_site"]).astype({'site': 'int32'})
     df = df.sort_values("site", ascending=True)
 
     # check data
@@ -68,7 +68,7 @@ def main():
 
     # add in the protein numbers
     m = pd.read_csv(pdb_map)
-    df = pd.merge(df, m, on="site_label")
+    df = pd.merge(df, m, on="label_site")
 
     # output the data
     df.to_csv("HIV_dms-view.csv", index=False)

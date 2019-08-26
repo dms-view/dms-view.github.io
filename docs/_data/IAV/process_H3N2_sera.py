@@ -24,7 +24,7 @@ def main():
     df = df.rename(columns={"serum": "condition",
                             "pdb_chain": "protein_chain",
                             "pdb_site": "protein_site",
-                            "site": "site_label",
+                            "site": "label_site",
                             "isite": "site"})
     df = df.rename(columns={"mutdiffsel": "mut_diffsel",
                             "abs_diffsel": "site_absdiffsel",
@@ -49,7 +49,6 @@ def main():
 
     # output the data
     df.to_csv("flu_dms-view.csv", index=False)
-    print(df["site"].unique())
 
 
 if __name__ == '__main__':

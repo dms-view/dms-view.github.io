@@ -13,7 +13,7 @@ def main():
                 line = line.split()
                 df.append(line[4:6])
     df = pd.DataFrame(df, columns=["protein_chain", "protein_site"])
-    df["site_label"] = df["protein_site"]
+    df["label_site"] = df["protein_site"]
     df.to_csv("protein_map.csv", index=False)
 
 

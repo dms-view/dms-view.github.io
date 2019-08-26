@@ -33,7 +33,7 @@ In the end, `dms-view` needs two data files:
 ### [`HIV_dms-view.csv`](HIV_dms-view.csv)  
 The final data frame has the following columns:  
 
-* `site_label`: what the line plot x-axis label should say
+* `label_site`: what the line plot x-axis label should say
 * `condition`: selective condition. In this case, different antibodies.  
 * `wildtype`:  wildtype residue at this position.  
 * `mutation`: mutation at this position.  

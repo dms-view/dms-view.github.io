@@ -1,4 +1,4 @@
-condition,site_label,wildtype,mutation,mut_diffsel,site_absdiffsel,site_posdiffsel,site_negdiffsel,site_maxdiffsel,site_mindiffsel,site,protein_chain,protein_site
+condition,label_site,wildtype,mutation,mut_diffsel,site_absdiffsel,site_posdiffsel,site_negdiffsel,site_maxdiffsel,site_mindiffsel,site,protein_chain,protein_site
 VIDD5,193,F,D,3.0309,15.378,14.185,-1.1928,3.0309,-1.1928,208,A,193
 VIDD5,193,F,S,2.6853,15.378,14.185,-1.1928,3.0309,-1.1928,208,A,193
 VIDD5,193,F,A,2.2859,15.378,14.185,-1.1928,3.0309,-1.1928,208,A,193
