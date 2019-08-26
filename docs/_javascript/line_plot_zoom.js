@@ -37,11 +37,6 @@ function genomeLineChart() {
     selection.each(function (data) {
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
-      data.sort(function(x, y){
-        return x["site"] - y["site"]
-      })
-      console.log("here")
-      console.log(data)
       // Bind the data to the chart function.
       chart.data = data;
 
@@ -82,11 +77,11 @@ function genomeLineChart() {
       yScaleContext.domain(yScaleFocus.domain());
 
       // Create the context plot, drawing a line through all of the data points.
-      // focus.append("path")
-      //   .datum(data)
-      //   .attr("class", "line")
-      //   .style("clip-path", "url(#clip)")
-      //   .attr("d", lineFocus);
+      focus.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("clip-path", "url(#clip)")
+        .attr("d", lineFocus);
 
       // Plot a circle for each site in the given data.
       var circlePoint = focus.append("g")
