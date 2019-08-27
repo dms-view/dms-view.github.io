@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.point {
+  fill: #2f225d;
+  stroke: #afa2dc;
+}
+
+.brushed {
+  fill: #afa2dc;
+  stroke: #2f225d;
+}
+
+.clicked {
+  fill: #afa2dc;
+  stroke: #2f225d;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+p {
+  font: 12px sans-serif;
+  margin: 0 0 2px 0;
+  padding: 0;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+
+// generate some fake data
+var data = [];
+var values = [];
+for (var i = 2; i <= 50; i++) {
+    var val = Math.floor(Math.random() * (50 - 5 + 1) + 5);
+    data.push({index: i, value: val});
+    values.push(val);
+}
+
+// set up the plot
+var margin = {top: 20, right: 20, bottom: 60, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scaleLinear().range([0, width]).domain([0, 50]),
+y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(values) + 5]),
+xAxis = d3.axisBottom(x),
+yAxis = d3.axisLeft(y);
+
+
+// make the svg
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+   .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// add in the axes
+svg.append("g")
+    .attr("class", "axis axis--x")
+    .attr("id", "axis_x")
+    .attr("clip-path", "url(#clip)")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+svg.append("g")
+    .attr("class", "axis axis--y")
+    .attr("id", "axis_y")
+    .call(yAxis);
+
+// define and add the brush
+var brush = d3.brush().extent([[0,0], [width, height]]).on("brush end", brushSelection);
+
+svg.append("g")
+    .attr("class", "brush")
+    .call(brush)
+  .selectAll('rect')
+    .attr('height', height);
+
+// what does this do?
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", width)
+    .attr("height", height + 20);
+
+// add in the points
+// cx and cy are taking the ith element of the scale which is mapped onto given domains
+points = svg.selectAll(".point")
+    .data(data)
+    .enter().append("circle")
+    .attr("class", "point")
+    .attr("clip-path", "url(#clip)")
+    .attr("r", function(d){return Math.floor(Math.random() * (20 - 5 + 1) + 5);})
+    .attr("cx", function(d) { return x(d.index); })
+    .attr("cy", function(d) { return y(d.value); })
+    .on("click", clickSelection);
+
+function clickSelection(d) {
+  if (d3.select(this).classed("brushed") && d3.select(this).classed("clicked")){
+    d3.select(this).classed("brushed", false);
+    d3.select(this).classed("clicked", false);
+  }
+  else if (d3.select(this).classed("clicked")){
+    d3.select(this).classed("clicked", false)
+  }
+  else if (d3.select(this).classed("brushed")){
+    d3.select(this).classed("brushed", false)
+  }
+  else{
+    d3.select(this).classed("clicked", true)
+  }
+}
+
+
+function brushSelection(){
+  extent = d3.event.selection
+  points.classed("brushed", function(d){return isBrushed(extent, d)})
+}
+
+
+function isBrushed(brush_coords, d) {
+  cx = x(d.index);
+  cy = y(d.value);
+     var x0 = brush_coords[0][0],
+         x1 = brush_coords[1][0],
+         y0 = brush_coords[0][1],
+         y1 = brush_coords[1][1];
+    return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
+}
+/*
+Currently, the `brushSelection` function goes over all of the circles in the plot
+and asks whether or not they are in the brush box.
+If the circle is in the brush box, it is classed as selected.
+If the circle is not in the brush box, it is classed as selected -> false.
+
+What I really want, is to go over the points and ask two questions.
+
+1. Is it in the brush box?
+2. Is is already selected?
+
+If in the brush box - > select
+If already selected -> select
+else selected -> false
+
+Another strategy would be to keep track of which points are selected by the brush
+and which are selected by the mouse clicking.
+If selected by the mouse clicking, we don't want the brush to effect them
+*/
+
+</script>
