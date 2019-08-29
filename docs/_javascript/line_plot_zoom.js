@@ -125,11 +125,12 @@ function genomeLineChart() {
       }
 
       function selectPoint(d) {
-        console.log("Select site: " + d.site + " " +d.chain_site);
+        console.log("Select site: " + d.site);
         const selectedSite = parseInt(d.site);
-        const selectedChain = d.chain;
-        const selectedChainSite = d.chain_site;
+        const selectedChain = d.protein_chain;
+        const selectedChainSite = d.protein_site;
         const selectedAbsDiffsel = Math.ceil(d.site_absdiffsel);
+        console.log("Select site: " + selectedSite + " (" + selectedChain + selectedChainSite + ")");
 
         // if not already selected
         if (!d3.select(this).classed("selected")) {
