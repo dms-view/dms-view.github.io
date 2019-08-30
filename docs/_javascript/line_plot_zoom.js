@@ -27,6 +27,7 @@ function genomeLineChart() {
       lineFocus = d3.line().x(XFocus).y(YFocus),
       areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(plotHeightContext).y1(YContext),
       brushContext = d3.brushX().extent([[0, 0], [plotWidth, plotHeightContext]]),
+      brushFocus = d3.brushX().extent([[0, plotHeightFocus], [plotWidth, marginFocus.top]]),
       zoomContext = d3.zoom()
         .scaleExtent([1, Infinity])
         .translateExtent([[0, 0], [plotWidth, plotHeightFocus]])
@@ -56,6 +57,7 @@ function genomeLineChart() {
 
       // Update the context brush and zoom.
       brushContext.on("brush end", brushed);
+      brushFocus.on("brush end", brushedFocus);
       zoomContext.on("zoom", zoomed);
 
       // Create the context plot which shows the whole genome view below the
@@ -80,7 +82,7 @@ function genomeLineChart() {
       focus.append("path")
         .datum(data)
         .attr("class", "line")
-        .style("clip-path", "url(#clip)")
+        // .style("clip-path", "url(#clip)")
         .attr("d", lineFocus);
 
       // Plot a circle for each site in the given data.
@@ -226,6 +228,12 @@ function genomeLineChart() {
         .call(brushContext)
         .call(brushContext.move, xScaleFocus.range());
 
+        focus.append("g")
+          .attr("class", "brush")
+          .call(brushFocus)
+          .selectAll('rect')
+          .attr('height', marginFocus.top);
+
       function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || xScaleContext.range();
@@ -251,6 +259,43 @@ function genomeLineChart() {
         focus.select(".axis--x").call(xAxisFocus);
         context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
       }
+
+
+function selectProteinSites(){
+  d3.selectAll(".not-brushed").data().forEach(function(element) {
+    deselectSite(":"+element.protein_chain+ " and "+ element.protein_site)
+  });
+  d3.selectAll(".brushed").data().forEach(function(element) {
+    selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
+  });
+}
+
+      // this gathers info about the brushed sites
+      function brushedFocus(){
+        extent = d3.event.selection
+        circlePoint.classed("brushed", function(d){return isBrushed(extent, d)});
+        circlePoint.classed("not-brushed", function(d){return ! isBrushed(extent, d)});
+        selectProteinSites();
+      }
+
+
+      function isBrushed(brush_coords, d) {
+        cx = xScaleFocus(d.site);
+        cy = yScaleFocus(d.site_absdiffsel);
+        if (brush_coords == null){
+          return false
+        }
+        else{
+          var x0 = brush_coords[0],
+              x1 = brush_coords[1];
+           // var x0 = brush_coords[0][0],
+           //     x1 = brush_coords[1][0],
+           //     y0 = brush_coords[0][1],
+           //     y1 = brush_coords[1][1];
+          return x0 <= cx && cx <= x1;    // This return TRUE or FALSE depending on if the points is in the selected area
+        }
+      }
+
     });
   }
 

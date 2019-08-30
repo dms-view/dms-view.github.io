@@ -16,6 +16,22 @@
   pointer-events: all;
 }
 
+.brushed {
+  stroke: #2f225d;
+  fill: blue;
+}
+
+.selected {
+  fill: blue;
+}
+
+.clicked {
+  fill: steelblue;
+}
+
+.not-brushed {
+}
+
 tr:nth-child(even) {
     background-color: #d9d9d9;
 }
