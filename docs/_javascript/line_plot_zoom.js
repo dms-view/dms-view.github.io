@@ -126,6 +126,7 @@ function genomeLineChart() {
         return tooltip.style("visibility", "hidden");
       }
 
+      // selection by clicking
       function selectPoint(d) {
         console.log("Select site: " + d.site);
         const selectedSite = parseInt(d.site);
@@ -228,12 +229,14 @@ function genomeLineChart() {
         .call(brushContext)
         .call(brushContext.move, xScaleFocus.range());
 
+    // Enable brushing in the focus plot.
         focus.append("g")
           .attr("class", "brush")
           .call(brushFocus)
           .selectAll('rect')
           .attr('height', marginFocus.top);
 
+    // Zoom when you brush the contex plot
       function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || xScaleContext.range();
@@ -261,24 +264,26 @@ function genomeLineChart() {
       }
 
 
-function selectProteinSites(){
-  d3.selectAll(".not-brushed").data().forEach(function(element) {
-    deselectSite(":"+element.protein_chain+ " and "+ element.protein_site)
-  });
-  d3.selectAll(".brushed").data().forEach(function(element) {
-    selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
-  });
-}
-
-      // this gathers info about the brushed sites
+      // this gathers info about the brushed sites in the focus plot
       function brushedFocus(){
         extent = d3.event.selection
         circlePoint.classed("brushed", function(d){return isBrushed(extent, d)});
-        circlePoint.classed("not-brushed", function(d){return ! isBrushed(extent, d)});
-        selectProteinSites();
+        circlePoint.classed("non_brushed", function(d){return ! isBrushed(extent, d)});
+        d3.selectAll(".brushed").classed("brush_selected", true);
+
+        // select the brushed sites
+        d3.selectAll(".brushed").data().forEach(function(element) {
+          selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
+        });
+
+        // deselct points sites which were brushed and are now not-brushed
+        d3.selectAll(".non_brushed.brush_selected").data().forEach(function(element){
+          deselectSite(":"+element.protein_chain+" and " +element.protein_site)
+        })
+        d3.selectAll(".non_brushed.brush_selected").classed("brush_selected", false)
       }
 
-
+      // determines if a point is in the brush or not
       function isBrushed(brush_coords, d) {
         cx = xScaleFocus(d.site);
         cy = yScaleFocus(d.site_absdiffsel);
