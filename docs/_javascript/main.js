@@ -7,7 +7,12 @@ var chart;
 var perSiteData;
 var punchCard;
 var dataPath = "_data/IAV/flu_dms-view.csv";
-var proteinPath = "_data/IAV/4O5N_trimer.pdb"
+var proteinPath = "_data/IAV/4O5N_trimer.pdb";
+
+// Bitstream Vera Fonts provided by Gnome:
+// https://www.gnome.org/fonts/
+var fontPath = "_data/fonts/VeraMono.ttf";
+var fontObject;
 
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
@@ -36,6 +41,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .call(chart)
     });
 
+    // TODO: Refactor this redundant code with the code above.
     var promise2 = d3.csv(dataPath).then(function (data) {
       // Calculate the absolute differential selection for plotting.
       data.forEach(
@@ -52,12 +58,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
       return perSiteData;
     });
 
+    // TODO: rename promise variable
     var promise3 = loadStructure(proteinPath);
+
+    var promiseFontLoaded = opentype.load(fontPath, function(err, font) {
+      if (err) {
+        console.log("Font could not be loaded: " + err);
+      }
+      else {
+        console.log("Font loaded: " + fontPath);
+        fontObject = font;
+      }
+    });
 
     // Wait for all data to load before initializing content across the entire
     // application.
     console.log("Waiting for promises...");
-    Promise.all([promise1, promise2, promise3]).then(values => {
+    Promise.all([promise1, promise2, promise3, promiseFontLoaded]).then(values => {
       console.log("Promises fulfilled!");
       console.log(values);
 
