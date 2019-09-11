@@ -271,6 +271,10 @@ function genomeLineChart() {
         circlePoint.classed("non_brushed", function(d){return ! isBrushed(extent, d)});
         d3.selectAll(".brushed").classed("brush_selected", true);
 
+        brushedFocusProtein();
+      }
+
+      var brushedFocusProtein = _.debounce(function() {
         // select the brushed sites
         d3.selectAll(".brushed").data().forEach(function(element) {
           selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
@@ -281,7 +285,8 @@ function genomeLineChart() {
           deselectSite(":"+element.protein_chain+" and " +element.protein_site)
         })
         d3.selectAll(".non_brushed.brush_selected").classed("brush_selected", false)
-      }
+
+      }, 7);
 
       // determines if a point is in the brush or not
       function isBrushed(brush_coords, d) {
