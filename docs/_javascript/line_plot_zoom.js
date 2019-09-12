@@ -276,15 +276,17 @@ function genomeLineChart() {
 
       var brushedFocusProtein = _.debounce(function() {
         // select the brushed sites
-        d3.selectAll(".brushed").data().forEach(function(element) {
+        d3.selectAll(".brushed").each(function(element) {
           selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
+          d3.select(this).style("fill", color_key[Math.ceil(element.site_absdiffsel)]);
         });
 
         // deselct points sites which were brushed and are now not-brushed
-        d3.selectAll(".non_brushed.brush_selected").data().forEach(function(element){
+        d3.selectAll(".non_brushed.brush_selected").each(function(element){
           deselectSite(":"+element.protein_chain+" and " +element.protein_site)
         })
-        d3.selectAll(".non_brushed.brush_selected").classed("brush_selected", false)
+        d3.selectAll(".non_brushed.brush_selected").style('fill', 'grey').classed("brush_selected", false)
+
 
       }, 15);
 
