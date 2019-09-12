@@ -281,6 +281,12 @@ function genomeLineChart() {
           d3.select(this).style("fill", color_key[Math.ceil(element.site_absdiffsel)]);
         });
 
+        // punchard sites
+        chart.brushedSites = d3.selectAll(".brushed").data().map(d => +d.site);
+          d3.select("#punchcard_chart")
+            .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+            .call(punchCard);
+
         // deselct points sites which were brushed and are now not-brushed
         d3.selectAll(".non_brushed.brush_selected").each(function(element){
           deselectSite(":"+element.protein_chain+" and " +element.protein_site)
