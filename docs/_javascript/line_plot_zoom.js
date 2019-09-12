@@ -27,7 +27,7 @@ function genomeLineChart() {
       lineFocus = d3.line().x(XFocus).y(YFocus),
       areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(plotHeightContext).y1(YContext),
       brushContext = d3.brushX().extent([[0, 0], [plotWidth, plotHeightContext]]),
-      brushFocus = d3.brushX().extent([[0, plotHeightFocus], [plotWidth, marginFocus.top]]),
+      brushFocus = d3.brush().extent([[0, 0], [plotWidth, plotHeightFocus]]),
       zoomContext = d3.zoom()
         .scaleExtent([1, Infinity])
         .translateExtent([[0, 0], [plotWidth, plotHeightFocus]])
@@ -271,7 +271,7 @@ function genomeLineChart() {
         circlePoint.classed("non_brushed", function(d){return ! isBrushed(extent, d)});
         d3.selectAll(".brushed").classed("brush_selected", true);
 
-        // brushedFocusProtein();
+        brushedFocusProtein();
       }
 
       var brushedFocusProtein = _.debounce(function() {
@@ -296,13 +296,11 @@ function genomeLineChart() {
           return false
         }
         else{
-          var x0 = brush_coords[0],
-              x1 = brush_coords[1];
-           // var x0 = brush_coords[0][0],
-           //     x1 = brush_coords[1][0],
-           //     y0 = brush_coords[0][1],
-           //     y1 = brush_coords[1][1];
-          return x0 <= cx && cx <= x1;    // This return TRUE or FALSE depending on if the points is in the selected area
+           var x0 = brush_coords[0][0],
+               x1 = brush_coords[1][0],
+               y0 = brush_coords[0][1],
+               y1 = brush_coords[1][1];
+          return x0 <= cx && cx <= x1 && y0 <= cy &&  cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
         }
       }
 
