@@ -236,15 +236,6 @@ function genomeLineChart() {
           .selectAll('rect')
           .attr('height', marginFocus.top);
 
-          var menuDiv = d3.select("#line_plot");
-          var menuButton = menuDiv.append("button")
-              .text("view on protein structure")
-              .attr("id", "buttonCentre")
-              .classed("button", true)
-              .on('click', function(){
-                  brushFocusProteinNodebounce()
-              });
-
     // Zoom when you brush the contex plot
       function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
@@ -281,19 +272,6 @@ function genomeLineChart() {
         d3.selectAll(".brushed").classed("brush_selected", true);
 
         // brushedFocusProtein();
-      }
-
-      function brushFocusProteinNodebounce(){
-        // select the brushed sites
-        d3.selectAll(".brushed").data().forEach(function(element) {
-          selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
-        });
-
-        // deselct points sites which were brushed and are now not-brushed
-        d3.selectAll(".non_brushed.brush_selected").data().forEach(function(element){
-          deselectSite(":"+element.protein_chain+" and " +element.protein_site)
-        })
-        d3.selectAll(".non_brushed.brush_selected").classed("brush_selected", false)
       }
 
       var brushedFocusProtein = _.debounce(function() {
