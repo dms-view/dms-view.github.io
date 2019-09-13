@@ -82,7 +82,7 @@ function genomeLineChart() {
       focus.append("path")
         .datum(data)
         .attr("class", "line")
-        // .style("clip-path", "url(#clip)")
+        .style("clip-path", "url(#clip)")
         .attr("d", lineFocus);
 
       // Plot a circle for each site in the given data.
