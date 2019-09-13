@@ -157,7 +157,7 @@ function genomeLineChart() {
           deselectSite(":"+selectedChain+ " and "+ selectedChainSite)
         }
 
-        chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
+        chart.selectedSites = d3.selectAll(".brushed,.selected").data().map(d => +d.site);
         console.log("Selected sites: " + chart.selectedSites);
 
         d3.select("#punchcard_chart")
@@ -282,7 +282,7 @@ function genomeLineChart() {
         });
 
         // punchard sites
-        chart.brushedSites = d3.selectAll(".brushed").data().map(d => +d.site);
+        chart.brushedSites = d3.selectAll(".brushed,.selected").data().map(d => +d.site);
           d3.select("#punchcard_chart")
             .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
             .call(punchCard);
