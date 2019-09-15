@@ -142,6 +142,7 @@ function genomeLineChart() {
 
           // Update circles in the line plot to reflect which sites have frequency data or not.
           d3.select(this).style("fill", color_key[selectedAbsDiffsel]).classed("selected", true);
+          d3.select(this).classed("clicked", true);
           d3.selectAll(".selected").data().forEach(function(element) {
             selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
           });
@@ -152,7 +153,8 @@ function genomeLineChart() {
           // return circle to baseline grey
           d3.select(this)
              .style('fill', 'grey')
-             .classed("selected",false);
+             .classed("selected",false)
+             .classed("clicked", false);
           // remove color on the protein structure.
           deselectSite(":"+selectedChain+ " and "+ selectedChainSite)
         }
@@ -163,6 +165,8 @@ function genomeLineChart() {
         d3.select("#punchcard_chart")
           .data([perSiteData.filter(d => chart.selectedSites.includes(+d.site))])
           .call(punchCard);
+
+        triageSelectedPoints();
       }
 
       var circleAttributes = circlePoint
@@ -264,37 +268,48 @@ function genomeLineChart() {
       }
 
 
+    var triageSelectedPoints = _.debounce(function(){
+      var clicked = d3.selectAll(".clicked").data().map(d => +d.site);
+      var brushed = d3.selectAll(".new_brushed").data().map(d => +d.site);
+      var already_brushed = d3.selectAll(".new_brushed.brushed").data().map(d =>  +d.site);
+      var new_brushed = _.without.apply(_, [brushed].concat(already_brushed));
+      var new_brushed_not_clicked = _.without.apply(_, [new_brushed].concat(clicked));
+      var no_longer_brushed = d3.selectAll(".non_brushed.brushed").data().map(d => +d.site);
+      var no_longer_brushed_not_clicked = _.without.apply(_, [no_longer_brushed].concat(clicked));
+      d3.selectAll(".new_brushed").classed("brushed", true);
+      
+      // now do protein stuff
+      // select the brushed sites
+      new_brushed_not_clicked.forEach(function(element) {
+        var _circle = d3.select("#site_" + element),
+            _circleData = _circle.data()[0];
+        selectSite(":"+_circleData.protein_chain+ " and "+ _circleData.protein_site, color_key[Math.ceil(_circleData.site_absdiffsel)]);
+        _circle.style("fill", color_key[Math.ceil(_circleData.site_absdiffsel)]).classed("selected");
+      });
+
+      // deselect non-brushed sites
+      no_longer_brushed_not_clicked.forEach(function(element) {
+        var _circle = d3.select("#site_" + element),
+            _circleData = _circle.data()[0];
+        deselectSite(":"+_circleData.protein_chain+ " and "+ _circleData.protein_site);
+        _circle.style("fill", greyColor).classed("new_brushed", false).classed("brushed", false).classed("selected", false);
+      });
+
+      // punchard sites
+      chart.brushedSites = d3.selectAll(".brushed,.clicked").data().map(d => +d.site);
+        d3.select("#punchcard_chart")
+          .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+          .call(punchCard);
+    }, 15);
+
       // this gathers info about the brushed sites in the focus plot
       function brushedFocus(){
         extent = d3.event.selection
-        circlePoint.classed("brushed", function(d){return isBrushed(extent, d)});
+        circlePoint.classed("new_brushed", function(d){return isBrushed(extent, d)});
         circlePoint.classed("non_brushed", function(d){return ! isBrushed(extent, d)});
-        d3.selectAll(".brushed").classed("brush_selected", true);
 
-        brushedFocusProtein();
+        triageSelectedPoints();
       }
-
-      var brushedFocusProtein = _.debounce(function() {
-        // select the brushed sites
-        d3.selectAll(".brushed").each(function(element) {
-          selectSite(":"+element.protein_chain+ " and "+ element.protein_site, color_key[Math.ceil(element.site_absdiffsel)])
-          d3.select(this).style("fill", color_key[Math.ceil(element.site_absdiffsel)]);
-        });
-
-        // punchard sites
-        chart.brushedSites = d3.selectAll(".brushed,.selected").data().map(d => +d.site);
-          d3.select("#punchcard_chart")
-            .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
-            .call(punchCard);
-
-        // deselct points sites which were brushed and are now not-brushed
-        d3.selectAll(".non_brushed.brush_selected").each(function(element){
-          deselectSite(":"+element.protein_chain+" and " +element.protein_site)
-        })
-        d3.selectAll(".non_brushed.brush_selected").style('fill', 'grey').classed("brush_selected", false)
-
-
-      }, 15);
 
       // determines if a point is in the brush or not
       function isBrushed(brush_coords, d) {
