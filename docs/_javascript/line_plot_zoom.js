@@ -277,7 +277,7 @@ function genomeLineChart() {
       var no_longer_brushed = d3.selectAll(".non_brushed.brushed").data().map(d => +d.site);
       var no_longer_brushed_not_clicked = _.without.apply(_, [no_longer_brushed].concat(clicked));
       d3.selectAll(".new_brushed").classed("brushed", true);
-      
+
       // now do protein stuff
       // select the brushed sites
       new_brushed_not_clicked.forEach(function(element) {

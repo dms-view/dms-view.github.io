@@ -16,19 +16,19 @@
   pointer-events: all;
 }
 
-.brushed {
-  stroke: #2f225d;
+.brushed{
+  fill: black;
+  stroke: grey;
+  stroke-width: 1px;
+  r: 8;
+  opacity: 1.0;
 }
 
 .selected {
-  fill: blue;
-}
-
-.clicked {
-  fill: steelblue;
-}
-
-.not-brushed {
+  stroke: grey;
+  stroke-width: 1px;
+  r: 8;
+  opacity: 1.0;
 }
 
 tr:nth-child(even) {
@@ -43,11 +43,8 @@ tr:nth-child(even) {
 
 .focus circle.hovered {
   r: 8;
-  fill: blue;
-}
-
-.focus circle.selected {
-  r: 8;
+  fill: black;
+  opacity: 1.0;
 }
 
 .rect {
