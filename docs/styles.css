@@ -27,7 +27,7 @@
 .selected {
   stroke: grey;
   stroke-width: 1px;
-  r: 8;
+  r: 4;
   opacity: 1.0;
 }
 
@@ -42,7 +42,7 @@ tr:nth-child(even) {
 }
 
 .focus circle.hovered {
-  r: 8;
+  r: 4;
   fill: black;
   opacity: 1.0;
 }
