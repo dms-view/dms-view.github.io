@@ -58,7 +58,7 @@ function loadStructure (input) {
 }
 
 // color a site by a certain color
-function selectSite (siteString, color) {
+function selectSiteOnProtein (siteString, color) {
   // highlighted site representation should match main representation except
   // the highlighted site should be spacefill if main protein cartoon
   if (polymerSelect.value == "cartoon") {
@@ -74,7 +74,7 @@ function selectSite (siteString, color) {
   }
 
 // remove color from a site
-function deselectSite (siteString) {
+function deselectSiteOnProteinStructure (siteString) {
   stage.getRepresentationsByName(siteString).dispose()
   }
 
@@ -94,7 +94,7 @@ var polymerSelect = createSelect([
       })
       // on change, reselect the points so they are "on top"
       d3.selectAll(".selected").data().forEach(function(element) {
-        selectSite(":"+element.chain+ " and "+ element.chain_site,
+        selectSiteOnProtein(":"+element.chain+ " and "+ element.chain_site,
                    color_key[Math.ceil(element.abs_diffsel)])
       });
     })
