@@ -256,9 +256,7 @@ function genomeLineChart() {
     // Enable brushing in the FOCUS plot.
         focus.append("g")
           .attr("class", "brush")
-          .call(brushFocus)
-          .selectAll('rect')
-          .attr('height', marginFocus.top);
+          .call(brushFocus);
 
     // Zoom when you brush the CONTEXT plot
       function brushed() {
