@@ -109,6 +109,11 @@ function genomeLineChart() {
         .style("clip-path", "url(#clip)")
         .attr("d", lineFocus);
 
+    // Enable brushing in the FOCUS plot.
+        focus.append("g")
+          .attr("class", "brush")
+          .call(brushFocus);
+
       // Plot a circle for each site in the given data.
       var circlePoint = focus.append("g")
         .selectAll("circle")
@@ -252,11 +257,6 @@ function genomeLineChart() {
         .attr("class", "brush")
         .call(brushContext)
         .call(brushContext.move, xScaleFocus.range());
-
-    // Enable brushing in the FOCUS plot.
-        focus.append("g")
-          .attr("class", "brush")
-          .call(brushFocus);
 
     // Zoom when you brush the CONTEXT plot
       function brushed() {
