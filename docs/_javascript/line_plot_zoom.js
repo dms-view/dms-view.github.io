@@ -62,6 +62,8 @@ function genomeLineChart() {
       var color_key = JSON.parse(colors);
 
       // line plot does not use the mutation-level data
+      var metric = "site_absdiffsel"
+      data.forEach(d => {d["metric"] = d[metric]});
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
@@ -236,8 +238,8 @@ function genomeLineChart() {
       // Set y-axis label for the focus plot.
       svg
         .append("text")
-        .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 30) + ") rotate(-90)")
-        .text("Absolute differential selection");
+        .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 0) + ") rotate(-90)")
+        .text(metric);
 
         // Set title for the context plot.
         svg
