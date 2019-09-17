@@ -63,6 +63,8 @@ function genomeLineChart() {
   function chart(selection) {
     selection.each(function (data) {
       // line plot does not use the mutation-level data
+      var metric = "site_absdiffsel"
+      data.forEach(d => {d["metric"] = d[metric]});
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
@@ -98,7 +100,7 @@ function genomeLineChart() {
 
       // Update the x and y domains to match the extent of the incoming data.
       xScaleFocus.domain(d3.extent(data, d => +d.site));
-      yScaleFocus.domain(d3.extent(data, d => +d.site_absdiffsel));
+      yScaleFocus.domain(d3.extent(data, d => +d.metric));
       xScaleContext.domain(xScaleFocus.domain());
       yScaleContext.domain(yScaleFocus.domain());
 
@@ -144,7 +146,7 @@ function genomeLineChart() {
           .style("left", mousePosition[0] + "px")
           .style("top", mousePosition[1] + 50 + "px")
           .html("Site: (" + d.protein_chain + ")" + d.protein_site + " <br/> " +
-            "abs_diffsel: " + parseFloat(d.site_absdiffsel).toFixed(2) + " <br/> " +
+            "abs_diffsel: " + parseFloat(d.metric).toFixed(2) + " <br/> " +
             "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
             "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
             "seq number: " + d.site)
@@ -166,12 +168,12 @@ function genomeLineChart() {
         if (!d3.select(this).classed("selected")) {
           // update the point on the LINE plot (color based on metric)
           d3.select(this)
-          .style("fill", color_key[Math.ceil(d.site_absdiffsel)])
+          .style("fill", color_key[Math.ceil(d.metric)])
           .classed("selected", true)
           .classed("clicked", true);
           // update the PROTEIN structure (color based on metric)
           selectSiteOnProtein(":"+d.protein_chain+ " and "+ d.protein_site,
-                              color_key[Math.ceil(d.site_absdiffsel)])
+                              color_key[Math.ceil(d.metric)])
         }
 
         // if the point is already selected
@@ -237,8 +239,8 @@ function genomeLineChart() {
       // Set y-axis label for the focus plot.
       svg
         .append("text")
-        .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 30) + ") rotate(-90)")
-        .text("Absolute differential selection");
+        .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 0) + ") rotate(-90)")
+        .text(metric);
 
         // Set title for the context plot.
         svg
@@ -272,7 +274,7 @@ function genomeLineChart() {
         focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
-          .attr("cy", (d) => yScaleFocus(+d.site_absdiffsel))
+          .attr("cy", (d) => yScaleFocus(+d.metric))
         focus.select(".axis--x").call(xAxisFocus);
         svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
           .scale(plotWidth / (s[1] - s[0]))
@@ -286,7 +288,7 @@ function genomeLineChart() {
         focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
-          .attr("cy", (d) => yScaleFocus(+d.site_absdiffsel));
+          .attr("cy", (d) => yScaleFocus(+d.metric));
         focus.select(".axis--x").call(xAxisFocus);
         context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
       }
@@ -362,9 +364,9 @@ function genomeLineChart() {
             _circleData = _circle.data()[0];  // grab the data
         // select the site on the PROTEIN
         selectSiteOnProtein(":"+_circleData.protein_chain+ " and "+ _circleData.protein_site,
-                            color_key[Math.ceil(_circleData.site_absdiffsel)]);
+                            color_key[Math.ceil(_circleData.metric)]);
         // FOCUS styling and update the point to `selected` class
-        _circle.style("fill", color_key[Math.ceil(_circleData.site_absdiffsel)])
+        _circle.style("fill", color_key[Math.ceil(_circleData.metric)])
                .classed("selected", true);
       });
 
@@ -389,7 +391,7 @@ function genomeLineChart() {
       // determines if a point is in the brush or not
       function isBrushed(brush_coords, d) {
         cx = xScaleFocus(d.site);
-        cy = yScaleFocus(d.site_absdiffsel);
+        cy = yScaleFocus(d.metric);
         if (brush_coords == null){
           return false
         }
@@ -416,11 +418,11 @@ function genomeLineChart() {
 
   // Define accessors for y-axis values in the focus and context panels.
   function YFocus(d) {
-    return yScaleFocus(+d.site_absdiffsel);
+    return yScaleFocus(+d.metric);
   }
 
   function YContext(d) {
-    return yScaleContext(+d.site_absdiffsel);
+    return yScaleContext(+d.metric);
   }
 
   // Define getters and setters for chart dimensions using Mike Bostock's idiom.
