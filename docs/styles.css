@@ -6,7 +6,7 @@
 }
 
 .area {
-  fill: steelblue;
+  fill: grey;
   clip-path: url(#clip);
 }
 

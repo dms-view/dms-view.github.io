@@ -240,6 +240,13 @@ function genomeLineChart() {
         .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 30) + ") rotate(-90)")
         .text("Absolute differential selection");
 
+        // Set title for the context plot.
+        svg
+          .append("text")
+          .attr("transform", "translate(" + (divWidth / 10) + ", " + (plotHeightFocus + 60) + ")")
+          .style("text-anchor", "middle")
+          .text("zoom bar");
+
       // Create the context plot.
       context.append("path")
         .datum(data)
@@ -255,8 +262,7 @@ function genomeLineChart() {
       // Enable brushing in the CONTEXT plot.
       context.append("g")
         .attr("class", "brush")
-        .call(brushContext)
-        .call(brushContext.move, xScaleFocus.range());
+        .call(brushContext);
 
     // Zoom when you brush the CONTEXT plot
       function brushed() {
