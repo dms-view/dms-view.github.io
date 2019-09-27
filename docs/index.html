@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Exploring HA Deep Mutational Scan Data</title>
+  <title>dms-view</title>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-array.v2.min.js"></script>
@@ -19,23 +19,19 @@
   <div class="container">
     <div class="row mt-3">
       <div class="col-12">
-        <h1>Seasonal influenza evolution in the lab and nature</h1>
-
-        <p>The line plot below reveals sites in seasonal influenza A/H3N2's hemagglutinin where mutations have allowed individual viruses to escape human adaptive immunity in laboratory conditions.</p>
-
-        <p>Click on a site shown on the line plot to see the position of that site in the three-dimensional protein structure of hemagglutinin and the frequencies of mutations at that site in natural influenza populations.</p>
-
-        <p>Sites shown in <strong style="color: #000000">black</strong> have frequency data. Sites shown in <strong style="color: #999999">grey</strong> do not have any genetic variation in natural populations and therefore do not have any mutation
-          frequency data.</p>
+        <h1>Influenza Virus HA escape from human sera</h1>
       </div>
     </div>
 
     <div class="row mb-5 border-top border-bottom pt-3 pb-3">
       <div class="col-8">
+        <h4 align="center">site-level metric</h4>
         <div id="line_plot" class="row"></div>
+        <h4 align="center">mutation-level metric</h4>
         <div id="punchcard_chart" class="row"></div>
       </div>
       <div class="col-4">
+        <h4 align="center">protein structure</h4>
         <div id="protein" style="width:400px; height:800px;"></div>
       </div>
     </div>

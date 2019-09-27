@@ -224,7 +224,7 @@ function genomeLineChart() {
       svg.append("text")
         .attr("transform", "translate(" + (divWidth / 2) + ", " + (15) + ")")
         .style("text-anchor", "middle")
-        .text("Evolution in the lab")
+        .text("")
         .style("font-weight", "bold");
 
       // Set x-axis label for the focus plot.
