@@ -64,7 +64,7 @@ function genomeLineChart() {
       // line plot does not use the mutation-level data
       var metric = "site_absdiffsel"
       data.forEach(d => {d["metric"] = d[metric]});
-      var conditions = ["red", "blue"];
+      var conditions = ["beginning", "end"];
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
@@ -96,8 +96,29 @@ function genomeLineChart() {
       // updateBars(initialData);
 
       function updateChart(newData){
-        console.log(newData)
-        circlePoint.style("fill", newData)
+        if(newData == "beginning"){
+          var newDataTemp = data.slice(1, 250)
+        }
+        else{
+          var newDataTemp = data.slice(250, 500)
+        };
+
+        console.log(newDataTemp)
+                //rejoin data
+        circlePoint.data(newDataTemp)
+        .exit().remove()
+        .enter().append("circle")
+        .attr("r",0).transition()
+        .duration(500).attr("r", 5);
+        circlePoint.attr("cx", XFocus)
+        .attr("cy", YFocus)
+        .attr("id", d => "site_" + d.site)
+        .attr("class", "non_brushed")
+        .style("clip-path", "url(#clip)")
+        .on("mouseover", showTooltip)
+        .on("mouseout", hideTooltip)
+        .on("click", clickOnPoint);
+
       };
 
       // Create the base chart SVG object.
@@ -148,8 +169,7 @@ function genomeLineChart() {
           .call(brushFocus);
 
       // Plot a circle for each site in the given data.
-      var circlePoint = focus.append("g")
-        .selectAll("circle")
+      var circlePoint = focus.append("g").selectAll("circle")
         .data(data)
         .enter()
         .append("circle");
@@ -227,7 +247,6 @@ function genomeLineChart() {
           .data([perSiteData.filter(d => chart.selectedSites.includes(+d.site))])
           .call(punchCard);
       }
-
       // add style and selection events to the circles
       var circleAttributes = circlePoint
         .attr("r", 5)
