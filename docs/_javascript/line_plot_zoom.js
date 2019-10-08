@@ -133,7 +133,8 @@ function genomeLineChart() {
 
       // Update the context brush, focus brush and zoom brush.
       brushContext.on("brush end", brushed);
-      brushFocus.on("brush end", brushPointsFocus);
+      brushFocus.on("brush end", _.debounce(brushedFocus, 200));
+      // brushFocus.on("brush end", brushedFocus);
       zoomContext.on("zoom", zoomed);
 
       //Create context plot. Shows how genome view below the focus plot
@@ -251,7 +252,7 @@ function genomeLineChart() {
         .attr("cy", YFocus)
         .attr("id", d => "site_" + d.site)
         .attr("class", "non_brushed")
-        .style("clip-path", "url(#clip)")
+        // .style("clip-path", "url(#clip)")
         .on("mouseover", showTooltip)
         .on("mouseout", hideTooltip)
         .on("click", clickOnPoint);
