@@ -3,6 +3,7 @@
  * Initialization includes requesting data to populate plots and protein
  * viewer.
  */
+var debounce = require('lodash.debounce');
 var chart;
 var perSiteData;
 var punchCard;
