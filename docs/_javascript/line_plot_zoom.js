@@ -120,7 +120,7 @@ function genomeLineChart() {
         .on("mouseout", hideTooltip)
         .on("click", clickOnPoint);
 
-      };
+      }; // end of updateChart
 
       // Create the base chart SVG object.
       var svg = d3.select(this)
@@ -454,8 +454,8 @@ function genomeLineChart() {
           return x0 <= cx && cx <= x1 && y0 <= cy &&  cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
         }
       }
-    });
-  }
+    }); // end of for each for the selection
+  } // end of selection
 
   // Define accessors for x-axis values in the focus and context panels.
   function XFocus(d) {
@@ -489,4 +489,4 @@ function genomeLineChart() {
   };
 
   return chart;
-}
+} // end of genomeLineChart
