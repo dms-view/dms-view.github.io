@@ -97,7 +97,7 @@ function genomeLineChart() {
 
       // Update the x and y domains to match the extent of the incoming data.
       xScaleFocus.domain(d3.extent(data, d => +d.site));
-      yScaleFocus.domain(d3.extent(data, d => +d.site_absdiffsel));
+      yScaleFocus.domain(d3.extent(data, d => +d[site_metric]));
       xScaleContext.domain(xScaleFocus.domain());
       yScaleContext.domain(yScaleFocus.domain());
 
@@ -143,7 +143,7 @@ function genomeLineChart() {
           .style("left", mousePosition[0] + "px")
           .style("top", mousePosition[1] + 50 + "px")
           .html("Site: (" + d.protein_chain + ")" + d.protein_site + " <br/> " +
-            "abs_diffsel: " + parseFloat(d.site_absdiffsel).toFixed(2) + " <br/> " +
+            "abs_diffsel: " + parseFloat(d[site_metric]).toFixed(2) + " <br/> " +
             "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
             "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
             "seq number: " + d.site)
@@ -165,12 +165,12 @@ function genomeLineChart() {
         if (!d3.select(this).classed("selected")) {
           // update the point on the LINE plot (color based on metric)
           d3.select(this)
-          .style("fill", color_key[Math.ceil(d.site_absdiffsel)])
+          .style("fill", color_key[Math.ceil(d[site_metric])])
           .classed("selected", true)
           .classed("clicked", true);
           // update the PROTEIN structure (color based on metric)
           selectSiteOnProtein(":"+d.protein_chain+ " and "+ d.protein_site,
-                              color_key[Math.ceil(d.site_absdiffsel)])
+                              color_key[Math.ceil(d[site_metric])])
         }
 
         // if the point is already selected
@@ -271,7 +271,7 @@ function genomeLineChart() {
         focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
-          .attr("cy", (d) => yScaleFocus(+d.site_absdiffsel))
+          .attr("cy", (d) => yScaleFocus(+d[site_metric]))
         focus.select(".axis--x").call(xAxisFocus);
         svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
           .scale(plotWidth / (s[1] - s[0]))
@@ -285,7 +285,7 @@ function genomeLineChart() {
         focus.select(".line").attr("d", lineFocus);
         focus.selectAll("circle")
           .attr("cx", (d) => xScaleFocus(+d.site))
-          .attr("cy", (d) => yScaleFocus(+d.site_absdiffsel));
+          .attr("cy", (d) => yScaleFocus(+d[site_metric]));
         focus.select(".axis--x").call(xAxisFocus);
         context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
       }
@@ -361,9 +361,9 @@ function genomeLineChart() {
             _circleData = _circle.data()[0];  // grab the data
         // select the site on the PROTEIN
         selectSiteOnProtein(":"+_circleData.protein_chain+ " and "+ _circleData.protein_site,
-                            color_key[Math.ceil(_circleData.site_absdiffsel)]);
+                            color_key[Math.ceil(_circleData[site_metric])]);
         // FOCUS styling and update the point to `selected` class
-        _circle.style("fill", color_key[Math.ceil(_circleData.site_absdiffsel)])
+        _circle.style("fill", color_key[Math.ceil(_circleData[site_metric])])
                .classed("selected", true);
       });
 
@@ -388,7 +388,7 @@ function genomeLineChart() {
       // determines if a point is in the brush or not
       function isBrushed(brush_coords, d) {
         cx = xScaleFocus(d.site);
-        cy = yScaleFocus(d.site_absdiffsel);
+        cy = yScaleFocus(d[site_metric]);
         if (brush_coords == null){
           return false
         }
@@ -415,11 +415,11 @@ function genomeLineChart() {
 
   // Define accessors for y-axis values in the focus and context panels.
   function YFocus(d) {
-    return yScaleFocus(+d.site_absdiffsel);
+    return yScaleFocus(+d[site_metric]);
   }
 
   function YContext(d) {
-    return yScaleContext(+d.site_absdiffsel);
+    return yScaleContext(+d[site_metric]);
   }
 
   // Define getters and setters for chart dimensions using Mike Bostock's idiom.

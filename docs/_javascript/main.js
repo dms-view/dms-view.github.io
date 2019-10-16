@@ -6,8 +6,11 @@
 var chart;
 var perSiteData;
 var punchCard;
-var dataPath = "_data/IAV/flu_dms-view.csv";
-var proteinPath = "_data/IAV/4O5N_trimer.pdb";
+var dataPath = "_data/NA/flu_dms-view.csv";
+var proteinPath = "_data/NA/4O5N_trimer.pdb";
+var site_metric = "site_absdiffsel";
+var mut_metric = "mut_diffsel";
+
 
 // Bitstream Vera Fonts provided by Gnome:
 // https://www.gnome.org/fonts/
@@ -52,7 +55,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       // Calculate the absolute differential selection for plotting.
       data.forEach(
         function (d) {
-          d.absmutdiffsel = Math.abs(+d.mut_diffsel);
+          d.absmutdiffsel = Math.abs(+d[mut_metric]);
           d.site = +d.site;
           return d;
         }
@@ -86,8 +89,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
       // Select the site with the maximum y value by default.
       console.log("Select site with maximum y value");
-      var max_y_value = d3.max(chart.data, d => +d.site_absdiffsel);
-      var max_y_record = chart.data.filter(d => +d.site_absdiffsel == max_y_value);
+      var max_y_value = d3.max(chart.data, d => +d[site_metric]);
+      var max_y_record = chart.data.filter(d => +d[site_metric] == max_y_value);
 
       if (max_y_record.length > 0) {
         console.log("click site " + max_y_record[0].site);
