@@ -6,8 +6,8 @@
 var chart;
 var perSiteData;
 var punchCard;
-var dataPath = "_data/NA/flu_dms-view.csv";
-var proteinPath = "_data/NA/4O5N_trimer.pdb";
+var dataPath = "_data/IAV/flu_dms-view.csv";
+var proteinPath = "_data/IAV/4O5N_trimer.pdb";
 var site_metric = "site_absdiffsel";
 var mut_metric = "mut_diffsel";
 
