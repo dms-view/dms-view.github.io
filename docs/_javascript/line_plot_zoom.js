@@ -54,14 +54,13 @@ function genomeLineChart() {
         .translateExtent([[0, 0], [plotWidth, plotHeightFocus]])
         .extent([[0, 0], [plotWidth, plotHeightContext]]);
 
-
-  // color key
-  var colors = sessionStorage.getItem("colorTest")
-  color_key = JSON.parse(colors);
-
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
+      // color key
+      var colors = sessionStorage.getItem("colorTest")
+      var color_key = JSON.parse(colors);
+
       // line plot does not use the mutation-level data
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);

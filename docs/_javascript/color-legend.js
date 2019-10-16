@@ -1,4 +1,4 @@
-d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
+function loadColorLegend(d) {
 
   var width = 380;
   var countScale = d3.scaleLinear()
@@ -101,4 +101,4 @@ d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(d => {
   .attr("dx", "-.8em")
   .attr("dy", ".40em")
   .attr("transform", "translate(8, 5)");
-  });
+}
