@@ -50,11 +50,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       // Calculate the absolute differential selection for plotting.
       data.forEach(
         function (d) {
-<<<<<<< HEAD
           d.absmutdiffsel = Math.abs(+d[mut_metric]);
-=======
-          d.absmutdiffsel = Math.abs(+d.mut_pref);
->>>>>>> 2a0d42b... fixed merge conflcits
           d.site = +d.site;
           return d;
         }
@@ -88,13 +84,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
       // Select the site with the maximum y value by default.
       console.log("Select site with maximum y value");
-<<<<<<< HEAD
       var max_y_value = d3.max(chart.data, d => +d[site_metric]);
       var max_y_record = chart.data.filter(d => +d[site_metric] == max_y_value);
-=======
-      var max_y_value = d3.max(chart.data, d => +d.site_entropy);
-      var max_y_record = chart.data.filter(d => +d.site_entropy == max_y_value);
->>>>>>> 2a0d42b... fixed merge conflcits
 
       if (max_y_record.length > 0) {
         console.log("click site " + max_y_record[0].site);
