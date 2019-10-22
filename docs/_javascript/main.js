@@ -29,12 +29,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Initialize the mutation/site chart.
     punchCard = punchCardChart("#punchcard_chart");
 
-    // Request data for color legend.
-    // TODO: Refactor this to use the main dataPath variable.
-    var promiseColorLegend = d3.csv("_data/2009-age-65-sitediffsel-median_processed.csv").then(
-      loadColorLegend
-    );
-
     // Request data for charts.
     var promise1 = d3.csv(dataPath).then(function(data){
       // Sort data by site
@@ -83,7 +77,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Wait for all data to load before initializing content across the entire
     // application.
     console.log("Waiting for promises...");
-    Promise.all([promise1, promise2, promise3, promiseFontLoaded, promiseColorLegend]).then(values => {
+    Promise.all([promise1, promise2, promise3, promiseFontLoaded]).then(values => {
       console.log("Promises fulfilled!");
       console.log(values);
 
