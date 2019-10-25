@@ -10,7 +10,8 @@ var dataPath = "_data/IAV/flu_dms-view.csv";
 var proteinPath = "_data/IAV/4O5N_trimer.pdb";
 var site_metric = "site_absdiffsel";
 var mut_metric = "mut_diffsel";
-
+var protein;
+var greyColor = "#999999";
 
 // Bitstream Vera Fonts provided by Gnome:
 // https://www.gnome.org/fonts/

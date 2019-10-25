@@ -13,6 +13,59 @@ window.addEventListener( "resize", function( event ){
     stage.handleResize();
 }, false );
 
+// create tooltip element and add to the viewer canvas
+var tooltip = document.createElement("div");
+Object.assign(tooltip.style, {
+  display: "none",
+  position: "absolute",
+  zIndex: 10,
+  pointerEvents: "none",
+  backgroundColor: "rgba(255,255,255, 0.3)",  // white and transparent
+  color: "black",
+  padding: "8px",
+  fontFamily: "sans-serif"
+});
+stage.viewer.container.appendChild(tooltip);
+
+// remove default hoverPick mouse action
+// this appears to remve the default tooltip behavior
+stage.mouseControls.remove("hoverPick")
+nan_data = {"site": NaN, "label_site": NaN, "wildtype": NaN}
+
+// listen to `hovered` signal to move tooltip around and change its text
+stage.signals.hovered.add(function (pickingProxy) {
+  if (pickingProxy && (pickingProxy.atom || pickingProxy.bond)){
+    var atom = pickingProxy.atom || pickingProxy.closestBondAtom;
+    var cp = pickingProxy.canvasPosition;
+    var site_name = atom.qualifiedName().split(":")[0].split("]")[1]
+    var chain_name = atom.qualifiedName().split(":")[1].split(".")[0]
+    var residue_data = chart.data.filter(d => (+d.protein_site == site_name)
+                                         && (d.protein_chain === chain_name))
+    try {
+      if(residue_data.length > 1) throw "data parse wrong";
+    }catch(err) {
+      console.log(err)
+    }
+    if (residue_data.length == 0){
+      residue_data = nan_data
+    }else{
+      residue_data = residue_data[0]
+    }
+
+    tooltip.innerHTML = `Atom: ${chain_name} ${site_name}<br/>
+       <hr/>
+       site: ${residue_data.site}<br/>
+       site label: ${residue_data.label_site}<br/>
+       wildtype: ${residue_data.wildtype}<br/>
+       `
+    tooltip.style.bottom = cp.y + 3 + "px";
+    tooltip.style.left = cp.x + 3 + "px";
+    tooltip.style.display = "block";
+  }else{
+    tooltip.style.display = "none";
+  }
+});
+
 // add button to the screen
 function addElement (el) {
   Object.assign(el.style, {
