@@ -211,9 +211,8 @@ function genomeLineChart() {
         .attr("class", "axis axis--x")
         .attr("id", "axis_x")
         .attr("transform", "translate(0," + plotHeightFocus + ")")
-        .call(xAxisFocus.tickFormat(function(label){
-          console.log(label)
-          return data[label].label_site
+        .call(xAxisFocus.tickFormat(function(site){
+          return data[site].label_site
         }));
 
       // Create the y-axis for the focus plot.
