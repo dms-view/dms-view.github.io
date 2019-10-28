@@ -375,16 +375,14 @@ function genomeLineChart() {
           .attr("class", "line")
           .style("clip-path", "url(#clip)")
           .attr("d", lineFocus);
+        console.log(data)
+        console.log("here")
 
         // Plot a circle for each site in the given data.
-        var circlePoint = focus.append("g").selectAll("circle")
-          .data(data)
-          .enter()
-          .append("circle");
+        var circlePoint = focus.selectAll("circle").data(data);
 
-        // add style and selection events to the circles
-        // TODO: refactor this to happen when circlePoint is defined
-        var circleAttributes = circlePoint
+        circlePoint.enter()
+          .append("circle")
           .attr("r", 5)
           .attr("cx", XFocus)
           .attr("cy", YFocus)
@@ -394,6 +392,15 @@ function genomeLineChart() {
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
+
+
+          // Update old ones, already have x / width from before
+          circlePoint
+              .transition().duration(250)
+              .attr("cy", YFocus);
+
+          // Remove old ones
+          circlePoint.exit().remove();
 
         // Set y-axis label for the focus plot.
         svg
