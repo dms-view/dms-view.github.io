@@ -107,7 +107,7 @@ tooltip = createElement("div", {}, {
   position: "absolute",
   zIndex: 10,
   pointerEvents: "none",
-  backgroundColor: "rgba(255,255,255, 0.3)",  // white and transparent
+  backgroundColor: "rgba(255,255,255, 0.8)",  // white and transparent
   color: "black",
   padding: "8px",
   fontFamily: "sans-serif"
