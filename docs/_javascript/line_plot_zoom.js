@@ -222,7 +222,9 @@ function genomeLineChart() {
         .attr("class", "axis axis--x")
         .attr("id", "axis_x")
         .attr("transform", "translate(0," + plotHeightFocus + ")")
-        .call(xAxisFocus);
+        .call(xAxisFocus.tickFormat(function(site){
+          return data[site].label_site
+        }));
 
       // Create the y-axis for the focus plot.
       focus.append("g")
@@ -267,7 +269,9 @@ function genomeLineChart() {
       context.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + plotHeightContext + ")")
-        .call(xAxisContext);
+        .call(xAxisContext.tickFormat(function(label){
+          return data[label].label_site
+        }));
 
       // Enable brushing in the CONTEXT plot.
       context.append("g")
