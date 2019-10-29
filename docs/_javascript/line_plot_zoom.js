@@ -54,18 +54,29 @@ function genomeLineChart() {
         .translateExtent([[0, 0], [plotWidth, plotHeightFocus]])
         .extent([[0, 0], [plotWidth, plotHeightContext]]);
 
+
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
-      // color key
-      var colors = sessionStorage.getItem("colorTest")
-      var color_key = JSON.parse(colors);
-
       // line plot does not use the mutation-level data
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
       chart.data = data;
+
+      var generateColorMap = function(data){
+        // create color key based on the data
+        var colors = {};
+        var min_y_value = d3.min(data, d => +d[site_metric]);
+        var max_y_value = d3.max(data, d => +d[site_metric]);
+        data.forEach(function(d){
+          var norm_value = (d[site_metric] - min_y_value) / max_y_value
+          colors[d.site] = d3.interpolateViridis(norm_value)
+        })
+        return colors;
+      };
+
+      color_key = generateColorMap(chart.data);
 
       // Create the base chart SVG object.
       var svg = d3.select(this)
@@ -165,12 +176,12 @@ function genomeLineChart() {
         if (!d3.select(this).classed("selected")) {
           // update the point on the LINE plot (color based on metric)
           d3.select(this)
-          .style("fill", color_key[Math.ceil(d[site_metric])])
+          .style("fill", color_key[d.site])
           .classed("selected", true)
           .classed("clicked", true);
           // update the PROTEIN structure (color based on metric)
           selectSiteOnProtein(":"+d.protein_chain+ " and "+ d.protein_site,
-                              color_key[Math.ceil(d[site_metric])])
+                              color_key[d.site])
         }
 
         // if the point is already selected
@@ -361,9 +372,9 @@ function genomeLineChart() {
             _circleData = _circle.data()[0];  // grab the data
         // select the site on the PROTEIN
         selectSiteOnProtein(":"+_circleData.protein_chain+ " and "+ _circleData.protein_site,
-                            color_key[Math.ceil(_circleData[site_metric])]);
+                            color_key[_circleData.site]);
         // FOCUS styling and update the point to `selected` class
-        _circle.style("fill", color_key[Math.ceil(_circleData[site_metric])])
+        _circle.style("fill", color_key[_circleData.site])
                .classed("selected", true);
       });
 
