@@ -60,7 +60,7 @@ function punchCardChart(selection) {
       var siteMap = new Map();
       data.forEach(function (d) {
         if (siteMap.get(d.site) === undefined) {
-          siteMap.set(d.site, {"site": d.site});
+          siteMap.set(d.site, {"site": d.site, "label": d.label_site});
         }
 
         siteMap.get(d.site)[d.mutation] = d.absmutdiffsel;
@@ -113,7 +113,9 @@ function punchCardChart(selection) {
       };
 
 
-      svg.select(".x-axis").call(xAxis);
+        svg.select(".x-axis").call(xAxis.tickFormat(function(site){
+          return siteMap.get(site)["label"];
+      }));
       svg.select(".y-axis").call(yAxis);
 
       svg.selectAll("g.bar_letter")
