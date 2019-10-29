@@ -61,24 +61,41 @@ function genomeLineChart() {
       // line plot does not use the mutation-level data
       var metric = "site_absdiffsel"
       data.forEach(d => {d["metric"] = d[metric]});
+      var conditions = ["red", "blue"];
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
       chart.data = data;
 
-      var generateColorMap = function(data){
-        // create color key based on the data
-        var colors = {};
-        var min_y_value = d3.min(data, d => +d[site_metric]);
-        var max_y_value = d3.max(data, d => +d[site_metric]);
-        data.forEach(function(d){
-          var norm_value = (d[site_metric] - min_y_value) / max_y_value
-          colors[d.site] = d3.interpolateViridis(norm_value)
-        })
-        return colors;
+      // Handler for dropdown value change
+      var dropdownChange = function() {
+          // var newCereal = d3.select(this).property('value'),
+          //     newData   = cerealMap[newCereal];
+          newData = d3.select(this).property('value')
+
+          updateChart(newData);
       };
 
-      color_key = generateColorMap(chart.data);
+      // Get names of cereals, for dropdown
+      // var cereals = Object.keys(cerealMap).sort();
+
+      var dropdown = d3.select("#line_plot")
+          .insert("select", "svg")
+          .on("change", dropdownChange);
+
+      dropdown.selectAll("option")
+          .data(conditions)
+          .enter().append("option")
+          .attr("value", function (d) { return d; })
+          .text(function (d) { return d;})
+
+      // var initialData = cerealMap[ cereals[0] ];
+      // updateBars(initialData);
+
+      function updateChart(newData){
+        console.log(newData)
+        circlePoint.style("fill", newData)
+      };
 
       // Create the base chart SVG object.
       var svg = d3.select(this)
@@ -107,6 +124,7 @@ function genomeLineChart() {
       var focus = svg.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + marginFocus.left + "," + marginFocus.top + ")");
+
 
       // Update the x and y domains to match the extent of the incoming data.
       xScaleFocus.domain(d3.extent(data, d => +d.site));
@@ -417,7 +435,6 @@ function genomeLineChart() {
           return x0 <= cx && cx <= x1 && y0 <= cy &&  cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
         }
       }
-
     });
   }
 
