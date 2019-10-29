@@ -112,8 +112,7 @@ function punchCardChart(selection) {
         var colorMap = zScale;
       };
 
-
-        svg.select(".x-axis").call(xAxis.tickFormat(function(site){
+      svg.select(".x-axis").call(xAxis.tickFormat(function(site) {
           return siteMap.get(site)["label"];
       }));
       svg.select(".y-axis").call(yAxis);
