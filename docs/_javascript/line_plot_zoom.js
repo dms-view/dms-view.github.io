@@ -162,14 +162,14 @@ function genomeLineChart() {
   // Create the x-axis for the focus plot.
   focus.append("g")
     .attr("class", "axis axis--x")
-    .attr("id", "axis_x")
+    .attr("id", "axis_x_focus")
     .attr("transform", "translate(0," + plotHeightFocus + ")")
     .call(xAxisFocus);
 
   // Create the y-axis for the focus plot.
   focus.append("g")
     .attr("class", "axis axis--y")
-    .attr("id", "axis_y")
+    .attr("id", "axis_y_focus")
     .call(yAxis);
 
   // Set chart title.
@@ -196,8 +196,16 @@ function genomeLineChart() {
   // Create the x-axis for the context plot.
   context.append("g")
     .attr("class", "axis axis--x")
+    .attr("id", "axis_y_context")
     .attr("transform", "translate(0," + plotHeightContext + ")")
     .call(xAxisContext);
+
+    // Set y-axis label for the focus plot.
+    svg
+      .append("text")
+      .attr("id", "axis_y_label_context")
+      .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 0) + ") rotate(-90)")
+      .text(site_metric);
 
   // Enable brushing in the CONTEXT plot.
   context.append("g")
@@ -370,13 +378,11 @@ function genomeLineChart() {
         yScaleContext.domain(yScaleFocus.domain());
 
         // Create the context plot, drawing a line through all of the data points.
-        focus.append("path")
-          .datum(data)
-          .attr("class", "line")
-          .style("clip-path", "url(#clip)")
-          .attr("d", lineFocus);
-        console.log(data)
-        console.log("here")
+        // focus.append("path")
+        //   .datum(data)
+        //   .attr("class", "line")
+        //   .style("clip-path", "url(#clip)")
+        //   .attr("d", lineFocus);
 
         // Plot a circle for each site in the given data.
         var circlePoint = focus.selectAll("circle").data(data);
@@ -388,6 +394,10 @@ function genomeLineChart() {
           .attr("cy", YFocus)
           .attr("id", d => "site_" + d.site)
           .attr("class", "non_brushed")
+          .classed("current_brushed", false)
+          .classed("brushed", false)
+          .classed("selected", false)
+          .classed("class", "current_brushed", false)
           .style("clip-path", "url(#clip)")
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
@@ -402,11 +412,16 @@ function genomeLineChart() {
           // Remove old ones
           circlePoint.exit().remove();
 
-        // Set y-axis label for the focus plot.
-        svg
-          .append("text")
-          .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 0) + ") rotate(-90)")
-          .text(site_metric);
+          // fix the axes (including labels)
+          focus.select("#axis_y_focus")
+            .transition()
+            .call(yAxis);
+
+          focus.select("#axis_x_focus")
+            .call(xAxisFocus);
+
+          context.select("#axis_x_context").call(xAxisContext);
+
 
         // Create the context plot.
         context.append("path")
