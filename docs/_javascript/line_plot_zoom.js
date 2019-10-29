@@ -66,11 +66,11 @@ function genomeLineChart() {
 
       var generateColorMap = function(data){
         // create color key based on the data
-        var colors = {}
+        var colors = {};
         var min_y_value = d3.min(data, d => +d[site_metric]);
-        var range = d3.max(data, d => +d[site_metric]); - min_y_value
+        var max_y_value = d3.max(data, d => +d[site_metric]);
         data.forEach(function(d){
-          var norm_value = (d[site_metric] - min_y_value) / range
+          var norm_value = (d[site_metric] - min_y_value) / max_y_value
           colors[d.site] = d3.interpolateViridis(norm_value)
         })
         return colors;
