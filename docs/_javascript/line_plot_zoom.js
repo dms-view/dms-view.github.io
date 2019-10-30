@@ -196,16 +196,9 @@ function genomeLineChart() {
   // Create the x-axis for the context plot.
   context.append("g")
     .attr("class", "axis axis--x")
-    .attr("id", "axis_y_context")
+    .attr("id", "axis_x_context")
     .attr("transform", "translate(0," + plotHeightContext + ")")
     .call(xAxisContext);
-
-    // Set y-axis label for the focus plot.
-    svg
-      .append("text")
-      .attr("id", "axis_y_label_context")
-      .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 0) + ") rotate(-90)")
-      .text(site_metric);
 
   // Enable brushing in the CONTEXT plot.
   context.append("g")
@@ -266,7 +259,6 @@ function genomeLineChart() {
     var clicked = d3.selectAll(".clicked").data().map(d => +d.site),
         current_brushed = d3.selectAll(".current_brushed").data().map(d => +d.site),
         already_brushed = d3.selectAll(".current_brushed.brushed").data().map(d =>  +d.site);
-    console.log(current_brished)
 
     // sites to select - `current_brushed` but not `clicked` or `brushed`.
     var sites_to_select = _.without.apply(_, [current_brushed].concat(already_brushed)),
@@ -356,7 +348,7 @@ nestmap = d3.rollup(alldata, v => v[0], d => d.condition, d => d.site)
       function updateChart(data){
         // Update the context brush, focus brush and zoom brush.
         brushContext.on("brush end", brushed);
-        brushFocus.on("brush end", brushPointsFocusSelection);
+        brushFocus.on("brush end", brushPointsFocus);
         zoomContext.on("zoom", zoomed);
 
         // Update the x and y domains to match the extent of the incoming data.
@@ -416,7 +408,38 @@ nestmap = d3.rollup(alldata, v => v[0], d => d.condition, d => d.site)
           .datum(data)
           .attr("class", "area")
           .attr("d", areaContext);
-      }
+
+      // FOCUS plot brush functions
+      function brushPointsFocus(){
+        /*
+        updates PROTEIN structure and LOGOPLOTS based on the brush selection
+        from the CONTEXT plot.
+        */
+        extent = d3.event.selection  // FOCUS brush's coordinates
+
+        // TODO: if circlePoint gets refactored to the top-level this function can also move up
+        // a point is either in the newly brushed area or it is not
+        circlePoint.classed("current_brushed",
+                            function(d){return isBrushed(extent, d)});
+        circlePoint.classed("non_brushed",
+                            function(d){return ! isBrushed(extent, d)});
+
+        /*
+        call function to do the actual selection.
+        This function is `debounced` to decrease laggy-ness of the PROTEIN
+        structure update.
+        */
+        brushPointsFocusSelection();
+
+        // LOGOPLOT includes all `.selected` (clicked or brushed) points
+        chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
+          d3.select("#punchcard_chart")
+            .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+            .call(punchCard);
+
+    };
+
+              }; // end of update chart
       // TO DO, find a default value and load that here
       updateChart(chart.data[conditions[0]]);
     }); // end of for each for the selection
