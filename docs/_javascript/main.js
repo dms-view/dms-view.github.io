@@ -10,6 +10,8 @@ var dataPath = "_data/IAV/flu_dms-view.csv";
 var proteinPath = "_data/IAV/4O5N_trimer.pdb";
 var site_metric = "site_absdiffsel";
 var mut_metric = "mut_diffsel";
+var dropdownChange;
+
 var protein;
 var greyColor = "#999999";
 
@@ -40,6 +42,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       data = data.sort(function(a, b) {
           return a.site - b.site;
       });
+
       d3.select("#line_plot")
         .data([data])
         .call(chart)
@@ -81,6 +84,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
     Promise.all([promise1, promise2, promise3, promiseFontLoaded]).then(values => {
       console.log("Promises fulfilled!");
       console.log(values);
+
+      // set up the drop down menu
+      // this needs to happen after the promise because there are some
+      // functions in line_plot_zoom
+      var conditions = []
+      chart.data.forEach(function(key){
+        conditions.push(key["condition"]);
+      });
+      conditions = conditions.filter((x, i, a) => a.indexOf(x) == i);
+
+      var dropdown = d3.select("#line_plot")
+          .insert("select", "svg")
+          .on("change", dropdownChange);
+
+      dropdown.selectAll("option")
+          .data(conditions)
+          .enter().append("option")
+          .attr("value", function (d) { return d; })
+          .text(function (d) { return d;})
 
       // Select the site with the maximum y value by default.
       console.log("Select site with maximum y value");

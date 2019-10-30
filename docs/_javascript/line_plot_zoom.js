@@ -319,33 +319,16 @@ function genomeLineChart() {
       // line plot does not use the mutation-level data
       var metric = "site_absdiffsel"
       data.forEach(d => {d["metric"] = d[metric]});
-      var conditions = ["beginning", "end"];
       data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
       chart.data = data;
 
       // Handler for dropdown value change
-      var dropdownChange = function() {
-          // var newCereal = d3.select(this).property('value'),
-          //     newData   = cerealMap[newCereal];
+      dropdownChange = function() {
           newData = d3.select(this).property('value')
-
           updateChart(newData);
       };
-
-      // Get names of cereals, for dropdown
-      // var cereals = Object.keys(cerealMap).sort();
-
-      var dropdown = d3.select("#line_plot")
-          .insert("select", "svg")
-          .on("change", dropdownChange);
-
-      dropdown.selectAll("option")
-          .data(conditions)
-          .enter().append("option")
-          .attr("value", function (d) { return d; })
-          .text(function (d) { return d;})
 
       // var initialData = cerealMap[ cereals[0] ];
       // updateBars(initialData);
