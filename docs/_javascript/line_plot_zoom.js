@@ -315,49 +315,134 @@ function genomeLineChart() {
 
   // Create a genome line chart for the given selection.
   function chart(selection) {
+<<<<<<< HEAD
     selection.each(function (data) {
+=======
+    selection.each(function (alldata) {
+      // color key
+      colors = sessionStorage.getItem("colorTest")
+      color_key = JSON.parse(colors);
+
+>>>>>>> 0ab9cae... initial render of data done with updateChart
       // line plot does not use the mutation-level data
       var metric = "site_absdiffsel"
-      data.forEach(d => {d["metric"] = d[metric]});
-      data.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
-      data = d3.rollups(data, v => v[0], d => d.site).map(d => d[1]);
+      alldata.forEach(d => {d["metric"] = d[metric]});
+      alldata.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
+      alldata = d3.rollups(alldata, v => v[0], d => d.site).map(d => d[1]);
       // Bind the data to the chart function.
-      chart.data = data;
+      chart.data = alldata;
+      console.log("here is what the data has to look like")
+      console.log(chart.data)
 
       // Handler for dropdown value change
       dropdownChange = function() {
           newData = d3.select(this).property('value')
-          updateChart(newData);
+          updateChart(alldata);
       };
 
-      // var initialData = cerealMap[ cereals[0] ];
-      // updateBars(initialData);
+      function updateChart(data){
+        console.log("inside update chart")
+        // Update the context brush, focus brush and zoom brush.
+        brushContext.on("brush end", brushed);
+        brushFocus.on("brush end", brushPointsFocus);
+        zoomContext.on("zoom", zoomed);
 
-      function updateChart(newData){
-        if(newData == "beginning"){
-          var newDataTemp = data.slice(1, 250)
-        }
-        else{
-          var newDataTemp = data.slice(250, 500)
-        };
+        // Update the x and y domains to match the extent of the incoming data.
+        xScaleFocus.domain(d3.extent(data, d => +d.site));
+        yScaleFocus.domain(d3.extent(data, d => +d[site_metric]));
+        xScaleContext.domain(xScaleFocus.domain());
+        yScaleContext.domain(yScaleFocus.domain());
 
-        console.log(newDataTemp)
-                //rejoin data
-        circlePoint.data(newDataTemp)
-        .exit().remove()
-        .enter().append("circle")
-        .attr("r",0).transition()
-        .duration(500).attr("r", 5);
-        circlePoint.attr("cx", XFocus)
-        .attr("cy", YFocus)
-        .attr("id", d => "site_" + d.site)
-        .attr("class", "non_brushed")
-        .style("clip-path", "url(#clip)")
-        .on("mouseover", showTooltip)
-        .on("mouseout", hideTooltip)
-        .on("click", clickOnPoint);
+        // Create the context plot, drawing a line through all of the data points.
+        focus.append("path")
+          .datum(data)
+          .attr("class", "line")
+          .style("clip-path", "url(#clip)")
+          .attr("d", lineFocus);
+
+        // Plot a circle for each site in the given data.
+        var circlePoint = focus.append("g").selectAll("circle")
+          .data(data)
+          .enter()
+          .append("circle");
+
+        // add style and selection events to the circles
+        // TODO: refactor this to happen when circlePoint is defined
+        var circleAttributes = circlePoint
+          .attr("r", 5)
+          .attr("cx", XFocus)
+          .attr("cy", YFocus)
+          .attr("id", d => "site_" + d.site)
+          .attr("class", "non_brushed")
+          .style("clip-path", "url(#clip)")
+          .on("mouseover", showTooltip)
+          .on("mouseout", hideTooltip)
+          .on("click", clickOnPoint);
+
+        // Set y-axis label for the focus plot.
+        svg
+          .append("text")
+          .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus + 0) + ") rotate(-90)")
+          .text(site_metric);
+
+        // Create the context plot.
+        context.append("path")
+          .datum(data)
+          .attr("class", "area")
+          .attr("d", areaContext);
+
+        // FOCUS plot brush functions
+        function brushPointsFocus(){
+          /*
+          updates PROTEIN structure and LOGOPLOTS based on the brush selection
+          from the CONTEXT plot.
+          */
+          extent = d3.event.selection  // FOCUS brush's coordinates
+
+          // TODO: if circlePoint gets refactored to the top-level this function can also move up
+          // a point is either in the newly brushed area or it is not
+          circlePoint.classed("current_brushed",
+                              function(d){return isBrushed(extent, d)});
+          circlePoint.classed("non_brushed",
+                              function(d){return ! isBrushed(extent, d)});
+
+          /*
+          call function to do the actual selection.
+          This function is `debounced` to decrease laggy-ness of the PROTEIN
+          structure update.
+          */
+          brushPointsFocusSelection();
+
+          // LOGOPLOT includes all `.selected` (clicked or brushed) points
+          chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
+            d3.select("#punchcard_chart")
+              .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+              .call(punchCard);
+        // if(newData == "beginning"){
+        //   var newDataTemp = data.slice(1, 250)
+        // }
+        // else{
+        //   var newDataTemp = data.slice(250, 500)
+        // };
+        //
+        // console.log(newDataTemp)
+        //         //rejoin data
+        // circlePoint.data(newDataTemp)
+        // .exit().remove()
+        // .enter().append("circle")
+        // .attr("r",0).transition()
+        // .duration(500).attr("r", 5);
+        // circlePoint.attr("cx", XFocus)
+        // .attr("cy", YFocus)
+        // .attr("id", d => "site_" + d.site)
+        // .attr("class", "non_brushed")
+        // .style("clip-path", "url(#clip)")
+        // .on("mouseover", showTooltip)
+        // .on("mouseout", hideTooltip)
+        // .on("click", clickOnPoint);
 
       }; // end of updateChart
+<<<<<<< HEAD
 
       // Update the context brush, focus brush and zoom brush.
       brushContext.on("brush end", brushed);
@@ -516,7 +601,6 @@ function genomeLineChart() {
         .attr("class", "area")
         .attr("d", areaContext);
 
-<<<<<<< HEAD
       // Create the x-axis for the context plot.
       context.append("g")
         .attr("class", "axis axis--x")
@@ -558,8 +642,6 @@ function genomeLineChart() {
       }
 
 
-=======
->>>>>>> af2e77d... Refactor functions that don't need data into top-level genomeLineChart
       // FOCUS plot brush functions
       function brushPointsFocus(){
         /*
@@ -673,6 +755,11 @@ function genomeLineChart() {
       }
 =======
 >>>>>>> af2e77d... Refactor functions that don't need data into top-level genomeLineChart
+=======
+      }
+      // TO DO, find a default value and load that here
+      updateChart(alldata);
+>>>>>>> 0ab9cae... initial render of data done with updateChart
     }); // end of for each for the selection
   } // end of selection
 
