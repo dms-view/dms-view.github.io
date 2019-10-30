@@ -48,6 +48,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .call(chart)
     });
 
+
     // TODO: Refactor this redundant code with the code above.
     var promise2 = d3.csv(dataPath).then(function (data) {
       // Calculate the absolute differential selection for plotting.
@@ -84,15 +85,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     Promise.all([promise1, promise2, promise3, promiseFontLoaded]).then(values => {
       console.log("Promises fulfilled!");
       console.log(values);
-
-      // set up the drop down menu
-      // this needs to happen after the promise because there are some
-      // functions in line_plot_zoom
-      var conditions = []
-      chart.data.forEach(function(key){
-        conditions.push(key["condition"]);
-      });
-      conditions = conditions.filter((x, i, a) => a.indexOf(x) == i);
+      
+      conditions = Object.keys(chart.data)
 
       var dropdown = d3.select("#line_plot")
           .insert("select", "svg")
@@ -105,13 +99,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
           .text(function (d) { return d;})
 
       // Select the site with the maximum y value by default.
-      console.log("Select site with maximum y value");
-      var max_y_value = d3.max(chart.data, d => +d[site_metric]);
-      var max_y_record = chart.data.filter(d => +d[site_metric] == max_y_value);
-
-      if (max_y_record.length > 0) {
-        console.log("click site " + max_y_record[0].site);
-        d3.select("#site_" + max_y_record[0].site).dispatch("click");
-      }
+      // console.log("Select site with maximum y value");
+      // var max_y_value = d3.max(chart.data, d => +d[site_metric]);
+      // var max_y_record = chart.data.filter(d => +d[site_metric] == max_y_value);
+      //
+      // if (max_y_record.length > 0) {
+      //   console.log("click site " + max_y_record[0].site);
+      //   d3.select("#site_" + max_y_record[0].site).dispatch("click");
+      // }
     });
 });

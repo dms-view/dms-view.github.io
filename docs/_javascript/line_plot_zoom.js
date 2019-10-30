@@ -323,25 +323,41 @@ function genomeLineChart() {
       colors = sessionStorage.getItem("colorTest")
       color_key = JSON.parse(colors);
 
+<<<<<<< HEAD
 >>>>>>> 0ab9cae... initial render of data done with updateChart
       // line plot does not use the mutation-level data
       var metric = "site_absdiffsel"
       alldata.forEach(d => {d["metric"] = d[metric]});
       alldata.forEach(d => { Object.keys(d).forEach(function (key) { if (key.startsWith("mut_") || key == "mutation") { delete d[key] } }) });
       alldata = d3.rollups(alldata, v => v[0], d => d.site).map(d => d[1]);
+=======
+      var conditions = []
+      alldata.forEach(function(key){
+        conditions.push(key["condition"]);
+      });
+      conditions = conditions.filter((x, i, a) => a.indexOf(x) == i);
+      // This sorts by condition and by site and only takes the first of the sites
+      nestmap = d3.rollup(alldata, v => v[0], d => d.condition, d => d.site)
+
+      // all I need to do is flatten the sites map into an array of values
+      // but I can't figure out how to do that so I am just going to do it
+      // by hand
+      var dataMap = {}
+      conditions.forEach(function(condition){
+        dataMap[condition] = Array.from(nestmap.get(condition), ([key, value]) => value)
+      })
+
+>>>>>>> d115fa2... drop down menu now adds in condition data
       // Bind the data to the chart function.
-      chart.data = alldata;
-      console.log("here is what the data has to look like")
-      console.log(chart.data)
+      chart.data = dataMap;
 
       // Handler for dropdown value change
       dropdownChange = function() {
-          newData = d3.select(this).property('value')
-          updateChart(alldata);
+          newCondition = d3.select(this).property('value')
+          updateChart(chart.data[newCondition]);
       };
 
       function updateChart(data){
-        console.log("inside update chart")
         // Update the context brush, focus brush and zoom brush.
         brushContext.on("brush end", brushed);
         brushFocus.on("brush end", brushPointsFocus);
@@ -557,7 +573,6 @@ function genomeLineChart() {
         .on("mouseout", hideTooltip)
         .on("click", clickOnPoint);
 
-<<<<<<< HEAD
       // Create the x-axis for the focus plot.
       focus.append("g")
         .attr("class", "axis axis--x")
@@ -587,8 +602,6 @@ function genomeLineChart() {
         .style("text-anchor", "middle")
         .text("Site");
 
-=======
->>>>>>> af2e77d... Refactor functions that don't need data into top-level genomeLineChart
       // Set y-axis label for the focus plot.
       svg
         .append("text")
@@ -758,8 +771,12 @@ function genomeLineChart() {
 =======
       }
       // TO DO, find a default value and load that here
+<<<<<<< HEAD
       updateChart(alldata);
 >>>>>>> 0ab9cae... initial render of data done with updateChart
+=======
+      updateChart(chart.data[conditions[0]]);
+>>>>>>> d115fa2... drop down menu now adds in condition data
     }); // end of for each for the selection
   } // end of selection
 
