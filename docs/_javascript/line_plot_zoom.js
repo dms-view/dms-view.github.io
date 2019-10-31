@@ -310,9 +310,9 @@ function genomeLineChart() {
       // select the site on the PROTEIN
       selectSiteOnProtein(":" + _circleData.protein_chain + " and " +
         _circleData.protein_site,
-        color_key[Math.ceil(_circleData[site_metric])]);
+        color_key[_circleData.site]);
       // FOCUS styling and update the point to `selected` class
-      _circle.style("fill", color_key[Math.ceil(_circleData[site_metric])])
+      _circle.style("fill", color_key[_circleData.site])
         .classed("selected", true);
     });
 
