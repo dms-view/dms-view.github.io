@@ -134,6 +134,19 @@ function genomeLineChart() {
     return tooltip.style("visibility", "hidden");
   }
 
+  var generateColorMap = function(data) {
+    // create color key based on the data
+    var colors = {};
+    var min_y_value = d3.min(data, d => +d[site_metric]);
+    var max_y_value = d3.max(data, d => +d[site_metric]);
+    data.forEach(function(d) {
+      var norm_value = (d[site_metric] - min_y_value) / max_y_value
+      colors[d.site] = d3.interpolateViridis(norm_value)
+    })
+    return colors;
+  };
+
+
   // selection by mouse click
   function clickOnPoint(d) {
     /*
@@ -145,12 +158,12 @@ function genomeLineChart() {
     if (!d3.select(this).classed("selected")) {
       // update the point on the LINE plot (color based on metric)
       d3.select(this)
-        .style("fill", color_key[Math.ceil(d[site_metric])])
+        .style("fill", color_key[d.site])
         .classed("selected", true)
         .classed("clicked", true);
       // update the PROTEIN structure (color based on metric)
       selectSiteOnProtein(":" + d.protein_chain + " and " + d.protein_site,
-        color_key[Math.ceil(d[site_metric])])
+        color_key[d.site])
     }
 
     // if the point is already selected
@@ -368,9 +381,13 @@ function genomeLineChart() {
       dropdownChange = function() {
         newCondition = d3.select(this).property('value')
         updateChart(chart.data[newCondition]);
+        chart.condition_data = chart.data[newCondition]
       };
 
       function updateChart(data) {
+        // get the new color map
+        color_key = generateColorMap(data);
+
         // Update the context brush, focus brush and zoom brush.
         brushContext.on("brush end", brushed);
         brushFocus.on("brush end", brushPointsFocus);
@@ -475,6 +492,7 @@ function genomeLineChart() {
       // first time we load the circles
       updateChart(chart.data[conditions[0]]);
       updateChart(chart.data[conditions[0]]);
+      chart.condition_data = chart.data[conditions[0]];
     }); // end of for each for the selection
   } // end of selection
 
