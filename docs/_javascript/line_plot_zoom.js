@@ -440,9 +440,14 @@ function genomeLineChart() {
           .call(yAxis);
 
         focus.select("#axis_x_focus")
-          .call(xAxisFocus);
+          .call(xAxisFocus.tickFormat(function(site) {
+            return data[site].label_site
+          }));
 
-        context.select("#axis_x_context").call(xAxisContext);
+        context.select("#axis_x_context")
+          .call(xAxisContext.tickFormat(function(site) {
+            return data[site].label_site
+          }));
 
 
         // Create the context plot.
