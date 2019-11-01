@@ -349,15 +349,45 @@ function genomeLineChart() {
     }
   }
 
+  // FOCUS plot brush functions
+  function brushPointsFocus() {
+    /*
+    updates PROTEIN structure and LOGOPLOTS based on the brush selection
+    from the CONTEXT plot.
+    */
+    var extent = d3.event.selection // FOCUS brush's coordinates
+
+    // a point is either in the newly brushed area or it is not
+    var circlePoint = d3.select(".focus").selectAll("circle");
+
+    circlePoint.classed("current_brushed",
+      function(d) {
+        return isBrushed(extent, d)
+      });
+    circlePoint.classed("non_brushed",
+      function(d) {
+        return !isBrushed(extent, d)
+      });
+
+    /*
+    call function to do the actual selection.
+    This function is `debounced` to decrease laggy-ness of the PROTEIN
+    structure update.
+    */
+    brushPointsFocusSelection();
+
+    // LOGOPLOT includes all `.selected` (clicked or brushed) points
+    chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
+      .site);
+    d3.select("#punchcard_chart")
+      .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+      .call(punchCard);
+
+  };
 
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function(alldata) {
-      // color key
-      colors = sessionStorage.getItem("colorTest")
-      color_key = JSON.parse(colors);
-
-
       var conditions = []
       alldata.forEach(function(key) {
         conditions.push(key["condition"]);
@@ -452,53 +482,13 @@ function genomeLineChart() {
             return data[site].label_site
           }));
 
-
         // Create the context plot.
         context.append("path")
           .datum(data)
           .attr("class", "area")
           .attr("d", areaContext);
-
-        // FOCUS plot brush functions
-        function brushPointsFocus() {
-          /*
-          updates PROTEIN structure and LOGOPLOTS based on the brush selection
-          from the CONTEXT plot.
-          */
-          extent = d3.event.selection // FOCUS brush's coordinates
-
-          // TODO: if circlePoint gets refactored to the top-level this function can also move up
-          // a point is either in the newly brushed area or it is not
-          circlePoint.classed("current_brushed",
-            function(d) {
-              return isBrushed(extent, d)
-            });
-          circlePoint.classed("non_brushed",
-            function(d) {
-              return !isBrushed(extent, d)
-            });
-
-          /*
-          call function to do the actual selection.
-          This function is `debounced` to decrease laggy-ness of the PROTEIN
-          structure update.
-          */
-          brushPointsFocusSelection();
-
-          // LOGOPLOT includes all `.selected` (clicked or brushed) points
-          chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
-            .site);
-          d3.select("#punchcard_chart")
-            .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
-            .call(punchCard);
-
-        };
-
       }; // end of update chart
-      // for some reason, we have to call this twice to get the brush to work
-      // make it has something to do with there being nothing to select the
-      // first time we load the circles
-      updateChart(chart.data[conditions[0]]);
+
       updateChart(chart.data[conditions[0]]);
       chart.condition_data = chart.data[conditions[0]];
     }); // end of for each for the selection
