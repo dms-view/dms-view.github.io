@@ -62,7 +62,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     // Bind the data to the chart function.
     perSiteData = data;
-    console.log(perSiteData);
     return perSiteData;
   });
 
