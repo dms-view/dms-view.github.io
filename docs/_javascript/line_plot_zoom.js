@@ -379,9 +379,12 @@ function genomeLineChart() {
 
       // Handler for dropdown value change
       dropdownChange = function() {
-        newCondition = d3.select(this).property('value')
-        updateChart(chart.data[newCondition]);
-        chart.condition_data = chart.data[newCondition]
+        current_condition = d3.select("#condition").property('value')
+        current_site = d3.select("#site").property('value')
+          // newCondition = d3.select(this).property('value')
+        console.log(current_condition, current_site)
+        updateChart(chart.data[current_condition]);
+        chart.condition_data = chart.data[current_condition]
       };
 
       function updateChart(data) {
