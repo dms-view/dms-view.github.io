@@ -433,8 +433,9 @@ function genomeLineChart() {
         yScaleContext.domain(yScaleFocus.domain());
 
         // Create the context plot, drawing a line through all of the data points.
-        // focus.append("path")
-        //   .datum(data)
+        // focus.selectAll("path.line")
+        //   .data([data])
+        //   .join("path")
         //   .attr("class", "line")
         //   .style("clip-path", "url(#clip)")
         //   .attr("d", lineFocus);
@@ -483,8 +484,9 @@ function genomeLineChart() {
           }));
 
         // Create the context plot.
-        context.append("path")
-          .datum(data)
+        context.selectAll("path.area")
+          .data([data])
+          .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
       }; // end of update chart
