@@ -7,68 +7,126 @@ var chart;
 var perSiteData;
 var punchCard;
 var dataPath = "_data/IAV/flu_dms-view.csv";
-var proteinPath = "_data/IAV/4O5N_trimer.pdb"
+var proteinPath = "_data/IAV/4O5N_trimer.pdb";
+var site_metric = "site_absdiffsel";
+var mut_metric = "mut_diffsel";
+var dropdownChange;
+
+var protein;
+var greyColor = "#999999";
+
+// Bitstream Vera Fonts provided by Gnome:
+// https://www.gnome.org/fonts/
+var fontPath = "_data/fonts/VeraMono.ttf";
+var fontObject;
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    console.log('DOM fully loaded and parsed');
+  console.log('DOM fully loaded and parsed');
 
-    // Initialize line chart.
-    chart = genomeLineChart();
+  // Initialize line chart.
+  chart = genomeLineChart();
 
-    // Initialize protein view.
-    addElement(polymerSelect);
+  // Initialize protein view.
+  addElement(polymerSelect);
 
-    // Initialize the mutation/site chart.
-    punchCard = punchCardChart("#punchcard_chart");
+  // Initialize the mutation/site chart.
+  punchCard = punchCardChart("#punchcard_chart");
 
-    // Request data for charts.
-    var promise1 = d3.csv(dataPath).then(function(data){
-      // Sort data by site
-      data.forEach(function(d){
+  // Request data for charts.
+  var promise1 = d3.csv(dataPath).then(function(data) {
+    // Sort data by site
+    data.forEach(function(d) {
+      d.site = +d.site;
+      return d;
+    })
+    data = data.sort(function(a, b) {
+      return a.site - b.site;
+    });
+
+    d3.select("#line_plot")
+      .data([data])
+      .call(chart)
+  });
+
+
+  // TODO: Refactor this redundant code with the code above.
+  var promise2 = d3.csv(dataPath).then(function(data) {
+    // Calculate the absolute differential selection for plotting.
+    data.forEach(
+      function(d) {
+        d.absmutdiffsel = Math.abs(+d[mut_metric]);
         d.site = +d.site;
         return d;
-      })
-      data = data.sort(function(a, b) {
-          return a.site - b.site;
-      });
-      d3.select("#line_plot")
-        .data([data])
-        .call(chart)
-    });
+      }
+    )
 
-    var promise2 = d3.csv(dataPath).then(function (data) {
-      // Calculate the absolute differential selection for plotting.
-      data.forEach(
-        function (d) {
-          d.absmutdiffsel = Math.abs(+d.mut_pref);
-          d.site = +d.site;
-          return d;
-        }
-      )
+    // Bind the data to the chart function.
+    perSiteData = data;
+    return perSiteData;
+  });
 
-      // Bind the data to the chart function.
-      perSiteData = data;
-      console.log(perSiteData);
-      return perSiteData;
-    });
+  // TODO: rename promise variable
+  var promise3 = loadStructure(proteinPath);
 
-    var promise3 = loadStructure(proteinPath);
+  var promiseFontLoaded = opentype.load(fontPath, function(err, font) {
+    if (err) {
+      console.log("Font could not be loaded: " + err);
+    } else {
+      console.log("Font loaded: " + fontPath);
+      fontObject = font;
+    }
+  });
 
-    // Wait for all data to load before initializing content across the entire
-    // application.
-    console.log("Waiting for promises...");
-    Promise.all([promise1, promise2, promise3]).then(values => {
+  // Wait for all data to load before initializing content across the entire
+  // application.
+  console.log("Waiting for promises...");
+  Promise.all([promise1, promise2, promise3, promiseFontLoaded]).then(
+    values => {
       console.log("Promises fulfilled!");
       console.log(values);
 
-      // Select the site with the maximum y value by default.
-      console.log("Select site with maximum y value");
-      var max_y_value = d3.max(chart.data, d => +d.site_entropy);
-      var max_y_record = chart.data.filter(d => +d.site_entropy == max_y_value);
+      conditions = Object.keys(chart.data)
+      site_metrics = Object.keys(chart.data[conditions[0]][0]).filter(
+        column => column.startsWith("site_"));
 
-      if (max_y_record.length > 0) {
-        console.log("click site " + max_y_record[0].site);
-        d3.select("#site_" + max_y_record[0].site).dispatch("click");
-      }
+      var conditiondropdown = d3.select("#line_plot")
+        .insert("select", "svg")
+        .attr("id", 'condition')
+        .on("change", dropdownChange);
+
+      var sitedropdown = d3.select("#line_plot")
+        .insert("select", "svg")
+        .attr("id", 'site')
+        .on("change", dropdownChange);
+
+      conditiondropdown.selectAll("option")
+        .data(conditions)
+        .enter().append("option")
+        .attr("value", function(d) {
+          return d;
+        })
+        .text(function(d) {
+          return d;
+        })
+
+      sitedropdown.selectAll("option")
+        .data(site_metrics)
+        .enter().append("option")
+        .attr("value", function(d) {
+          return d;
+        })
+        .text(function(d) {
+          return d.substring(5, );
+        })
+
+      // Select the site with the maximum y value by default.
+      // console.log("Select site with maximum y value");
+      // var max_y_value = d3.max(chart.data, d => +d[site_metric]);
+      // var max_y_record = chart.data.filter(d => +d[site_metric] == max_y_value);
+      //
+      // if (max_y_record.length > 0) {
+      //   console.log("click site " + max_y_record[0].site);
+      //   d3.select("#site_" + max_y_record[0].site).dispatch("click");
+      // }
     });
 });

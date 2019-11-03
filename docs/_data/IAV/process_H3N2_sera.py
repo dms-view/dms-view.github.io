@@ -10,7 +10,7 @@ import pandas as pd
 def main():
     # inputs
     fname = "avg_sel_tidy.csv"
-    sera = ["VIDD5"]
+    sera = ["VIDD5", "557v1"]
 
     # read in data and subset
     df = pd.read_csv(fname, low_memory=False)
@@ -38,7 +38,7 @@ def main():
 
     # check the data
     # per site, there should be 20 AA and identical site-level metrics
-    for name, group in df.groupby("site"):
+    for name, group in df.groupby(["site", "condition"]):
         assert len(group) == 20
         assert len(group["wildtype"].unique()) == 1
         assert len(group["site_absdiffsel"].unique()) == 1
