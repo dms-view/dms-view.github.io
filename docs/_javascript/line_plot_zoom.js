@@ -215,6 +215,12 @@ function genomeLineChart() {
     .style("text-anchor", "middle")
     .text("Site");
 
+    // Set y-axis label for the focus plot.
+    svg
+      .append("text")
+      .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus - 50) + ") rotate(-90)")
+      .attr("id", "context_y_label");
+
   // Set title for the context plot.
   svg
     .append("text")
@@ -507,12 +513,16 @@ function genomeLineChart() {
             return data[site].label_site
           }));
 
+        svg.select("#context_y_label")
+              .text(data[0]["metric_name"].substring(5, ));
+
         // Create the context plot.
         context.selectAll("path.area")
           .data([data])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
+
       }; // end of update chart
       chart.condition_data = chart.data[conditions[0]][site_metrics[0]];
       updateChart(chart.condition_data);
