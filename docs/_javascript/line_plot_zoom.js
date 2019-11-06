@@ -123,7 +123,7 @@ function genomeLineChart() {
       .style("left", mousePosition[0] + "px")
       .style("top", mousePosition[1] + 50 + "px")
       .html("Site: (" + d.protein_chain + ")" + d.protein_site + " <br/> " +
-        "abs_diffsel: " + parseFloat(d[site_metric]).toFixed(2) + " <br/> " +
+        "abs_diffsel: " + parseFloat(d.metric).toFixed(2) + " <br/> " +
         "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
         "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
         "seq number: " + d.site)
@@ -137,10 +137,10 @@ function genomeLineChart() {
   var generateColorMap = function(data) {
     // create color key based on the data
     var colors = {};
-    var min_y_value = d3.min(data, d => +d[site_metric]);
-    var max_y_value = d3.max(data, d => +d[site_metric]);
+    var min_y_value = d3.min(data, d => +d.metric);
+    var max_y_value = d3.max(data, d => +d.metric);
     data.forEach(function(d) {
-      var norm_value = (d[site_metric] - min_y_value) / max_y_value
+      var norm_value = (d.metric - min_y_value) / max_y_value
       colors[d.site] = d3.interpolateViridis(norm_value)
     })
     return colors;
@@ -244,7 +244,7 @@ function genomeLineChart() {
     focus.select(".line").attr("d", lineFocus);
     focus.selectAll("circle")
       .attr("cx", (d) => xScaleFocus(+d.site))
-      .attr("cy", (d) => yScaleFocus(+d[site_metric]))
+      .attr("cy", (d) => yScaleFocus(+d.metric))
     focus.select(".axis--x").call(xAxisFocus);
     svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
       .scale(plotWidth / (s[1] - s[0]))
@@ -258,7 +258,7 @@ function genomeLineChart() {
     focus.select(".line").attr("d", lineFocus);
     focus.selectAll("circle")
       .attr("cx", (d) => xScaleFocus(+d.site))
-      .attr("cy", (d) => yScaleFocus(+d[site_metric]));
+      .attr("cy", (d) => yScaleFocus(+d.metric));
     focus.select(".axis--x").call(xAxisFocus);
     context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
   }
@@ -337,7 +337,7 @@ function genomeLineChart() {
   // determines if a point is in the brush or not
   function isBrushed(brush_coords, d) {
     cx = xScaleFocus(d.site);
-    cy = yScaleFocus(d[site_metric]);
+    cy = yScaleFocus(d.metric);
     if (brush_coords == null) {
       return false
     } else {
@@ -393,28 +393,52 @@ function genomeLineChart() {
         conditions.push(key["condition"]);
       });
       conditions = conditions.filter((x, i, a) => a.indexOf(x) == i);
+
+      var site_metrics = []
+      Object.keys(alldata[0]).forEach(function(col){
+        if (col.startsWith("site_")){
+          site_metrics.push(col)
+        }
+      })
+
+      var long_data = []
+      alldata.forEach( function(row) {
+        Object.keys(row).forEach( function(colname){
+          if(!colname.startsWith('site_')) {
+            return
+          }
+          long_data.push({
+            "site": row["site"],
+            "label_site": row["site"],
+            "wildtype": row["wildtype"],
+            "protein_chain": row["protein_chain"],
+            "protein_site": row["protein_site"],
+            "condition": row["condition"],
+            "metric": row[colname],
+            "metric_name": colname});
+        })
+      })
       // This sorts by condition and by site and only takes the first of the sites
-      nestmap = d3.rollup(alldata, v => v[0], d => d.condition, d => d.site)
+      nestmap = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
         // all I need to do is flatten the sites map into an array of values
         // but I can't figure out how to do that so I am just going to do it
         // by hand
       var dataMap = {}
       conditions.forEach(function(condition) {
-        dataMap[condition] = Array.from(nestmap.get(condition), ([key,
-          value
-        ]) => value)
+        dataMap[condition] = {}
+        site_metrics.forEach(function(site_metric){
+          dataMap[condition][site_metric] = Array.from(nestmap.get(condition).get(site_metric), ([key,value]) => value)
+        })
       })
-
       chart.data = dataMap;
 
       // Handler for dropdown value change
       dropdownChange = function() {
         current_condition = d3.select("#condition").property('value')
         current_site = d3.select("#site").property('value')
-          // newCondition = d3.select(this).property('value')
-        console.log(current_condition, current_site)
-        updateChart(chart.data[current_condition]);
-        chart.condition_data = chart.data[current_condition]
+        chart.condition_data = chart.data[current_condition][current_site]
+        updateChart(chart.condition_data);
+
       };
 
       function updateChart(data) {
@@ -428,7 +452,7 @@ function genomeLineChart() {
 
         // Update the x and y domains to match the extent of the incoming data.
         xScaleFocus.domain(d3.extent(data, d => +d.site));
-        yScaleFocus.domain(d3.extent(data, d => +d[site_metric]));
+        yScaleFocus.domain(d3.extent(data, d => +d.metric));
         xScaleContext.domain(xScaleFocus.domain());
         yScaleContext.domain(yScaleFocus.domain());
 
@@ -490,9 +514,9 @@ function genomeLineChart() {
           .attr("class", "area")
           .attr("d", areaContext);
       }; // end of update chart
+      chart.condition_data = chart.data[conditions[0]][site_metrics[0]];
+      updateChart(chart.condition_data);
 
-      updateChart(chart.data[conditions[0]]);
-      chart.condition_data = chart.data[conditions[0]];
     }); // end of for each for the selection
   } // end of selection
 
@@ -507,11 +531,11 @@ function genomeLineChart() {
 
   // Define accessors for y-axis values in the focus and context panels.
   function YFocus(d) {
-    return yScaleFocus(+d[site_metric]);
+    return yScaleFocus(+d.metric);
   }
 
   function YContext(d) {
-    return yScaleContext(+d[site_metric]);
+    return yScaleContext(+d.metric);
   }
 
   // Define getters and setters for chart dimensions using Mike Bostock's idiom.

@@ -8,7 +8,6 @@ var perSiteData;
 var punchCard;
 var dataPath = "_data/IAV/flu_dms-view.csv";
 var proteinPath = "_data/IAV/4O5N_trimer.pdb";
-var site_metric = "site_absdiffsel";
 var mut_metric = "mut_diffsel";
 var dropdownChange;
 
@@ -86,8 +85,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       console.log(values);
 
       conditions = Object.keys(chart.data)
-      site_metrics = Object.keys(chart.data[conditions[0]][0]).filter(
-        column => column.startsWith("site_"));
+      site_metrics = Object.keys(chart.data[conditions[0]])
 
       var conditiondropdown = d3.select("#line_plot")
         .insert("select", "svg")
@@ -120,13 +118,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
         })
 
       // Select the site with the maximum y value by default.
-      // console.log("Select site with maximum y value");
-      // var max_y_value = d3.max(chart.data, d => +d[site_metric]);
-      // var max_y_record = chart.data.filter(d => +d[site_metric] == max_y_value);
-      //
-      // if (max_y_record.length > 0) {
-      //   console.log("click site " + max_y_record[0].site);
-      //   d3.select("#site_" + max_y_record[0].site).dispatch("click");
-      // }
+      console.log("Select site with maximum y value");
+      var max_y_value = d3.max(chart.condition_data, d => +d.metric);
+      var max_y_record = chart.condition_data.filter(d => +d.metric == max_y_value);
+
+      if (max_y_record.length > 0) {
+        console.log("click site " + max_y_record[0].site);
+        d3.select("#site_" + max_y_record[0].site).dispatch("click");
+      }
     });
 });
