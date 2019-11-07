@@ -84,8 +84,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
       console.log("Promises fulfilled!");
       console.log(values);
 
-      conditions = Object.keys(chart.data)
-      site_metrics = Object.keys(chart.data[conditions[0]])
+      console.log(chart.data)
+      conditions = Array.from(chart.data.keys())
+      site_metrics = Array.from(chart.data.get(conditions[0]).keys())
 
       var conditiondropdown = d3.select("#line_plot")
         .insert("select", "svg")
@@ -119,8 +120,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
       // Select the site with the maximum y value by default.
       console.log("Select site with maximum y value");
-      var max_y_value = d3.max(chart.condition_data, d => +d.metric);
-      var max_y_record = chart.condition_data.filter(d => +d.metric == max_y_value);
+      var max_y_value = d3.max(Array.from(chart.condition_data.values()), d => +d.metric);
+      var max_y_record = Array.from(chart.condition_data.values()).filter(d => +d.metric == max_y_value);
 
       if (max_y_record.length > 0) {
         console.log("click site " + max_y_record[0].site);

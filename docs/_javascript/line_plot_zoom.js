@@ -426,28 +426,19 @@ function genomeLineChart() {
       })
       // This sorts by condition and by site and only takes the first of the sites
       nestmap = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
-        // all I need to do is flatten the sites map into an array of values
-        // but I can't figure out how to do that so I am just going to do it
-        // by hand
-      var dataMap = {}
-      conditions.forEach(function(condition) {
-        dataMap[condition] = {}
-        site_metrics.forEach(function(site_metric){
-          dataMap[condition][site_metric] = Array.from(nestmap.get(condition).get(site_metric), ([key,value]) => value)
-        })
-      })
-      chart.data = dataMap;
+      chart.data = nestmap;
 
       // Handler for dropdown value change
       dropdownChange = function() {
         current_condition = d3.select("#condition").property('value')
         current_site = d3.select("#site").property('value')
-        chart.condition_data = chart.data[current_condition][current_site]
+        chart.condition_data = chart.data.get(current_condition).get(current_site)
         updateChart(chart.condition_data);
 
       };
 
-      function updateChart(data) {
+      function updateChart(dataMap) {
+        data = Array.from(dataMap.values())
         // get the new color map
         color_key = generateColorMap(data);
 
@@ -505,12 +496,18 @@ function genomeLineChart() {
 
         focus.select("#axis_x_focus")
           .call(xAxisFocus.tickFormat(function(site) {
-            return data[site].label_site
+            if (dataMap.get(site) === undefined){
+              return ""
+            }
+            return dataMap.get(site).label_site
           }));
 
         context.select("#axis_x_context")
           .call(xAxisContext.tickFormat(function(site) {
-            return data[site].label_site
+            if (dataMap.get(site) === undefined){
+              return ""
+            }
+            return dataMap.get(site).label_site
           }));
 
         svg.select("#context_y_label")
@@ -524,7 +521,7 @@ function genomeLineChart() {
           .attr("d", areaContext);
 
       }; // end of update chart
-      chart.condition_data = chart.data[conditions[0]][site_metrics[0]];
+      chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0])
       updateChart(chart.condition_data);
 
     }); // end of for each for the selection
