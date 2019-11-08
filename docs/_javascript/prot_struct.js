@@ -138,8 +138,8 @@ stage.signals.hovered.add(function(pickingProxy) {
     var site_name = atom.qualifiedName().split(":")[0].split("]")[1]
     var chain_name = atom.qualifiedName().split(":")[1].split(".")[0]
       // extract the data corresponding to this site
-    var residue_data = chart.condition_data.filter(d => (+d.protein_site ==
-        site_name) && (d.protein_chain === chain_name))
+    var residue_data = Array.from(chart.condition_data.values()).filter(d =>
+      (+d.protein_site == site_name) && (d.protein_chain === chain_name))
       // there should not be more than one entry
     try {
       if (residue_data.length > 1) throw "data parse wrong";
