@@ -56,7 +56,7 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]),
+    ]).on("brush end", brushPointsFocus),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -255,6 +255,7 @@ function genomeLineChart() {
     svg.select(".zoom").call(zoomContext.transform, d3.zoomIdentity
       .scale(plotWidth / (s[1] - s[0]))
       .translate(-s[0], 0));
+    focus.select(".brush").call(brushFocus.move, null);
   }
 
   function zoomed() {
@@ -363,31 +364,33 @@ function genomeLineChart() {
     */
     var extent = d3.event.selection // FOCUS brush's coordinates
 
-    // a point is either in the newly brushed area or it is not
-    var circlePoint = d3.select(".focus").selectAll("circle");
+    if(extent){
+      // a point is either in the newly brushed area or it is not
+      var circlePoint = d3.select(".focus").selectAll("circle");
 
-    circlePoint.classed("current_brushed",
-      function(d) {
-        return isBrushed(extent, d)
-      });
-    circlePoint.classed("non_brushed",
-      function(d) {
-        return !isBrushed(extent, d)
-      });
+      circlePoint.classed("current_brushed",
+        function(d) {
+          return isBrushed(extent, d)
+        });
+      circlePoint.classed("non_brushed",
+        function(d) {
+          return !isBrushed(extent, d)
+        });
 
-    /*
-    call function to do the actual selection.
-    This function is `debounced` to decrease laggy-ness of the PROTEIN
-    structure update.
-    */
-    brushPointsFocusSelection();
+      /*
+      call function to do the actual selection.
+      This function is `debounced` to decrease laggy-ness of the PROTEIN
+      structure update.
+      */
+      brushPointsFocusSelection();
 
-    // LOGOPLOT includes all `.selected` (clicked or brushed) points
-    chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
-      .site);
-    d3.select("#punchcard_chart")
-      .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
-      .call(punchCard);
+      // LOGOPLOT includes all `.selected` (clicked or brushed) points
+      chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
+        .site);
+      d3.select("#punchcard_chart")
+        .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+        .call(punchCard);
+    }
 
   };
 
@@ -444,7 +447,6 @@ function genomeLineChart() {
 
         // Update the context brush, focus brush and zoom brush.
         brushContext.on("brush end", brushed);
-        brushFocus.on("brush end", brushPointsFocus);
         zoomContext.on("zoom", zoomed);
 
         // Update the x and y domains to match the extent of the incoming data.
@@ -533,6 +535,8 @@ function genomeLineChart() {
           .attr("class", "area")
           .attr("d", areaContext);
 
+        // clear the physical brush (classification as 'brushed' remains)
+        focus.select(".brush").call(brushFocus.move, null);
       }; // end of update chart
       chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0])
       updateChart(chart.condition_data);
