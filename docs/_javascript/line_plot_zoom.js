@@ -480,7 +480,6 @@ function genomeLineChart() {
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
 
-
         // Update old ones, already have x / width from before
         circlePoint
           .transition().duration(250)
@@ -488,6 +487,20 @@ function genomeLineChart() {
 
         // Remove old ones
         circlePoint.exit().remove();
+
+       // update the colors
+       d3.selectAll(".selected").data().map(d => +d.site).forEach(function(site) {
+         var _circle = d3.select("#site_" + site), // select the point
+             _circleData = _circle.data()[0]; // grab the data
+
+         // select the site on the PROTEIN
+         selectSiteOnProtein(":" + _circleData.protein_chain + " and " +
+           _circleData.protein_site,
+           color_key[_circleData.site]);
+
+        // color the point in the FOCUS plot
+         _circle.style("fill", color_key[_circleData.site])
+       });
 
         // fix the axes (including labels)
         focus.select("#axis_y_focus")
