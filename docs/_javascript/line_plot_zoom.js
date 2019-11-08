@@ -415,7 +415,7 @@ function genomeLineChart() {
           }
           long_data.push({
             "site": row["site"],
-            "label_site": row["site"],
+            "label_site": row["label_site"],
             "wildtype": row["wildtype"],
             "protein_chain": row["protein_chain"],
             "protein_site": row["protein_site"],
