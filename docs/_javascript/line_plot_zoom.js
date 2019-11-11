@@ -123,9 +123,7 @@ function genomeLineChart() {
       .style("left", mousePosition[0] + "px")
       .style("top", mousePosition[1] + 50 + "px")
       .html("Site: (" + d.protein_chain + ")" + d.protein_site + " <br/> " +
-        "abs_diffsel: " + parseFloat(d.metric).toFixed(2) + " <br/> " +
-        "pos_diffsel: " + parseFloat(d.positive_diffsel).toFixed(2) + " <br/> " +
-        "max_diffsel: " + parseFloat(d.max_diffsel).toFixed(2) + " <br/> " +
+        d.metric_name + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
         "seq number: " + d.site)
   }
 
