@@ -330,6 +330,7 @@ function genomeLineChart() {
         " and " + _circleData.protein_site);
       // FOCUS styling and revert classes
       _circle.style("fill", greyColor)
+        .attr("class", "non_brushed")
         .classed("current_brushed", false)
         .classed("brushed", false)
         .classed("selected", false);
@@ -440,9 +441,10 @@ function genomeLineChart() {
             " and " + _circleData.protein_site);
           // FOCUS styling and revert classes
           _circle.style("fill", greyColor)
-            .classed("current_brushed", false)
-            .classed("brushed", false)
-            .classed("selected", false);
+          .attr("class", "non_brushed")
+          .classed("current_brushed", false)
+          .classed("brushed", false)
+          .classed("selected", false)
         })
         // LOGOPLOT includes all `.selected` (clicked or brushed) points
         chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
@@ -499,8 +501,8 @@ function genomeLineChart() {
           .classed("current_brushed", false)
           .classed("brushed", false)
           .classed("selected", false)
-          .classed("class", "current_brushed", false)
           .style("clip-path", "url(#clip)")
+          .style("fill", greyColor)
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
