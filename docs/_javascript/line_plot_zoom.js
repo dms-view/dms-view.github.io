@@ -66,9 +66,7 @@ function genomeLineChart() {
     .extent([
       [0, 0],
       [plotWidth, plotHeightContext]
-    ]),
-    colors,
-    color_key;
+    ]);
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -134,12 +132,11 @@ function genomeLineChart() {
 
   var generateColorMap = function(data) {
     // create color key based on the data
-    var colors = {};
-    var min_y_value = d3.min(data, d => +d.metric);
-    var range = d3.max(data, d => +d.metric) - min_y_value;
+    var colors = {},
+        min_y_value = d3.min(data, d => +d.metric),
+        range = d3.max(data, d => +d.metric) - min_y_value;
     data.forEach(function(d) {
-      var norm_value = (d.metric - min_y_value) / range
-      colors[d.site] = d3.interpolateViridis(norm_value)
+      colors[d.site] = d3.interpolateViridis((d.metric - min_y_value) / range)
     })
     return colors;
   };
