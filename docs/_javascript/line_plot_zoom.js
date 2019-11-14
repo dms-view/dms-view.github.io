@@ -429,6 +429,31 @@ function genomeLineChart() {
       nestmap = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
       chart.data = nestmap;
 
+      // Handler for clear button change
+      clearbuttonchange = function() {
+        console.log('inside clear')
+        d3.selectAll(".selected").each(function(element){
+          var _circle = d3.select(this),
+              _circleData = _circle.data()[0]
+          // deselect the site on the PROTEIN
+          deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
+            " and " + _circleData.protein_site);
+          // FOCUS styling and revert classes
+          _circle.style("fill", greyColor)
+            .classed("current_brushed", false)
+            .classed("brushed", false)
+            .classed("selected", false);
+        })
+        // LOGOPLOT includes all `.selected` (clicked or brushed) points
+        chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
+          .site);
+        d3.select("#punchcard_chart")
+          .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+          .call(punchCard);
+        // clear the physical brush (classification as 'brushed' remains)
+        focus.select(".brush").call(brushFocus.move, null);
+      };
+
       // Handler for dropdown value change
       dropdownChange = function() {
         current_condition = d3.select("#condition").property('value')
