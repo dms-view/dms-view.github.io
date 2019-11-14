@@ -434,18 +434,17 @@ function genomeLineChart() {
       clearbuttonchange = function() {
         console.log('inside clear')
         d3.selectAll(".selected").each(function(element){
-          var _circle = d3.select(this),
-              _circleData = _circle.data()[0]
-          // deselect the site on the PROTEIN
-          deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
-            " and " + _circleData.protein_site);
-          // FOCUS styling and revert classes
-          _circle.style("fill", greyColor)
+          d3.select(this).style("fill", greyColor)
           .attr("class", "non_brushed")
           .classed("current_brushed", false)
           .classed("brushed", false)
           .classed("selected", false)
+          
+          // deselect the site on the PROTEIN
+          var _d = d3.select(this).data()[0]
+          deselectSiteOnProteinStructure(":" + _d.protein_chain + " and " + _d.protein_site);
         })
+
         // LOGOPLOT includes all `.selected` (clicked or brushed) points
         chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
           .site);
