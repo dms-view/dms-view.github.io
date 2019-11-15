@@ -178,7 +178,7 @@ function genomeLineChart() {
 
     // update the LOGOPLOT
     d3.select("#punchcard_chart")
-      .data([perSiteData.filter(d => chart.selectedSites.includes(+d.site))])
+      .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
       .call(punchCard);
   }
 
@@ -384,7 +384,7 @@ function genomeLineChart() {
       chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
         .site);
       d3.select("#punchcard_chart")
-        .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+        .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
         .call(punchCard);
     }
 
@@ -404,28 +404,50 @@ function genomeLineChart() {
         if (col.startsWith("site_")){
           site_metrics.push(col)
         }
-      })
+      });
+
+      var mut_metrics = []
+      Object.keys(alldata[0]).forEach(function(col){
+        if (col.startsWith("mut_")){
+          mut_metrics.push(col)
+        }
+      });
 
       var long_data = []
+      var mut_long_data = [];
       alldata.forEach( function(row) {
         Object.keys(row).forEach( function(colname){
-          if(!colname.startsWith('site_')) {
-            return
+          if(colname.startsWith('site_')) {
+            long_data.push({
+              "site": +row["site"],
+              "label_site": row["label_site"],
+              "wildtype": row["wildtype"],
+              "protein_chain": row["protein_chain"],
+              "protein_site": row["protein_site"],
+              "condition": row["condition"],
+              "metric": +row[colname],
+              "metric_name": colname});
           }
-          long_data.push({
-            "site": row["site"],
-            "label_site": row["label_site"],
-            "wildtype": row["wildtype"],
-            "protein_chain": row["protein_chain"],
-            "protein_site": row["protein_site"],
-            "condition": row["condition"],
-            "metric": row[colname],
-            "metric_name": colname});
+          else if (colname.startsWith('mut_')) {
+            mut_long_data.push({
+              "site": +row["site"],
+              "label_site": row["label_site"],
+              "mutation": row["mutation"],
+              "condition": row["condition"],
+              "metric": Math.abs(+row[colname]),
+              "metric_name": colname
+            });
+          }
         })
-      })
-      // This sorts by condition and by site and only takes the first of the sites
-      nestmap = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
-      chart.data = nestmap;
+      });
+
+      // Group data by condition and site and only takes the first of the sites,
+      // to get site-level data.
+      chart.data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site);
+
+      // Group data by condition and mutation metric, keeping all records to get
+      // site- and mutation-level data.
+      chart.mutData = d3.group(mut_long_data, d => d.condition, d => d.metric_name);
 
       // Handler for clear button change
       clearbuttonchange = function() {
@@ -436,17 +458,16 @@ function genomeLineChart() {
           .classed("current_brushed", false)
           .classed("brushed", false)
           .classed("selected", false)
-          
+
           // deselect the site on the PROTEIN
           var _d = d3.select(this).data()[0]
           deselectSiteOnProteinStructure(":" + _d.protein_chain + " and " + _d.protein_site);
         })
 
         // LOGOPLOT includes all `.selected` (clicked or brushed) points
-        chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
-          .site);
+        chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
         d3.select("#punchcard_chart")
-          .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+          .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
           .call(punchCard);
         // clear the physical brush (classification as 'brushed' remains)
         focus.select(".brush").call(brushFocus.move, null);
@@ -454,11 +475,18 @@ function genomeLineChart() {
 
       // Handler for dropdown value change
       dropdownChange = function() {
-        current_condition = d3.select("#condition").property('value')
-        current_site = d3.select("#site").property('value')
-        chart.condition_data = chart.data.get(current_condition).get(current_site)
+        current_condition = d3.select("#condition").property('value');
+        current_site = d3.select("#site").property('value');
+        current_mut_metric = d3.select("#mutation_metric").property('value');
+
+        chart.condition_data = chart.data.get(current_condition).get(current_site);
+        chart.condition_mut_data = chart.mutData.get(current_condition).get(current_mut_metric);
         updateChart(chart.condition_data);
 
+        chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
+        d3.select("#punchcard_chart")
+          .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
+          .call(punchCard);
       };
 
       function updateChart(dataMap) {
@@ -555,9 +583,10 @@ function genomeLineChart() {
         // clear the physical brush (classification as 'brushed' remains)
         focus.select(".brush").call(brushFocus.move, null);
       }; // end of update chart
-      chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0])
-      updateChart(chart.condition_data);
+      chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0]);
+      chart.condition_mut_data = chart.mutData.get(conditions[0]).get(mut_metrics[0]);
 
+      updateChart(chart.condition_data);
     }); // end of for each for the selection
   } // end of selection
 
