@@ -10,6 +10,7 @@ var dataPath = "_data/IAV/flu_dms-view.csv";
 var proteinPath = "_data/IAV/4O5N_trimer.pdb";
 var mut_metric = "mut_diffsel";
 var dropdownChange;
+var clearbuttonchange;
 
 var protein;
 var greyColor = "#999999";
@@ -97,6 +98,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .insert("select", "svg")
         .attr("id", 'site')
         .on("change", dropdownChange);
+
+      var clearButton = d3.select("#line_plot")
+        .append("button")
+        .text("clear selections")
+        .attr("id", "clearButton")
+        .classed("button", true)
+        .on('click', clearbuttonchange);
 
       conditiondropdown.selectAll("option")
         .data(conditions)

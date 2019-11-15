@@ -327,6 +327,7 @@ function genomeLineChart() {
         " and " + _circleData.protein_site);
       // FOCUS styling and revert classes
       _circle.style("fill", greyColor)
+        .attr("class", "non_brushed")
         .classed("current_brushed", false)
         .classed("brushed", false)
         .classed("selected", false);
@@ -426,6 +427,31 @@ function genomeLineChart() {
       nestmap = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
       chart.data = nestmap;
 
+      // Handler for clear button change
+      clearbuttonchange = function() {
+        console.log('inside clear')
+        d3.selectAll(".selected").each(function(element){
+          d3.select(this).style("fill", greyColor)
+          .attr("class", "non_brushed")
+          .classed("current_brushed", false)
+          .classed("brushed", false)
+          .classed("selected", false)
+          
+          // deselect the site on the PROTEIN
+          var _d = d3.select(this).data()[0]
+          deselectSiteOnProteinStructure(":" + _d.protein_chain + " and " + _d.protein_site);
+        })
+
+        // LOGOPLOT includes all `.selected` (clicked or brushed) points
+        chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
+          .site);
+        d3.select("#punchcard_chart")
+          .data([perSiteData.filter(d => chart.brushedSites.includes(+d.site))])
+          .call(punchCard);
+        // clear the physical brush (classification as 'brushed' remains)
+        focus.select(".brush").call(brushFocus.move, null);
+      };
+
       // Handler for dropdown value change
       dropdownChange = function() {
         current_condition = d3.select("#condition").property('value')
@@ -471,8 +497,8 @@ function genomeLineChart() {
           .classed("current_brushed", false)
           .classed("brushed", false)
           .classed("selected", false)
-          .classed("class", "current_brushed", false)
           .style("clip-path", "url(#clip)")
+          .style("fill", greyColor)
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
