@@ -52,7 +52,7 @@ function genomeLineChart() {
     brushContext = d3.brushX().extent([
       [0, 0],
       [plotWidth, plotHeightContext]
-    ]),
+    ]).on("brush end", brushed),
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
@@ -66,7 +66,7 @@ function genomeLineChart() {
     .extent([
       [0, 0],
       [plotWidth, plotHeightContext]
-    ]);
+    ]).on("zoom", zoomed);
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -439,10 +439,6 @@ function genomeLineChart() {
         data = Array.from(dataMap.values())
         // get the new color map
         color_key = generateColorMap(data);
-
-        // Update the context brush, focus brush and zoom brush.
-        brushContext.on("brush end", brushed);
-        zoomContext.on("zoom", zoomed);
 
         // Update the x and y domains to match the extent of the incoming data.
         xScaleFocus.domain(d3.extent(data, d => +d.site));
