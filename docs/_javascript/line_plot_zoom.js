@@ -367,6 +367,7 @@ function genomeLineChart() {
     from the CONTEXT plot.
     */
     var extent = d3.event.selection // FOCUS brush's coordinates
+    var cmdKey = d3.event.sourceEvent.metaKey;
 
     if(extent){
       var cmdKey = d3.event.sourceEvent.metaKey,
