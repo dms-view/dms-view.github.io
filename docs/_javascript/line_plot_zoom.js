@@ -302,13 +302,15 @@ function genomeLineChart() {
     // sites to select - `current_brushed` but not `clicked` or `brushed`.
     var sites_to_select = _.without.apply(_, [current_brushed].concat(
         already_brushed)),
-      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked).concat(previous_brush));
+      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked)),
+      sites_to_select = _.without.apply(_, [sites_to_select].concat(previous_brush));
 
     // sites to deselect - `non_brushed` but previously `brushed` but not `clicked`
     var sites_to_deselect = d3.selectAll(".non_brushed.brushed").data().map(
         d => +d.site),
       sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(
-        clicked).concat(previous_brush));
+        clicked));
+    sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(previous_brush));
 
     // for each site to select, update the PROTEIN and the FOCUS point
     sites_to_select.forEach(function(element) {
