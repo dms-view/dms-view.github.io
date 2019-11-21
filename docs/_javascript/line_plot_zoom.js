@@ -56,7 +56,11 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]).on("brush end", brushPointsFocus),
+    ]).filter(() => !d3.event.ctrlKey
+    && !d3.event.button
+    && (d3.event.metaKey
+    || d3.event.target.__data__.type !== "overlay"))
+    .on("end", brushPointsFocus),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -292,18 +296,19 @@ function genomeLineChart() {
       current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
         .site),
       already_brushed = d3.selectAll(".current_brushed.brushed").data().map(
-        d => +d.site);
+        d => +d.site),
+      previous_brush = d3.selectAll(".previous_brush").data().map(d=>+d.site);
 
     // sites to select - `current_brushed` but not `clicked` or `brushed`.
     var sites_to_select = _.without.apply(_, [current_brushed].concat(
         already_brushed)),
-      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked));
+      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked).concat(previous_brush));
 
     // sites to deselect - `non_brushed` but previously `brushed` but not `clicked`
     var sites_to_deselect = d3.selectAll(".non_brushed.brushed").data().map(
         d => +d.site),
       sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(
-        clicked));
+        clicked).concat(previous_brush));
 
     // for each site to select, update the PROTEIN and the FOCUS point
     sites_to_select.forEach(function(element) {
@@ -359,6 +364,7 @@ function genomeLineChart() {
     from the CONTEXT plot.
     */
     var extent = d3.event.selection // FOCUS brush's coordinates
+    var cmdKey = d3.event.sourceEvent.metaKey;
 
     if(extent){
       // a point is either in the newly brushed area or it is not
@@ -378,6 +384,10 @@ function genomeLineChart() {
       This function is `debounced` to decrease laggy-ness of the PROTEIN
       structure update.
       */
+      if(cmdKey===true){
+        d3.selectAll(".brushed").classed('previous_brush', true)
+      }else{
+      }
       brushPointsFocusSelection();
 
       // LOGOPLOT includes all `.selected` (clicked or brushed) points
@@ -387,6 +397,7 @@ function genomeLineChart() {
         .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
         .call(punchCard);
     }
+
 
   };
 
@@ -451,7 +462,6 @@ function genomeLineChart() {
 
       // Handler for clear button change
       clearbuttonchange = function() {
-        console.log('inside clear')
         d3.selectAll(".selected").each(function(element){
           d3.select(this).style("fill", greyColor)
           .attr("class", "non_brushed")
