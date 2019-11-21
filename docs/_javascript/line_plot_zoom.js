@@ -364,9 +364,9 @@ function genomeLineChart() {
     from the CONTEXT plot.
     */
     var extent = d3.event.selection // FOCUS brush's coordinates
-    var cmdKey = d3.event.sourceEvent.metaKey;
 
     if(extent){
+      var cmdKey = d3.event.sourceEvent.metaKey;
       // a point is either in the newly brushed area or it is not
       var circlePoint = d3.select(".focus").selectAll("circle");
 
@@ -468,6 +468,7 @@ function genomeLineChart() {
           .classed("current_brushed", false)
           .classed("brushed", false)
           .classed("selected", false)
+          .classed("previous_brush", false)
 
           // deselect the site on the PROTEIN
           var _d = d3.select(this).data()[0]
