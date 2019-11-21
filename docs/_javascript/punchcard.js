@@ -52,7 +52,12 @@ function punchCardChart(selection) {
     selection.each(function (data) {
       var sites = [...new Set(data.map(d => d.site))].sort();
       var mutations = [...new Set(data.map(d => d.mutation))].sort();
+      if(data.length == 0){
+        metric_name = "";
+      }else{
       var metric_name = data[0].metric_name;
+      }
+
 
       xScale.domain(sites);
       zScale.domain(mutations);
