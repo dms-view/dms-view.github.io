@@ -44,14 +44,20 @@ function punchCardChart(selection) {
   // Set y-axis label.
   svg
     .append("text")
-    .attr("transform", "translate(" + (12) + ", " + (height + 10) + ") rotate(-90)")
-    .text("Absolute differential selection");
+    .attr("transform", "translate(" + (12) + ", " + (height - 40) + ") rotate(-90)")
+    .attr("id", "punchcard_y_label");
 
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
       var sites = [...new Set(data.map(d => d.site))].sort();
       var mutations = [...new Set(data.map(d => d.mutation))].sort();
+      if(data.length == 0){
+        metric_name = "";
+      }else{
+      var metric_name = data[0].metric_name;
+      }
+
 
       xScale.domain(sites);
       zScale.domain(mutations);
@@ -63,7 +69,7 @@ function punchCardChart(selection) {
           siteMap.set(d.site, {"site": d.site, "label": d.label_site});
         }
 
-        siteMap.get(d.site)[d.mutation] = d.absmutdiffsel;
+        siteMap.get(d.site)[d.mutation] = d.metric;
       });
 
       // Convert wide data map to an array.
@@ -115,6 +121,8 @@ function punchCardChart(selection) {
       svg.select(".x-axis").call(xAxis.tickFormat(function(site) {
           return siteMap.get(site)["label"];
       }));
+
+      svg.select("#punchcard_y_label").text(metric_name);
       svg.select(".y-axis").call(yAxis);
 
       svg.selectAll("g.bar_letter")
