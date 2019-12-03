@@ -53,11 +53,11 @@ function punchCardChart(selection) {
       var sites = [...new Set(data.map(d => d.site))].sort();
       var mutations = [...new Set(data.map(d => d.mutation))].sort();
       if(data.length == 0){
-        metric_name = "";
-      }else{
-      var metric_name = data[0].metric_name;
+        var metric_name = "";
       }
-
+      else {
+        var metric_name = data[0].metric_name;
+      }
 
       xScale.domain(sites);
       zScale.domain(mutations);
@@ -73,20 +73,36 @@ function punchCardChart(selection) {
       });
 
       // Convert wide data map to an array.
-      var wideData = Array.from(siteMap.values());
+      chart.data = data;
 
-      // Stack the wide data by mutations for plotting a stacked barchart.
-      var series = d3.stack().keys(mutations)(wideData);
+      const residuesBySite = Array.from(
+        d3.groups(
+          chart.data.sort(
+            (a, b) => (a["metric"] > b["metric"] ? 1 : (a["metric"] < b["metric"] ? -1 : 0))
+          ),
+          d => d["site"]
+        ).values()
+      );
 
-      // Annotate each stacked element with its parent key.
-      series.forEach(s => s.forEach(d => { d["key"] = s.key }))
-      chart.series = series;
+      residuesBySite.forEach(([site, residues]) => {
+        let base = 0.0;
+        for (let record of residues) {
+          record["yStart"] = base;
+          record["yEnd"] = base + record["metric"];
+          base = record["yEnd"];
+        }
+      });
+
+      const dataToPlot = residuesBySite.map(d => d[1]).flat();
+      chart.dataToPlot = dataToPlot;
+      console.log("Residues by site:");
+      console.log(dataToPlot);
 
       // Calculate the y domain from the maximum stack position.
-      yScale.domain([0, d3.max(series, d => d3.max(d, d => d[1]))]);
+      yScale.domain([0, d3.max(dataToPlot, d => d["yEnd"])]);
 
       // Calculate the color domain.
-      zScale.range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), series.length).reverse())
+      zScale.range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), mutations.length).reverse())
         .unknown("#cccccc");
       var functionalColors = {
        'G': '#f76ab4',
@@ -125,34 +141,31 @@ function punchCardChart(selection) {
       svg.select("#punchcard_y_label").text(metric_name);
       svg.select(".y-axis").call(yAxis);
 
-      svg.selectAll("g.bar_letter")
-        .data(series)
-        .join("g")
-          .attr("class", "bar_letter")
-        .selectAll("path.logo")
-        .data(d => d)
-        .join("path")
-          .attr("class", "logo")
-          .attr("d", d => {
-            var letter = fontObject.getPath(d.key);
-            var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
-            var width = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
-            return fontObject.getPath(
-              d.key,
-              xScale(d.data.site) + (xScale.bandwidth() / 2) - width / 2,
-              yScale(d[0]),
-              fontSize
-            ).toPathData();
-          })
-          .attr("transform", d => {
-            var letter = fontObject.getPath(d.key, 0, 0, fontSize);
-            var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
-            var rectangle_height = yScale(d[0]) - yScale(d[1]);
-            var scale = rectangle_height / height;
-            var y = yScale(d[0]);
-            return `translate(0 +${y}) scale(1.0 ${scale}) translate(0 -${y})`;
-          })
-          .attr("fill", d => colorMap(d.key));
+      svg.selectAll("path.logo")
+      .data(dataToPlot)
+      .join("path")
+        .attr("class", "logo")
+        .attr("d", d => {
+          //console.log(d);
+          var letter = fontObject.getPath(d["mutation"]);
+          var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
+          var width = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
+          return fontObject.getPath(
+            d["mutation"],
+            xScale(d["site"]) + (xScale.bandwidth() / 2) - width / 2,
+            yScale(d["yStart"]),
+            fontSize
+          ).toPathData();
+        })
+        .attr("transform", d => {
+          var letter = fontObject.getPath(d["mutation"], 0, 0, fontSize);
+          var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
+          var rectangle_height = yScale(d["yStart"]) - yScale(d["yEnd"]);
+          var scale = rectangle_height / height;
+          var y = yScale(d["yStart"]);
+          return `translate(0 +${y}) scale(1.0 ${scale}) translate(0 -${y})`;
+        })
+        .attr("fill", d => colorMap(d["mutation"]));
     });
   };
 
