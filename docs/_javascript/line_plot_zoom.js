@@ -300,6 +300,9 @@ function genomeLineChart() {
     // call function to deselect the points
     deselectPoints(sites_to_deselect);
 
+    // update the LOGOPLOT
+    updateLogoPlot();
+
   }, 15);
 
   var brushPointsFocusSelection = _.debounce(function() {
@@ -358,12 +361,20 @@ function genomeLineChart() {
         .classed("selected", true);
     });
 
-    deselectPoints(sites_to_deselect);
 
+    deselectPoints(sites_to_deselect);
     // all points in the current FOCUS brush area have been processed
     d3.selectAll(".current_brushed").classed("brushed", true);
+    updateLogoPlot();
   }, 15);
 
+  var updateLogoPlot = function(){
+    // LOGOPLOT includes all `.selected` (clicked or brushed) points
+    chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
+    d3.select("#punchcard_chart")
+      .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
+      .call(punchCard);
+  };
 
   // determines if a point is in the brush or not
   function isBrushed(brush_coords, d) {
@@ -413,8 +424,6 @@ function genomeLineChart() {
           if(cmdKey===true){
             d3.selectAll(".brushed").classed('previous_brush', true)
           }
-          else{
-          }
           brushPointsFocusSelection();
       }else if(brushType == 'deselect'){
         brushPointsFocusDeselection();
@@ -422,13 +431,6 @@ function genomeLineChart() {
       }else{
         console.log('Unknown brush type of ' + brushType)
       }
-
-      // LOGOPLOT includes all `.selected` (clicked or brushed) points
-      chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
-        .site);
-      d3.select("#punchcard_chart")
-        .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
-        .call(punchCard);
     }
 
 
