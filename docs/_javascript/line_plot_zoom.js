@@ -269,6 +269,39 @@ function genomeLineChart() {
     context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
   }
 
+  var deselectPoints = function(sites_to_deselect){
+    /*
+    Deselects sites in an array from PROTEIN and FOCUS plots.
+    */
+    sites_to_deselect.forEach(function(element) {
+      var _circle = d3.select("#site_" + element), // select the point
+        _circleData = _circle.data()[0]; // grab the data
+      // deselect the site on the PROTEIN
+      deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
+        " and " + _circleData.protein_site);
+      // FOCUS styling and revert classes
+      _circle.style("fill", greyColor)
+        .attr("class", "non_brushed")
+        .classed("current_brushed", false)
+        .classed("brushed", false)
+        .classed("selected", false);
+    });
+  };
+
+  var brushPointsFocusDeselection = _.debounce(function(){
+    /*
+    This function deselects all points in a brush which are selected.
+    */
+    var current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
+      .site),
+      selected = d3.selectAll(".selected").data().map(d => +d.site);
+    var sites_to_deselect = current_brushed.filter(value => selected.includes(value))
+
+    // call function to deselect the points
+    deselectPoints(sites_to_deselect);
+
+  }, 15);
+
   var brushPointsFocusSelection = _.debounce(function() {
     /*
     updates PROTEIN structure and LINE plot based on brush selection.
@@ -325,20 +358,7 @@ function genomeLineChart() {
         .classed("selected", true);
     });
 
-    // for each site to select, update the PROTEIN and the FOCUS point
-    sites_to_deselect.forEach(function(element) {
-      var _circle = d3.select("#site_" + element), // select the point
-        _circleData = _circle.data()[0]; // grab the data
-      // deselect the site on the PROTEIN
-      deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
-        " and " + _circleData.protein_site);
-      // FOCUS styling and revert classes
-      _circle.style("fill", greyColor)
-        .attr("class", "non_brushed")
-        .classed("current_brushed", false)
-        .classed("brushed", false)
-        .classed("selected", false);
-    });
+    deselectPoints(sites_to_deselect);
 
     // all points in the current FOCUS brush area have been processed
     d3.selectAll(".current_brushed").classed("brushed", true);
@@ -391,35 +411,13 @@ function genomeLineChart() {
           structure update.
           */
           if(cmdKey===true){
-            console.log("start a new brush of type " + brushType)
             d3.selectAll(".brushed").classed('previous_brush', true)
           }
           else{
           }
           brushPointsFocusSelection();
       }else if(brushType == 'deselect'){
-        // which sites are in the brush?
-        var current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
-          .site);
-        // which sites in the brush are in the brush and selected?
-        var selected = d3.selectAll(".selected").data().map(d => +d.site)
-        var selected_in_brush = current_brushed.filter(value => selected.includes(value))
-        console.log("deselecting the following points: " + selected_in_brush);
-
-        // for each site to select, update the PROTEIN and the FOCUS point
-        selected_in_brush.forEach(function(element) {
-          var _circle = d3.select("#site_" + element), // select the point
-            _circleData = _circle.data()[0]; // grab the data
-          // deselect the site on the PROTEIN
-          deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
-            " and " + _circleData.protein_site);
-          // FOCUS styling and revert classes
-          _circle.style("fill", greyColor)
-            .attr("class", "non_brushed")
-            .classed("current_brushed", false)
-            .classed("brushed", false)
-            .classed("selected", false);
-        });
+        brushPointsFocusDeselection();
         focus.select(".brush").call(brushFocus.move, null);
       }else{
         console.log('Unknown brush type of ' + brushType)
