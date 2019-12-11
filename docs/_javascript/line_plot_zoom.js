@@ -344,6 +344,7 @@ function genomeLineChart() {
     d3.selectAll(".current_brushed").classed("brushed", true);
   }, 15);
 
+
   // determines if a point is in the brush or not
   function isBrushed(brush_coords, d) {
     cx = xScaleFocus(d.site);
@@ -368,7 +369,8 @@ function genomeLineChart() {
     var extent = d3.event.selection // FOCUS brush's coordinates
 
     if(extent){
-      var cmdKey = d3.event.sourceEvent.metaKey;
+      var cmdKey = d3.event.sourceEvent.metaKey,
+          brushType = d3.select("#brushmenu").property('value');
       // a point is either in the newly brushed area or it is not
       var circlePoint = d3.select(".focus").selectAll("circle");
 
@@ -381,16 +383,47 @@ function genomeLineChart() {
           return !isBrushed(extent, d)
         });
 
-      /*
-      call function to do the actual selection.
-      This function is `debounced` to decrease laggy-ness of the PROTEIN
-      structure update.
-      */
-      if(cmdKey===true){
-        d3.selectAll(".brushed").classed('previous_brush', true)
+      // selection or deselection?
+      if(brushType == 'select'){
+          /*
+          call function to do the actual selection.
+          This function is `debounced` to decrease laggy-ness of the PROTEIN
+          structure update.
+          */
+          if(cmdKey===true){
+            console.log("start a new brush of type " + brushType)
+            d3.selectAll(".brushed").classed('previous_brush', true)
+          }
+          else{
+          }
+          brushPointsFocusSelection();
+      }else if(brushType == 'deselect'){
+        // which sites are in the brush?
+        var current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
+          .site);
+        // which sites in the brush are in the brush and selected?
+        var selected = d3.selectAll(".selected").data().map(d => +d.site)
+        var selected_in_brush = current_brushed.filter(value => selected.includes(value))
+        console.log("deselecting the following points: " + selected_in_brush);
+
+        // for each site to select, update the PROTEIN and the FOCUS point
+        selected_in_brush.forEach(function(element) {
+          var _circle = d3.select("#site_" + element), // select the point
+            _circleData = _circle.data()[0]; // grab the data
+          // deselect the site on the PROTEIN
+          deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
+            " and " + _circleData.protein_site);
+          // FOCUS styling and revert classes
+          _circle.style("fill", greyColor)
+            .attr("class", "non_brushed")
+            .classed("current_brushed", false)
+            .classed("brushed", false)
+            .classed("selected", false);
+        });
+        focus.select(".brush").call(brushFocus.move, null);
       }else{
+        console.log('Unknown brush type of ' + brushType)
       }
-      brushPointsFocusSelection();
 
       // LOGOPLOT includes all `.selected` (clicked or brushed) points
       chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
@@ -462,6 +495,11 @@ function genomeLineChart() {
       // site- and mutation-level data.
       chart.mutData = d3.group(mut_long_data, d => d.condition, d => d.metric_name);
 
+      // Handler for the brush button
+      brushdropdownchange = function(){
+        focus.select(".brush").call(brushFocus.move, null);
+      }
+
       // Handler for clear button change
       clearbuttonchange = function() {
         d3.selectAll(".selected").each(function(element){
@@ -485,6 +523,23 @@ function genomeLineChart() {
         // clear the physical brush (classification as 'brushed' remains)
         focus.select(".brush").call(brushFocus.move, null);
       };
+
+    // brush select/deselect choices
+
+    var brushdropdown = d3.select("#line_plot")
+      .insert("select", "svg")
+      .attr("id", 'brushmenu')
+      .on('click', brushdropdownchange);
+
+      brushdropdown.selectAll("option")
+        .data(['select', 'deselect'])
+        .enter().append("option")
+        .attr("value", function(d) {
+          return d;
+        })
+        .text(function(d) {
+          return d;
+        })
 
       // Handler for dropdown value change
       dropdownChange = function() {
