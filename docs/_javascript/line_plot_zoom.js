@@ -56,11 +56,7 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]).filter(() => !d3.event.ctrlKey
-    && !d3.event.button
-    && (d3.event.metaKey
-    || d3.event.target.__data__.type !== "overlay"))
-    .on("end", brushPointsFocus),
+    ]).on("end", brushPointsFocus),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -400,8 +396,7 @@ function genomeLineChart() {
     var extent = d3.event.selection // FOCUS brush's coordinates
 
     if(extent){
-      var cmdKey = d3.event.sourceEvent.metaKey,
-          brushType = d3.select("#brushmenu").property('value');
+      var brushType = d3.select("#brushmenu").property('value');
       // a point is either in the newly brushed area or it is not
       var circlePoint = d3.select(".focus").selectAll("circle");
 
@@ -421,10 +416,9 @@ function genomeLineChart() {
           This function is `debounced` to decrease laggy-ness of the PROTEIN
           structure update.
           */
-          if(cmdKey===true){
-            d3.selectAll(".brushed").classed('previous_brush', true)
-          }
+          d3.selectAll(".brushed").classed('previous_brush', true)
           brushPointsFocusSelection();
+          focus.select(".brush").call(brushFocus.move, null);
       }else if(brushType == 'deselect'){
         brushPointsFocusDeselection();
         focus.select(".brush").call(brushFocus.move, null);
