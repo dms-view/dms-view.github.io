@@ -389,7 +389,6 @@ function genomeLineChart() {
           }
         })
       });
-
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
       chart.data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site);
@@ -445,6 +444,14 @@ function genomeLineChart() {
 
       function updateChart(dataMap) {
         data = Array.from(dataMap.values())
+
+        // extract y-axis label from metric_name
+        svg.select("#context_y_label")
+              .text(data[0]["metric_name"].substring(5, ));
+
+        // filter out null values
+        data = data.filter(function (d) {return d.metric != "";});
+
         // get the new color map
         color_key = generateColorMap(data);
 
@@ -515,9 +522,6 @@ function genomeLineChart() {
             }
             return dataMap.get(site).label_site
           }));
-
-        svg.select("#context_y_label")
-              .text(data[0]["metric_name"].substring(5, ));
 
         // Create the context plot.
         context.selectAll("path.area")
