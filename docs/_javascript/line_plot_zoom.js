@@ -434,7 +434,7 @@ function genomeLineChart() {
               "label_site": row["label_site"],
               "mutation": row["mutation"],
               "condition": row["condition"],
-              "metric": Math.abs(+row[colname]),
+              "metric": +row[colname],
               "metric_name": colname
             });
           }
