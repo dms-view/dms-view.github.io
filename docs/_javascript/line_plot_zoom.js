@@ -284,7 +284,7 @@ function genomeLineChart() {
     });
   };
 
-  var brushPointsFocusDeselection = _.debounce(function(){
+  var brushPointsFocusDeselection = function(){
     /*
     This function deselects all points in a brush which are selected.
     */
@@ -299,9 +299,9 @@ function genomeLineChart() {
     // update the LOGOPLOT
     updateLogoPlot();
 
-  }, 15);
+  };
 
-  var brushPointsFocusSelection = _.debounce(function() {
+  var brushPointsFocusSelection = function() {
     /*
     updates PROTEIN structure and LINE plot based on brush selection.
 
@@ -318,9 +318,6 @@ function genomeLineChart() {
     3. is *not clicked*
     These points will also be colored the baseline grey and will no longer
     be classed as `selected`.
-
-    This protein is `debounced` to prevent laggy-ness. The wait period is
-    defined after the `}`.
     */
 
     // which sites are clicked? brushed? brushed but brushed before?
@@ -362,7 +359,7 @@ function genomeLineChart() {
     // all points in the current FOCUS brush area have been processed
     d3.selectAll(".current_brushed").classed("brushed", true);
     updateLogoPlot();
-  }, 15);
+  };
 
   var updateLogoPlot = function(){
     // LOGOPLOT includes all `.selected` (clicked or brushed) points
@@ -411,14 +408,9 @@ function genomeLineChart() {
 
       // selection or deselection?
       if(brushType == 'select'){
-          /*
-          call function to do the actual selection.
-          This function is `debounced` to decrease laggy-ness of the PROTEIN
-          structure update.
-          */
           d3.selectAll(".brushed").classed('previous_brush', true)
           brushPointsFocusSelection();
-          focus.select(".brush").call(brushFocus.move, null);
+          focus.select(".brush").call(brushFocus.move, null)
       }else if(brushType == 'deselect'){
         brushPointsFocusDeselection();
         focus.select(".brush").call(brushFocus.move, null);
@@ -426,8 +418,6 @@ function genomeLineChart() {
         console.log('Unknown brush type of ' + brushType)
       }
     }
-
-
   };
 
   // Create a genome line chart for the given selection.
