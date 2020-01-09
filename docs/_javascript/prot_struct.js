@@ -95,10 +95,13 @@ var polymerSelect = createSelect([
         })
         // on change, reselect the points so they are "on top"
       d3.selectAll(".selected").data().forEach(function(element) {
-        selectSiteOnProtein(
-          ":" + element.protein_chain + " and " + element.protein_site,
-          color_key[element.site]
-        )
+        element.protein_chain.forEach(function(chain){
+          selectSiteOnProtein(
+            ":" + chain + " and " + element.protein_site,
+            color_key[element.site]
+          )
+        })
+
       });
     })
   }
@@ -140,7 +143,7 @@ stage.signals.hovered.add(function(pickingProxy) {
     var chain_name = atom.qualifiedName().split(":")[1].split(".")[0]
       // extract the data corresponding to this site
     var residue_data = Array.from(chart.condition_data.values()).filter(d =>
-      (+d.protein_site == site_name) && (d.protein_chain === chain_name))
+      (+d.protein_site == site_name) && (d.protein_chain.includes(chain_name)))
       // there should not be more than one entry
     try {
       if (residue_data.length > 1) throw "data parse wrong";
