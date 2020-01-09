@@ -95,9 +95,10 @@ var polymerSelect = createSelect([
         })
         // on change, reselect the points so they are "on top"
       d3.selectAll(".selected").data().forEach(function(element) {
-        selectSiteOnProtein(":" + element.chain + " and " +
-          element.chain_site,
-          color_key[Math.ceil(element.abs_diffsel)])
+        selectSiteOnProtein(
+          ":" + element.protein_chain + " and " + element.protein_site,
+          color_key[element.site]
+        )
       });
     })
   }
