@@ -10,42 +10,63 @@ import pandas as pd
 def main():
     # inputs
     fname = "avg_sel_tidy.csv"
-    sera = ["VIDD5", "557v1"]
+    prefs = "rescaled_prefs.csv"
+    freqs = "H3_human_freqs.csv"
+    sera = ["2015-age-25-prevacc",
+            "2015-age-25-vacc",
+            "2015-age-29-prevacc",
+            "2015-age-29-vacc",
+            "2015-age-48-prevacc",
+            "2015-age-48-vacc",
+            "2015-age-49-prevacc",
+            "2015-age-49-vacc"]
 
     # read in data and subset
     df = pd.read_csv(fname, low_memory=False)
-    df = df[df["serum"].isin(sera)]
+    df = df[df["serum_name_formatted"].isin(sera)]
 
     # drop unnecessary columns
-    df = df.drop(["serum_name_formatted", "serum_group",
+    df = df.drop(["serum", "serum_group",
                   "serum_vaccination", "zoom_site"], axis=1)
 
     # rename columns
-    df = df.rename(columns={"serum": "condition",
+    df = df.rename(columns={"serum_name_formatted": "condition",
                             "pdb_chain": "protein_chain",
                             "pdb_site": "protein_site",
                             "site": "label_site",
                             "isite": "site"})
-    df = df.rename(columns={"mutdiffsel": "mut_diffsel",
-                            "abs_diffsel": "site_absdiffsel",
-                            "positive_diffsel": "site_posdiffsel",
-                            "negative_diffsel": "site_negdiffsel",
-                            "max_diffsel": "site_maxdiffsel",
-                            "min_diffsel": "site_mindiffsel"})
+    df = df.rename(columns={"mutdiffsel": "mut_Differential Selection",
+                            "abs_diffsel": "site_Absolute Differential Selection",
+                            "positive_diffsel": "site_Positive Differential Selection",
+                            "negative_diffsel": "site_Negative Differential Selection",
+                            "max_diffsel": "site_Max Differential Selection",
+                            "min_diffsel": "site_Min Differential Selection"})
 
     # convert datatypes
     df = df.astype({'site': 'int32'})
+
+    # process the preferences
+    prefs = pd.read_csv(prefs).rename(columns={'site': 'label_site'})
+    prefs = pd.melt(prefs, id_vars='label_site',
+                    value_name="mut_No Sera", var_name="mutation")
+    df = pd.merge(df, prefs, on=['label_site', 'mutation'])
+
+    # process the frequences
+    freqs = pd.read_csv(freqs)
+    freqs = pd.melt(freqs, id_vars='site',
+                    value_name="mut_Natural Frequencies", var_name="mutation")
+    df = pd.merge(df, freqs, on=['site', 'mutation'])
 
     # check the data
     # per site, there should be 20 AA and identical site-level metrics
     for name, group in df.groupby(["site", "condition"]):
         assert len(group) == 20
         assert len(group["wildtype"].unique()) == 1
-        assert len(group["site_absdiffsel"].unique()) == 1
-        assert len(group["site_posdiffsel"].unique()) == 1
-        assert len(group["site_negdiffsel"].unique()) == 1
-        assert len(group["site_maxdiffsel"].unique()) == 1
-        assert len(group["site_mindiffsel"].unique()) == 1
+        assert len(group["site_Absolute Differential Selection"].unique()) == 1
+        assert len(group["site_Positive Differential Selection"].unique()) == 1
+        assert len(group["site_Negative Differential Selection"].unique()) == 1
+        assert len(group["site_Max Differential Selection"].unique()) == 1
+        assert len(group["site_Min Differential Selection"].unique()) == 1
 
     # output the data
     df.to_csv("flu_dms-view.csv", index=False)
