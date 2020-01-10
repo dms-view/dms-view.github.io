@@ -575,6 +575,7 @@ function genomeLineChart() {
           .classed("selected", false)
           .style("clip-path", "url(#clip)")
           .style("fill", greyColor)
+          .style("opacity", 0.5)
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
