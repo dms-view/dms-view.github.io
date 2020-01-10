@@ -19,6 +19,8 @@ Selections made on the LINE plot will be reflect on the PROTEIN structure
 and in the LOGOPLOT.
 
 */
+selected_opacity = 1.0
+unselected_opacity = 0.5
 function genomeLineChart() {
   // Setup chart configuration.
   var svgId = "#line_plot",
@@ -154,6 +156,8 @@ function genomeLineChart() {
       // update the point on the LINE plot (color based on metric)
       d3.select(this)
         .style("fill", color_key[d.site])
+        .style("stroke-width", "1px")
+        .style("opacity", selected_opacity)
         .classed("selected", true)
         .classed("clicked", true);
       // update the PROTEIN structure (color based on metric)
@@ -169,6 +173,8 @@ function genomeLineChart() {
       // update the point on the LINE plot (baseline grey)
       d3.select(this)
         .style('fill', 'grey')
+        .style("stroke-width", "0px")
+        .style("opacity", unselected_opacity)
         .classed("selected", false)
         .classed("clicked", false);
       // update the PROTEIN structure (baseline grey)
@@ -282,6 +288,8 @@ function genomeLineChart() {
         " and " + _circleData.protein_site);
       // FOCUS styling and revert classes
       _circle.style("fill", greyColor)
+        .style("stroke-width", "0px")
+        .style("opacity", unselected_opacity)
         .attr("class", "non_brushed")
         .classed("current_brushed", false)
         .classed("brushed", false)
@@ -359,6 +367,8 @@ function genomeLineChart() {
 
       // FOCUS styling and update the point to `selected` class
       _circle.style("fill", color_key[_circleData.site])
+        .style("stroke-width", "1px")
+        .style("opacity", selected_opacity)
         .classed("selected", true);
     });
 
@@ -495,6 +505,8 @@ function genomeLineChart() {
       clearbuttonchange = function() {
         d3.selectAll(".selected").each(function(element){
           d3.select(this).style("fill", greyColor)
+          .style("stroke-width", "0px")
+          .style("opacity", unselected_opacity)
           .attr("class", "non_brushed")
           .classed("current_brushed", false)
           .classed("brushed", false)
@@ -584,7 +596,9 @@ function genomeLineChart() {
           .classed("selected", false)
           .style("clip-path", "url(#clip)")
           .style("fill", greyColor)
-          .style("opacity", 0.5)
+          .style("opacity", unselected_opacity)
+          .style("stroke", "grey")
+          .style("stroke-width", "0px")
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
