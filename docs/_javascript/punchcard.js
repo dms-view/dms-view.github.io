@@ -170,21 +170,50 @@ function punchCardChart(selection) {
           //console.log(d);
           var letter = fontObject.getPath(d["mutation"]);
           var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
-          var width = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
+          var letterWidth = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
+
+          // TODO: letter widths are hardcoded here to some reasonable maximum
+          // but we should dynamically identify the maximum width from all the
+          // letters.
+          letterWidth = 60;
           return fontObject.getPath(
             d["mutation"],
-            xScale(d["site"]) + (xScale.bandwidth() / 2) - width / 2,
+            xScale(d["site"]) + (xScale.bandwidth() / 2) - letterWidth / 2,
             yScale(d["yStart"]),
             fontSize
           ).toPathData();
         })
         .attr("transform", d => {
           var letter = fontObject.getPath(d["mutation"], 0, 0, fontSize);
+
+          // Calculate the amount to vertically scale each letter based on the
+          // actual letter height and the expected height from the y-axis scale.
+          // We further shrink this scale value by a fixed amount to add whitespace
+          // above and below letters in the stack.
           var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
           var rectangle_height = yScale(d["yStart"]) - yScale(d["yEnd"]);
-          var scale = rectangle_height / height;
+          var scale = (rectangle_height / height) * 0.9;
           var y = yScale(d["yStart"]);
-          return `translate(0 +${y}) scale(1.0 ${scale}) translate(0 -${y})`;
+
+          var letterWidth = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
+
+          // TODO: calculate max letter width dynamically
+          letterWidth = 60;
+          var x = xScale(d["site"]); // + (xScale.bandwidth() / 2);
+          var desiredWidth = xScale.bandwidth();
+
+          // Scale the width of letters to match the bandwidth of the x-axis
+          // scale when the letter is wider than the scale. When the letter is
+          // smaller than the bandwidth, do not scale up the letter as it becomes
+          // illegible.
+          var widthScale = desiredWidth / letterWidth;
+          if (widthScale > 1.0) {
+            widthScale = 1.0
+          }
+
+          // Scaling requires the object to be first moved (translated) to its
+          // desired x, y position, scaled, and then moved back by the same amount.
+          return `translate(+${x} +${y}) scale(${widthScale} ${scale}) translate(-${x} -${y})`;
         })
         .attr("fill", d => colorMap(d["mutation"]));
     });
