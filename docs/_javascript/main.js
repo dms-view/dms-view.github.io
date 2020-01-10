@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
           return d;
         })
         .text(function(d) {
-          return d;
+          return d.substring(4, );
         });
 
       // Select the site with the maximum y value by default.

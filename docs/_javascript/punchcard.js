@@ -159,7 +159,7 @@ function punchCardChart(selection) {
           return siteMap.get(site)["label"];
       }));
 
-      svg.select("#punchcard_y_label").text(metric_name);
+      svg.select("#punchcard_y_label").text(metric_name.substring(4, ));
       svg.select(".y-axis").call(yAxis);
 
       svg.selectAll("path.logo")
