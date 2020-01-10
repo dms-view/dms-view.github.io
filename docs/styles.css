@@ -16,35 +16,8 @@
   pointer-events: all;
 }
 
-.brushed{
-  fill: black;
-  stroke: grey;
-  stroke-width: 1px;
-  r: 4;
-  opacity: 1.0;
-}
-
-.selected {
-  stroke: grey;
-  stroke-width: 1px;
-  r: 4;
-  opacity: 1.0;
-}
-
 tr:nth-child(even) {
     background-color: #d9d9d9;
-}
-
-.focus circle.non_brushed {
-    fill: #999999;
-    opacity: 0.5;
-    r: 4;
-}
-
-.focus circle.hovered {
-  r: 4;
-  fill: black;
-  opacity: 1.0;
 }
 
 .rect {

@@ -56,7 +56,7 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]).on("brush end", brushPointsFocus),
+    ]).on("end", brushPointsFocus),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -270,7 +270,43 @@ function genomeLineChart() {
     context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
   }
 
-  var brushPointsFocusSelection = _.debounce(function() {
+  var deselectPoints = function(sites_to_deselect){
+    /*
+    Deselects sites in an array from PROTEIN and FOCUS plots.
+    */
+    sites_to_deselect.forEach(function(element) {
+      var _circle = d3.select("#site_" + element), // select the point
+        _circleData = _circle.data()[0]; // grab the data
+      // deselect the site on the PROTEIN
+      deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
+        " and " + _circleData.protein_site);
+      // FOCUS styling and revert classes
+      _circle.style("fill", greyColor)
+        .attr("class", "non_brushed")
+        .classed("current_brushed", false)
+        .classed("brushed", false)
+        .classed("selected", false);
+    });
+  };
+
+  var brushPointsFocusDeselection = function(){
+    /*
+    This function deselects all points in a brush which are selected.
+    */
+    var current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
+      .site),
+      selected = d3.selectAll(".selected").data().map(d => +d.site);
+    var sites_to_deselect = current_brushed.filter(value => selected.includes(value))
+
+    // call function to deselect the points
+    deselectPoints(sites_to_deselect);
+
+    // update the LOGOPLOT
+    updateLogoPlot();
+
+  };
+
+  var brushPointsFocusSelection = function() {
     /*
     updates PROTEIN structure and LINE plot based on brush selection.
 
@@ -287,9 +323,6 @@ function genomeLineChart() {
     3. is *not clicked*
     These points will also be colored the baseline grey and will no longer
     be classed as `selected`.
-
-    This protein is `debounced` to prevent laggy-ness. The wait period is
-    defined after the `}`.
     */
 
     // which sites are clicked? brushed? brushed but brushed before?
@@ -297,18 +330,21 @@ function genomeLineChart() {
       current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
         .site),
       already_brushed = d3.selectAll(".current_brushed.brushed").data().map(
-        d => +d.site);
+        d => +d.site),
+      previous_brush = d3.selectAll(".previous_brush").data().map(d=>+d.site);
 
     // sites to select - `current_brushed` but not `clicked` or `brushed`.
     var sites_to_select = _.without.apply(_, [current_brushed].concat(
         already_brushed)),
-      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked));
+      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked)),
+      sites_to_select = _.without.apply(_, [sites_to_select].concat(previous_brush));
 
     // sites to deselect - `non_brushed` but previously `brushed` but not `clicked`
     var sites_to_deselect = d3.selectAll(".non_brushed.brushed").data().map(
         d => +d.site),
       sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(
         clicked));
+    sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(previous_brush));
 
     // for each site to select, update the PROTEIN and the FOCUS point
     sites_to_select.forEach(function(element) {
@@ -326,27 +362,19 @@ function genomeLineChart() {
         .classed("selected", true);
     });
 
-    // for each site to select, update the PROTEIN and the FOCUS point
-    sites_to_deselect.forEach(function(element) {
-      var _circle = d3.select("#site_" + element), // select the point
-        _circleData = _circle.data()[0]; // grab the data
-      // deselect the site on the PROTEIN
-      _circleData.protein_chain.forEach(function(chain){
-        deselectSiteOnProteinStructure(":" + chain +
-          " and " + _circleData.protein_site);
-      })
-
-      // FOCUS styling and revert classes
-      _circle.style("fill", greyColor)
-        .attr("class", "non_brushed")
-        .classed("current_brushed", false)
-        .classed("brushed", false)
-        .classed("selected", false);
-    });
-
+    deselectPoints(sites_to_deselect);
     // all points in the current FOCUS brush area have been processed
     d3.selectAll(".current_brushed").classed("brushed", true);
-  }, 15);
+    updateLogoPlot();
+  };
+
+  var updateLogoPlot = function(){
+    // LOGOPLOT includes all `.selected` (clicked or brushed) points
+    chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
+    d3.select("#punchcard_chart")
+      .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
+      .call(punchCard);
+  };
 
   // determines if a point is in the brush or not
   function isBrushed(brush_coords, d) {
@@ -372,6 +400,7 @@ function genomeLineChart() {
     var extent = d3.event.selection // FOCUS brush's coordinates
 
     if(extent){
+      var brushType = d3.select("#brushmenu").property('value');
       // a point is either in the newly brushed area or it is not
       var circlePoint = d3.select(".focus").selectAll("circle");
 
@@ -384,21 +413,18 @@ function genomeLineChart() {
           return !isBrushed(extent, d)
         });
 
-      /*
-      call function to do the actual selection.
-      This function is `debounced` to decrease laggy-ness of the PROTEIN
-      structure update.
-      */
-      brushPointsFocusSelection();
-
-      // LOGOPLOT includes all `.selected` (clicked or brushed) points
-      chart.brushedSites = d3.selectAll(".selected").data().map(d => +d
-        .site);
-      d3.select("#punchcard_chart")
-        .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
-        .call(punchCard);
+      // selection or deselection?
+      if(brushType == 'select'){
+          d3.selectAll(".brushed").classed('previous_brush', true)
+          brushPointsFocusSelection();
+          focus.select(".brush").call(brushFocus.move, null)
+      }else if(brushType == 'deselect'){
+        brushPointsFocusDeselection();
+        focus.select(".brush").call(brushFocus.move, null);
+      }else{
+        console.log('Unknown brush type of ' + brushType)
+      }
     }
-
   };
 
   // Create a genome line chart for the given selection.
@@ -460,15 +486,20 @@ function genomeLineChart() {
       // site- and mutation-level data.
       chart.mutData = d3.group(mut_long_data, d => d.condition, d => d.metric_name);
 
+      // Handler for the brush button
+      brushdropdownchange = function(){
+        focus.select(".brush").call(brushFocus.move, null);
+      }
+
       // Handler for clear button change
       clearbuttonchange = function() {
-        console.log('inside clear')
         d3.selectAll(".selected").each(function(element){
           d3.select(this).style("fill", greyColor)
           .attr("class", "non_brushed")
           .classed("current_brushed", false)
           .classed("brushed", false)
           .classed("selected", false)
+          .classed("previous_brush", false)
 
           // deselect the site on the PROTEIN
           var _d = d3.select(this).data()[0]
@@ -485,6 +516,23 @@ function genomeLineChart() {
         // clear the physical brush (classification as 'brushed' remains)
         focus.select(".brush").call(brushFocus.move, null);
       };
+
+    // brush select/deselect choices
+
+    var brushdropdown = d3.select("#line_plot")
+      .insert("select", "svg")
+      .attr("id", 'brushmenu')
+      .on('click', brushdropdownchange);
+
+      brushdropdown.selectAll("option")
+        .data(['select', 'deselect'])
+        .enter().append("option")
+        .attr("value", function(d) {
+          return d;
+        })
+        .text(function(d) {
+          return d;
+        })
 
       // Handler for dropdown value change
       dropdownChange = function() {
@@ -536,6 +584,7 @@ function genomeLineChart() {
           .classed("selected", false)
           .style("clip-path", "url(#clip)")
           .style("fill", greyColor)
+          .style("opacity", 0.5)
           .on("mouseover", showTooltip)
           .on("mouseout", hideTooltip)
           .on("click", clickOnPoint);
