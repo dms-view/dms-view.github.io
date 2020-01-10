@@ -120,7 +120,7 @@ function genomeLineChart() {
       .style("visibility", "visible")
       .style("left", mousePosition[0] + "px")
       .style("top", mousePosition[1] + 50 + "px")
-      .html("Site: (" + d.protein_chain + ")" + d.protein_site + " <br/> " +
+      .html("Site: (" + d.protein_chain.join(" ") + ")" + d.protein_site + " <br/> " +
         d.metric_name + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
         "seq number: " + d.site)
   }
@@ -157,8 +157,11 @@ function genomeLineChart() {
         .classed("selected", true)
         .classed("clicked", true);
       // update the PROTEIN structure (color based on metric)
-      selectSiteOnProtein(":" + d.protein_chain + " and " + d.protein_site,
-        color_key[d.site])
+      d.protein_chain.forEach(function(chain){
+        selectSiteOnProtein(":" + chain + " and " + d.protein_site,
+          color_key[d.site])
+      })
+
     }
 
     // if the point is already selected
@@ -169,7 +172,9 @@ function genomeLineChart() {
         .classed("selected", false)
         .classed("clicked", false);
       // update the PROTEIN structure (baseline grey)
-      deselectSiteOnProteinStructure(":" + d.protein_chain + " and " + d.protein_site)
+      d.protein_chain.forEach(function(chain){
+        deselectSiteOnProteinStructure(":" + chain + " and " + d.protein_site)
+      })
     }
 
     // print the selected sites to the screen
@@ -310,9 +315,12 @@ function genomeLineChart() {
       var _circle = d3.select("#site_" + element), // select the point
         _circleData = _circle.data()[0]; // grab the data
       // select the site on the PROTEIN
-      selectSiteOnProtein(":" + _circleData.protein_chain + " and " +
-        _circleData.protein_site,
-        color_key[_circleData.site]);
+      _circleData.protein_chain.forEach(function(chain){
+        selectSiteOnProtein(":" + chain + " and " +
+          _circleData.protein_site,
+          color_key[_circleData.site]);
+      })
+
       // FOCUS styling and update the point to `selected` class
       _circle.style("fill", color_key[_circleData.site])
         .classed("selected", true);
@@ -323,8 +331,11 @@ function genomeLineChart() {
       var _circle = d3.select("#site_" + element), // select the point
         _circleData = _circle.data()[0]; // grab the data
       // deselect the site on the PROTEIN
-      deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
-        " and " + _circleData.protein_site);
+      _circleData.protein_chain.forEach(function(chain){
+        deselectSiteOnProteinStructure(":" + chain +
+          " and " + _circleData.protein_site);
+      })
+
       // FOCUS styling and revert classes
       _circle.style("fill", greyColor)
         .attr("class", "non_brushed")
@@ -422,7 +433,7 @@ function genomeLineChart() {
               "site": +row["site"],
               "label_site": row["label_site"],
               "wildtype": row["wildtype"],
-              "protein_chain": row["protein_chain"],
+              "protein_chain": row["protein_chain"].split(" "),
               "protein_site": row["protein_site"],
               "condition": row["condition"],
               "metric": +row[colname],
@@ -461,7 +472,9 @@ function genomeLineChart() {
 
           // deselect the site on the PROTEIN
           var _d = d3.select(this).data()[0]
-          deselectSiteOnProteinStructure(":" + _d.protein_chain + " and " + _d.protein_site);
+          _d.protein_chain.forEach(function(chain){
+            deselectSiteOnProteinStructure(":" + chain + " and " + _d.protein_site);
+          })
         })
 
         // LOGOPLOT includes all `.selected` (clicked or brushed) points
@@ -541,9 +554,12 @@ function genomeLineChart() {
              _circleData = _circle.data()[0]; // grab the data
 
          // select the site on the PROTEIN
-         selectSiteOnProtein(":" + _circleData.protein_chain + " and " +
-           _circleData.protein_site,
-           color_key[_circleData.site]);
+         _circleData.protein_chain.forEach(function(chain){
+           selectSiteOnProtein(":" + chain + " and " +
+             _circleData.protein_site,
+             color_key[_circleData.site]);
+         })
+
 
         // color the point in the FOCUS plot
          _circle.style("fill", color_key[_circleData.site])
