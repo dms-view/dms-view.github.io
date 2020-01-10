@@ -75,31 +75,52 @@ function punchCardChart(selection) {
       // Convert wide data map to an array.
       chart.data = data;
 
+      const sortMetricAscending = (a, b) => (a["metric"] > b["metric"] ? 1 : (a["metric"] < b["metric"] ? -1 : 0));
+      const sortMetricDescending = (a, b) => (-1 * sortMetricAscending(a, b));
+
       const residuesBySite = Array.from(
         d3.groups(
-          chart.data.sort(
-            (a, b) => (a["metric"] > b["metric"] ? 1 : (a["metric"] < b["metric"] ? -1 : 0))
-          ),
+          chart.data.sort(sortMetricAscending),
           d => d["site"]
         ).values()
       );
 
       residuesBySite.forEach(([site, residues]) => {
+         // Plot residues with positive values starting from zero and increasing
+         // up the y axis.
         let base = 0.0;
         for (let record of residues) {
-          record["yStart"] = base;
-          record["yEnd"] = base + record["metric"];
-          base = record["yEnd"];
+          if (record["metric"] >= 0) {
+            record["yStart"] = base;
+            record["yEnd"] = base + record["metric"];
+            base = record["yEnd"];
+          }
+        }
+
+        // Plot residues with negative values in descending order from zero
+        // down the y axis.
+        descendingResidues = residues.sort(sortMetricDescending);
+        base = 0.0;
+        for (let record of descendingResidues) {
+          if (record["metric"] < 0) {
+            // Calculate start and end positions on the y axis such that letters
+            // grow "down" the axis. This means the base line from which each
+            // letter is plotted corresponds to the "end" (or maximum) value.
+            record["yEnd"] = base;
+            record["yStart"] = base + record["metric"];
+            base = record["yStart"];
+          }
         }
       });
 
       const dataToPlot = residuesBySite.map(d => d[1]).flat();
       chart.dataToPlot = dataToPlot;
-      console.log("Residues by site:");
-      console.log(dataToPlot);
 
       // Calculate the y domain from the maximum stack position.
-      yScale.domain([0, d3.max(dataToPlot, d => d["yEnd"])]);
+      yScale.domain([
+        d3.min(dataToPlot, d => d["yStart"]),
+        d3.max(dataToPlot, d => d["yEnd"])
+      ]).nice();
 
       // Calculate the color domain.
       zScale.range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), mutations.length).reverse())

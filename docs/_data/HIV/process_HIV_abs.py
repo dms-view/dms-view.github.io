@@ -71,6 +71,7 @@ def main():
     df = pd.merge(df, m, on="label_site")
 
     # output the data
+    df = df.drop_duplicates()
     df.to_csv("HIV_dms-view.csv", index=False)
 
 
