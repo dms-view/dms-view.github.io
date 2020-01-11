@@ -230,10 +230,10 @@ function genomeLineChart() {
   // Set title for the context plot.
   svg
     .append("text")
-    .attr("transform", "translate(" + (divWidth / 10) + ", " + (plotHeightFocus +
+    .attr("transform", "translate(" + (divWidth / 4) + ", " + (plotHeightFocus +
       60) + ")")
     .style("text-anchor", "middle")
-    .text("zoom bar");
+    .text("zoom bar (brush to zoom in on a region)");
 
   // Create the x-axis for the context plot.
   context.append("g")
