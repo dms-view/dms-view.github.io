@@ -162,6 +162,41 @@ function punchCardChart(selection) {
       svg.select("#punchcard_y_label").text(metric_name.substring(4, ));
       svg.select(".y-axis").call(yAxis);
 
+      // Create the base tooltip object.
+      const logoTooltip = d3.select("#punchcard_chart")
+        .append("div")
+        .style("font-family", "'Open Sans', sans-serif")
+        .style("text-align", "left")
+        .style("position", "absolute")
+        .style("font-size", "20px")
+        .style("z-index", "20")
+        .style("background", "white")
+        .style("padding", "5px")
+        .style("border", "1px solid #cccccc")
+        .style("border-radius", "10px")
+        .style("visibility", "hidden");
+
+      function round(value, decimals) {
+        // From: https://www.jacklmoore.com/notes/rounding-in-javascript/
+        return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+      }
+
+      function showTooltip(d) {
+        mousePosition = d3.mouse(d3.event.target);
+        d3.select(this).classed("hovered", true);
+
+        return logoTooltip
+          .style("visibility", "visible")
+          .style("left", mousePosition[0] + "px")
+          .style("top", mousePosition[1] + 400 + "px")
+          .html(d.mutation + ": " + round(d.metric, 2));
+      }
+
+      function hideTooltip(d) {
+        d3.select(this).classed("hovered", false);
+        return logoTooltip.style("visibility", "hidden");
+      }
+
       svg.selectAll("path.logo")
       .data(dataToPlot)
       .join("path")
@@ -215,7 +250,9 @@ function punchCardChart(selection) {
           // desired x, y position, scaled, and then moved back by the same amount.
           return `translate(+${x} +${y}) scale(${widthScale} ${scale}) translate(-${x} -${y})`;
         })
-        .attr("fill", d => colorMap(d["mutation"]));
+        .attr("fill", d => colorMap(d["mutation"]))
+        .on("mouseover", showTooltip)
+        .on("mouseout", hideTooltip);
     });
   };
 
