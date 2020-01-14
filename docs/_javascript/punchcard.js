@@ -192,7 +192,7 @@ function punchCardChart(selection) {
           // above and below letters in the stack.
           var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
           var rectangle_height = yScale(d["yStart"]) - yScale(d["yEnd"]);
-          var scale = (rectangle_height / height) * 0.9;
+          var scale = (rectangle_height / height);
           var y = yScale(d["yStart"]);
 
           var letterWidth = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
