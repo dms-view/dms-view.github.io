@@ -23,3 +23,7 @@ tr:nth-child(even) {
 .rect {
     fill: #ffab00;
 }
+
+button, select {
+    margin-left: 0.5em;
+}
