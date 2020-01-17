@@ -441,6 +441,17 @@ function genomeLineChart() {
           return d;
         })
 
+      // add listener pressing a key on the keyboard
+      // if metaKey down, change brush to eraser
+      window.addEventListener("keydown", event => {
+        if (event.metaKey) {
+          d3.select("#brushmenu").property("value", "deselect")
+        }
+      });
+      window.addEventListener("keyup", event => {
+          d3.select("#brushmenu").property("value", "select")
+      });
+
       // Handler for dropdown value change
       dropdownChange = function() {
         current_condition = d3.select("#condition").property('value');
