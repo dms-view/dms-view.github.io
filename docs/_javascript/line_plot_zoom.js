@@ -309,7 +309,6 @@ function genomeLineChart() {
     var extent = d3.event.selection // FOCUS brush's coordinates
 
     if(extent){
-      var brushType = d3.select("#brushmenu").property('value');
       // a point is either in the newly brushed area or it is not
       var circlePoint = d3.select(".focus").selectAll("circle");
 
@@ -323,20 +322,20 @@ function genomeLineChart() {
           targets;
 
       // selection or deselection?
-      if(brushType == 'select'){
+      if(document.getElementById('select').checked){
         targets = _.without.apply(_, [brushed].concat(selected));
         targets.forEach(function(target) {
           selectSite(d3.select("#site_" + target))
         });
 
-      }else if(brushType == 'deselect'){
+      }else if(document.getElementById('deselect'){
         targets = brushed.filter(value => selected.includes(value))
         targets.forEach(function(target) {
           deselectSite(d3.select("#site_" + target))
         });
 
       }else{
-        console.log('Unknown brush type of ' + brushType)
+        console.log('Unknown brush type')
       }
 
       updateLogoPlot();
@@ -424,32 +423,16 @@ function genomeLineChart() {
         focus.select(".brush").call(brushFocus.move, null);
       };
 
-    // brush select/deselect choices
-
-    var brushdropdown = d3.select("#line_plot")
-      .insert("select", "svg")
-      .attr("id", 'brushmenu')
-      .on('click', brushdropdownchange);
-
-      brushdropdown.selectAll("option")
-        .data(['select', 'deselect'])
-        .enter().append("option")
-        .attr("value", function(d) {
-          return d;
-        })
-        .text(function(d) {
-          return d;
-        })
-
+      // brush select/deselect choices
       // add listener pressing a key on the keyboard
       // if metaKey down, change brush to eraser
       window.addEventListener("keydown", event => {
         if (event.metaKey) {
-          d3.select("#brushmenu").property("value", "deselect")
+          document.getElementById('deselect').checked = true
         }
       });
       window.addEventListener("keyup", event => {
-          d3.select("#brushmenu").property("value", "select")
+          document.getElementById('select').checked = true
       });
 
       // Handler for dropdown value change
