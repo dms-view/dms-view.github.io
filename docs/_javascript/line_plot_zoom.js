@@ -58,7 +58,7 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]).on("end", brushPointsFocus),
+    ]).on("end", brushPoints),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -268,45 +268,6 @@ function genomeLineChart() {
       });
   };
 
-  var brushPointsFocusDeselection = function(){
-    /*
-    This function deselects all points in a brush which are selected.
-    */
-    var brushed = d3.selectAll(".brushed").data().map(d => +d.site),
-        selected = d3.selectAll(".selected").data().map(d => +d.site);
-    var sites_to_deselect = brushed.filter(value => selected.includes(value))
-
-    // call function to deselect the points
-    // for each site to select, update the PROTEIN and the FOCUS point
-    sites_to_deselect.forEach(function(element) {
-      var _circle = d3.select("#site_" + element), // select the point
-          _circleData = _circle.data()[0]; // grab the data
-      deselectSite(_circle, _circleData);
-    });
-
-    // update the LOGOPLOT
-    updateLogoPlot();
-
-  };
-
-  var brushPointsFocusSelection = function() {
-    // we want to select sites which are in the current brush but have not been selected before
-    var selected = d3.selectAll(".selected").data().map(d => +d.site),
-        brushed = d3.selectAll(".brushed").data().map(d => +d.site),
-        sites_to_select = _.without.apply(_, [brushed].concat(selected));
-
-    // for each site to select, update the PROTEIN and the FOCUS point
-    sites_to_select.forEach(function(element) {
-      var _circle = d3.select("#site_" + element), // select the point
-          _circleData = _circle.data()[0]; // grab the data
-
-      selectSite(_circle, _circleData)
-    });
-
-    // all points in the current FOCUS brush area have been processed
-    updateLogoPlot();
-  };
-
   var updateLogoPlot = function(){
     // LOGOPLOT includes all `.selected`points
     chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
@@ -331,7 +292,7 @@ function genomeLineChart() {
   }
 
   // FOCUS plot brush functions
-  function brushPointsFocus() {
+  function brushPoints() {
     /*
     updates PROTEIN structure and LOGOPLOTS based on the brush selection
     from the CONTEXT plot.
@@ -348,16 +309,33 @@ function genomeLineChart() {
           return isBrushed(extent, d)
         });
 
+      var selected = d3.selectAll(".selected").data().map(d => +d.site),
+          brushed = d3.selectAll(".brushed").data().map(d => +d.site),
+          targets;
+
       // selection or deselection?
       if(brushType == 'select'){
-          brushPointsFocusSelection();
-          focus.select(".brush").call(brushFocus.move, null)
+        targets = _.without.apply(_, [brushed].concat(selected));
+        targets.forEach(function(target) {
+          var _circle = d3.select("#site_" + target), // select the point
+              _circleData = _circle.data()[0]; // grab the data
+          selectSite(_circle, _circleData)
+        });
+
       }else if(brushType == 'deselect'){
-        brushPointsFocusDeselection();
-        focus.select(".brush").call(brushFocus.move, null);
+        targets = brushed.filter(value => selected.includes(value))
+        targets.forEach(function(target) {
+          var _circle = d3.select("#site_" + target), // select the point
+              _circleData = _circle.data()[0]; // grab the data
+          deselectSite(_circle, _circleData)
+        });
+
       }else{
         console.log('Unknown brush type of ' + brushType)
       }
+
+      updateLogoPlot();
+      focus.select(".brush").call(brushFocus.move, null);
     }
   };
 
