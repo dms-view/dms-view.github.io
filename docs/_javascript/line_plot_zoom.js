@@ -404,19 +404,8 @@ function genomeLineChart() {
 
       // Handler for clear button change
       clearbuttonchange = function() {
-        d3.selectAll(".selected").each(function(element){
-          d3.select(this).style("fill", greyColor)
-          .style("stroke-width", "0px")
-          .style("opacity", unselected_opacity)
-          .attr("class", "non_brushed")
-          .classed("brushed", false)
-          .classed("selected", false)
-
-          // deselect the site on the PROTEIN
-          var _d = d3.select(this).data()[0]
-          _d.protein_chain.forEach(function(chain){
-            deselectSiteOnProtein(":" + chain + " and " + _d.protein_site);
-          })
+        d3.selectAll(".selected").each(function(){
+          deselectSite(d3.select(this))
         })
 
         updateLogoPlot();
