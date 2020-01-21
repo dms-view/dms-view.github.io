@@ -70,6 +70,7 @@ function genomeLineChart() {
       [plotWidth, plotHeightContext]
     ]).on("zoom", zoomed),
     missingData = [undefined, null, NaN, false, ""];
+    lastBrushTypeClick='select';
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -432,7 +433,13 @@ function genomeLineChart() {
         }
       });
       window.addEventListener("keyup", event => {
-          document.getElementById('select').checked = true
+          if (lastBrushTypeClick === 'select'){
+            document.getElementById('select').checked = true
+          }
+      });
+
+      d3.selectAll("input[name='mode']").on("change", function(){
+        lastBrushTypeClick = this.value;
       });
 
       // Handler for dropdown value change
