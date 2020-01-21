@@ -158,8 +158,7 @@ function genomeLineChart() {
         .style("fill", color_key[d.site])
         .style("stroke-width", "1px")
         .style("opacity", selected_opacity)
-        .classed("selected", true)
-        .classed("clicked", true);
+        .classed("selected", true);
       // update the PROTEIN structure (color based on metric)
       d.protein_chain.forEach(function(chain){
         selectSiteOnProtein(":" + chain + " and " + d.protein_site,
@@ -175,8 +174,7 @@ function genomeLineChart() {
         .style('fill', 'grey')
         .style("stroke-width", "0px")
         .style("opacity", unselected_opacity)
-        .classed("selected", false)
-        .classed("clicked", false);
+        .classed("selected", false);
       // update the PROTEIN structure (baseline grey)
       d.protein_chain.forEach(function(chain){
         deselectSiteOnProteinStructure(":" + chain + " and " + d.protein_site)
@@ -321,37 +319,31 @@ function genomeLineChart() {
     A point will be selected if it is
     1. in the FOCUS brush area _and_
     2. was not previously in the FOCUS brush area _and_
-    3. is not *clicked*
     These points will also be colored by the value of the site-level metric
     and classed as `selected`.
 
     A point will be deselected if it is
     1. outside the FOCUS brush area _and_
     2. was previously in the FOCUS brush area _and_
-    3. is *not clicked*
     These points will also be colored the baseline grey and will no longer
     be classed as `selected`.
     */
 
-    // which sites are clicked? brushed? brushed but brushed before?
-    var clicked = d3.selectAll(".clicked").data().map(d => +d.site),
-      current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
+    // which sites brushed? brushed but brushed before?
+    var current_brushed = d3.selectAll(".current_brushed").data().map(d => +d
         .site),
       already_brushed = d3.selectAll(".current_brushed.brushed").data().map(
         d => +d.site),
       previous_brush = d3.selectAll(".previous_brush").data().map(d=>+d.site);
 
-    // sites to select - `current_brushed` but not `clicked` or `brushed`.
+    // sites to select - `current_brushed` but not or `brushed`.
     var sites_to_select = _.without.apply(_, [current_brushed].concat(
         already_brushed)),
-      sites_to_select = _.without.apply(_, [sites_to_select].concat(clicked)),
       sites_to_select = _.without.apply(_, [sites_to_select].concat(previous_brush));
 
-    // sites to deselect - `non_brushed` but previously `brushed` but not `clicked`
+    // sites to deselect - `non_brushed` but previously `brushed`
     var sites_to_deselect = d3.selectAll(".non_brushed.brushed").data().map(
         d => +d.site),
-      sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(
-        clicked));
     sites_to_deselect = _.without.apply(_, [sites_to_deselect].concat(previous_brush));
 
     // for each site to select, update the PROTEIN and the FOCUS point
@@ -379,7 +371,7 @@ function genomeLineChart() {
   };
 
   var updateLogoPlot = function(){
-    // LOGOPLOT includes all `.selected` (clicked or brushed) points
+    // LOGOPLOT includes all `.selected`points
     chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
     d3.select("#punchcard_chart")
       .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
@@ -520,7 +512,7 @@ function genomeLineChart() {
           })
         })
 
-        // LOGOPLOT includes all `.selected` (clicked or brushed) points
+        // LOGOPLOT includes all `.selected` points
         chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
         d3.select("#punchcard_chart")
           .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
