@@ -230,15 +230,16 @@ function genomeLineChart() {
   function clickOnPoint(d) {
     // update FOCUS and PROTEIN
     if (!d3.select(this).classed("selected")) {
-      selectSite(d3.select(this), d)
+      selectSite(d3.select(this))
     }else {
-      deselectSite(d3.select(this), d)
+      deselectSite(d3.select(this))
     }
     // update the LOGOPLOT
     updateLogoPlot();
   }
 
-  var selectSite = function(circlePoint, circleData){
+  var selectSite = function(circlePoint){
+      var circleData = circlePoint.data()[0];
       // update the FOCUS plot
        circlePoint.style("fill", color_key[circleData.site])
         .style("stroke-width", "1px")
@@ -253,7 +254,8 @@ function genomeLineChart() {
     });
   };
 
-  var deselectSite = function(circlePoint, circleData){
+  var deselectSite = function(circlePoint){
+    var circleData = circlePoint.data()[0];
     // update FOCUS plot
     circlePoint.style("fill", greyColor)
       .style("stroke-width", "0px")
@@ -270,10 +272,11 @@ function genomeLineChart() {
 
   var updateLogoPlot = function(){
     // LOGOPLOT includes all `.selected`points
-    chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
+    chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
     d3.select("#punchcard_chart")
-      .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
+      .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
       .call(punchCard);
+    console.log("Selected sites: ", chart.selectedSites)
   };
 
   // determines if a point is in the brush or not
@@ -317,17 +320,13 @@ function genomeLineChart() {
       if(brushType == 'select'){
         targets = _.without.apply(_, [brushed].concat(selected));
         targets.forEach(function(target) {
-          var _circle = d3.select("#site_" + target), // select the point
-              _circleData = _circle.data()[0]; // grab the data
-          selectSite(_circle, _circleData)
+          selectSite(d3.select("#site_" + target))
         });
 
       }else if(brushType == 'deselect'){
         targets = brushed.filter(value => selected.includes(value))
         targets.forEach(function(target) {
-          var _circle = d3.select("#site_" + target), // select the point
-              _circleData = _circle.data()[0]; // grab the data
-          deselectSite(_circle, _circleData)
+          deselectSite(d3.select("#site_" + target))
         });
 
       }else{
@@ -420,11 +419,7 @@ function genomeLineChart() {
           })
         })
 
-        // LOGOPLOT includes all `.selected` points
-        chart.brushedSites = d3.selectAll(".selected").data().map(d => +d.site);
-        d3.select("#punchcard_chart")
-          .data([chart.condition_mut_data.filter(d => chart.brushedSites.includes(d.site))])
-          .call(punchCard);
+        updateLogoPlot();
         // clear the physical brush (classification as 'brushed' remains)
         focus.select(".brush").call(brushFocus.move, null);
       };
@@ -455,11 +450,7 @@ function genomeLineChart() {
         chart.condition_data = chart.data.get(current_condition).get(current_site);
         chart.condition_mut_data = chart.mutData.get(current_condition).get(current_mut_metric);
         updateChart(chart.condition_data);
-
-        chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
-        d3.select("#punchcard_chart")
-          .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
-          .call(punchCard);
+        updateLogoPlot();
       };
 
       function updateChart(dataMap) {
