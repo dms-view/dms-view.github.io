@@ -160,11 +160,8 @@ function genomeLineChart() {
     else {
       deselectSite(d3.select(this), d)
     }
-    
     // update the LOGOPLOT
-    d3.select("#punchcard_chart")
-      .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
-      .call(punchCard);
+    updateLogoPlot();
   }
 
   // Create the x-axis for the focus plot.
