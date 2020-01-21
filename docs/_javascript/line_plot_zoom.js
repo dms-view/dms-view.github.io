@@ -153,12 +153,7 @@ function genomeLineChart() {
 
     // if not already selected
     if (!d3.select(this).classed("selected")) {
-      // update the point on the LINE plot (color based on metric)
-      d3.select(this)
-        .style("fill", color_key[d.site])
-        .style("stroke-width", "1px")
-        .style("opacity", selected_opacity)
-        .classed("selected", true);
+      selectSite(d3.select(this), d)
       // update the PROTEIN structure (color based on metric)
       d.protein_chain.forEach(function(chain){
         selectSiteOnProtein(":" + chain + " and " + d.protein_site,
