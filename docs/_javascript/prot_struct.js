@@ -75,7 +75,7 @@ function selectSiteOnProtein(siteString, color) {
 }
 
 // remove color from a site
-function deselectSiteOnProteinStructure(siteString) {
+function deselectSiteOnProtein(siteString) {
   stage.getRepresentationsByName(siteString).dispose()
 }
 

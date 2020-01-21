@@ -143,27 +143,6 @@ function genomeLineChart() {
     return colors;
   };
 
-
-  // selection by mouse click
-  function clickOnPoint(d) {
-    /*
-    Select or deselect a point using mouse click.
-    Updates both the PROTEIN structure and the LOGOPLOTS.
-    */
-
-    // if not already selected
-    if (!d3.select(this).classed("selected")) {
-      selectSite(d3.select(this), d)
-    }
-
-    // if the point is already selected
-    else {
-      deselectSite(d3.select(this), d)
-    }
-    // update the LOGOPLOT
-    updateLogoPlot();
-  }
-
   // Create the x-axis for the focus plot.
   focus.append("g")
     .attr("class", "axis axis--x")
@@ -247,6 +226,18 @@ function genomeLineChart() {
     context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
   }
 
+  // selection by mouse click
+  function clickOnPoint(d) {
+    // update FOCUS and PROTEIN
+    if (!d3.select(this).classed("selected")) {
+      selectSite(d3.select(this), d)
+    }else {
+      deselectSite(d3.select(this), d)
+    }
+    // update the LOGOPLOT
+    updateLogoPlot();
+  }
+
   var selectSite = function(circlePoint, circleData){
       // update the FOCUS plot
        circlePoint.style("fill", color_key[circleData.site])
@@ -271,9 +262,8 @@ function genomeLineChart() {
       .classed("selected", false);
 
       // update PROTEIN structure
-      // update the PROTEIN structure
       circleData.protein_chain.forEach(function(chain){
-        deselectSiteOnProteinStructure(":" + chain + " and " +
+        deselectSiteOnProtein(":" + chain + " and " +
           circleData.protein_site);
       });
   };
@@ -290,7 +280,7 @@ function genomeLineChart() {
     // for each site to select, update the PROTEIN and the FOCUS point
     sites_to_deselect.forEach(function(element) {
       var _circle = d3.select("#site_" + element), // select the point
-        _circleData = _circle.data()[0]; // grab the data
+          _circleData = _circle.data()[0]; // grab the data
       deselectSite(_circle, _circleData);
     });
 
@@ -448,7 +438,7 @@ function genomeLineChart() {
           // deselect the site on the PROTEIN
           var _d = d3.select(this).data()[0]
           _d.protein_chain.forEach(function(chain){
-            deselectSiteOnProteinStructure(":" + chain + " and " + _d.protein_site);
+            deselectSiteOnProtein(":" + chain + " and " + _d.protein_site);
           })
         })
 
