@@ -158,22 +158,9 @@ function genomeLineChart() {
 
     // if the point is already selected
     else {
-      // update the point on the LINE plot (baseline grey)
-      d3.select(this)
-        .style('fill', 'grey')
-        .style("stroke-width", "0px")
-        .style("opacity", unselected_opacity)
-        .classed("selected", false);
-      // update the PROTEIN structure (baseline grey)
-      d.protein_chain.forEach(function(chain){
-        deselectSiteOnProteinStructure(":" + chain + " and " + d.protein_site)
-      })
+      deselectSite(d3.select(this), d)
     }
-
-    // print the selected sites to the screen
-    chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
-    console.log("Selected sites: " + chart.selectedSites);
-
+    
     // update the LOGOPLOT
     d3.select("#punchcard_chart")
       .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
@@ -263,42 +250,6 @@ function genomeLineChart() {
     context.select(".brush").call(brushContext.move, x.range().map(t.invertX, t));
   }
 
-  var deselectPoints = function(sites_to_deselect){
-    /*
-    Deselects sites in an array from PROTEIN and FOCUS plots.
-    */
-    sites_to_deselect.forEach(function(element) {
-      var _circle = d3.select("#site_" + element), // select the point
-        _circleData = _circle.data()[0]; // grab the data
-      // deselect the site on the PROTEIN
-      deselectSiteOnProteinStructure(":" + _circleData.protein_chain +
-        " and " + _circleData.protein_site);
-      // FOCUS styling and revert classes
-      _circle.style("fill", greyColor)
-        .style("stroke-width", "0px")
-        .style("opacity", unselected_opacity)
-        .attr("class", "non_brushed")
-        .classed("brushed", false)
-        .classed("selected", false);
-    });
-  };
-
-  var brushPointsFocusDeselection = function(){
-    /*
-    This function deselects all points in a brush which are selected.
-    */
-    var brushed = d3.selectAll(".brushed").data().map(d => +d.site),
-        selected = d3.selectAll(".selected").data().map(d => +d.site);
-    var sites_to_deselect = brushed.filter(value => selected.includes(value))
-
-    // call function to deselect the points
-    deselectPoints(sites_to_deselect);
-
-    // update the LOGOPLOT
-    updateLogoPlot();
-
-  };
-
   var selectSite = function(circlePoint, circleData){
       // update the FOCUS plot
        circlePoint.style("fill", color_key[circleData.site])
@@ -312,6 +263,43 @@ function genomeLineChart() {
         circleData.protein_site,
         color_key[circleData.site]);
     });
+  };
+
+  var deselectSite = function(circlePoint, circleData){
+    // update FOCUS plot
+    circlePoint.style("fill", greyColor)
+      .style("stroke-width", "0px")
+      .style("opacity", unselected_opacity)
+      .classed("brushed", false)
+      .classed("selected", false);
+
+      // update PROTEIN structure
+      // update the PROTEIN structure
+      circleData.protein_chain.forEach(function(chain){
+        deselectSiteOnProteinStructure(":" + chain + " and " +
+          circleData.protein_site);
+      });
+  };
+
+  var brushPointsFocusDeselection = function(){
+    /*
+    This function deselects all points in a brush which are selected.
+    */
+    var brushed = d3.selectAll(".brushed").data().map(d => +d.site),
+        selected = d3.selectAll(".selected").data().map(d => +d.site);
+    var sites_to_deselect = brushed.filter(value => selected.includes(value))
+
+    // call function to deselect the points
+    // for each site to select, update the PROTEIN and the FOCUS point
+    sites_to_deselect.forEach(function(element) {
+      var _circle = d3.select("#site_" + element), // select the point
+        _circleData = _circle.data()[0]; // grab the data
+      deselectSite(_circle, _circleData);
+    });
+
+    // update the LOGOPLOT
+    updateLogoPlot();
+
   };
 
   var brushPointsFocusSelection = function() {
