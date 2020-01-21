@@ -310,6 +310,21 @@ function genomeLineChart() {
 
   };
 
+  var selectSite = function(circlePoint, circleData){
+      // update the FOCUS plot
+       circlePoint.style("fill", color_key[circleData.site])
+        .style("stroke-width", "1px")
+        .style("opacity", selected_opacity)
+        .classed("selected", true);
+
+    // update the PROTEIN structure
+    circleData.protein_chain.forEach(function(chain){
+      selectSiteOnProtein(":" + chain + " and " +
+        circleData.protein_site,
+        color_key[circleData.site]);
+    });
+  };
+
   var brushPointsFocusSelection = function() {
     // we want to select sites which are in the current brush but have not been selected before
     var selected = d3.selectAll(".selected").data().map(d => +d.site),
@@ -321,19 +336,7 @@ function genomeLineChart() {
       var _circle = d3.select("#site_" + element), // select the point
           _circleData = _circle.data()[0]; // grab the data
 
-    // update the FOCUS plot
-    _circle.style("fill", color_key[_circleData.site])
-      .style("stroke-width", "1px")
-      .style("opacity", selected_opacity)
-      .classed("selected", true);
-
-      // update the PROTEIN structure
-      _circleData.protein_chain.forEach(function(chain){
-        selectSiteOnProtein(":" + chain + " and " +
-          _circleData.protein_site,
-          color_key[_circleData.site]);
-      })
-
+      selectSite(_circle, _circleData)
     });
 
     // all points in the current FOCUS brush area have been processed
@@ -380,7 +383,7 @@ function genomeLineChart() {
         function(d) {
           return isBrushed(extent, d)
         });
-        
+
       // selection or deselection?
       if(brushType == 'select'){
           brushPointsFocusSelection();
