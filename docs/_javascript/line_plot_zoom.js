@@ -329,7 +329,7 @@ function genomeLineChart() {
           selectSite(d3.select("#site_" + target))
         });
 
-      }else if(document.getElementById('deselect'){
+      }else if(document.getElementById('deselect')){
         targets = brushed.filter(value => selected.includes(value))
         targets.forEach(function(target) {
           deselectSite(d3.select("#site_" + target))
