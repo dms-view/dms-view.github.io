@@ -58,7 +58,8 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]).on("end", brushPoints),
+    ]).on("end", brushPoints)
+    .on("start", brushType),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -301,6 +302,16 @@ function genomeLineChart() {
     }
   }
 
+  function brushType() {
+    if(document.getElementById('select').checked){
+      focus.classed("brush_select", true).classed("brush_deselect", false)
+    }else if(document.getElementById('deselect').checked){
+      focus.classed("brush_select", false).classed("brush_deselect", true)
+  }else{
+    console.log("uh oh!")
+  }
+};
+
   // FOCUS plot brush functions
   function brushPoints() {
     /*
@@ -340,7 +351,7 @@ function genomeLineChart() {
       }
 
       updateLogoPlot();
-      focus.select(".brush").call(brushFocus.move, null);
+      focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
     }
   };
 
@@ -410,7 +421,7 @@ function genomeLineChart() {
 
       // Handler for the brush button
       brushdropdownchange = function(){
-        focus.select(".brush").call(brushFocus.move, null);
+        focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       }
 
       // Handler for clear button change
@@ -421,7 +432,7 @@ function genomeLineChart() {
 
         updateLogoPlot();
         // clear the physical brush (classification as 'brushed' remains)
-        focus.select(".brush").call(brushFocus.move, null);
+        focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       };
 
       // brush select/deselect choices
@@ -541,7 +552,7 @@ function genomeLineChart() {
           .attr("d", areaContext);
 
         // clear the physical brush (classification as 'brushed' remains)
-        focus.select(".brush").call(brushFocus.move, null);
+        focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       }; // end of update chart
       chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0]);
       chart.condition_mut_data = chart.mutData.get(conditions[0]).get(mut_metrics[0]);
