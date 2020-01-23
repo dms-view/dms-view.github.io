@@ -59,7 +59,7 @@ function genomeLineChart() {
       [0, 0],
       [plotWidth, plotHeightFocus]
     ]).on("end", brushPoints)
-    .on("start", brushType),
+    .on("start", brushBegin),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -71,6 +71,7 @@ function genomeLineChart() {
       [plotWidth, plotHeightContext]
     ]).on("zoom", zoomed),
     missingData = [undefined, null, NaN, false, ""];
+    brushType;
     lastBrushTypeClick='select';
 
   // Create the base chart SVG object.
@@ -302,13 +303,15 @@ function genomeLineChart() {
     }
   }
 
-  function brushType() {
+  function brushBegin() {
     if(document.getElementById('select').checked){
       focus.classed("brush_select", true).classed("brush_deselect", false)
+      brushType="select"
     }else if(document.getElementById('deselect').checked){
       focus.classed("brush_select", false).classed("brush_deselect", true)
+      brushType="deselect"
   }else{
-    console.log("uh oh!")
+    brushType="wrong"
   }
 };
 
@@ -334,13 +337,13 @@ function genomeLineChart() {
           targets;
 
       // selection or deselection?
-      if(document.getElementById('select').checked){
+      if(brushType === "select"){
         targets = _.without.apply(_, [brushed].concat(selected));
         targets.forEach(function(target) {
           selectSite(d3.select("#site_" + target))
         });
 
-      }else if(document.getElementById('deselect')){
+      }else if(brushType === "deselect"){
         targets = brushed.filter(value => selected.includes(value))
         targets.forEach(function(target) {
           deselectSite(d3.select("#site_" + target))
