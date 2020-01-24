@@ -102,6 +102,15 @@ function genomeLineChart() {
   // Enable brushing in the FOCUS plot.
   focus.append("g")
     .attr("class", "brush")
+    .attr("class", function(){
+    if(document.getElementById('select').checked){
+      return "brush_select"
+    }else if(document.getElementById('deselect').checked){
+      return "brush_deselect"
+    }else{
+      return "error"
+    }
+    })
     .call(brushFocus);
 
   // Create the base tooltip object.
@@ -305,10 +314,8 @@ function genomeLineChart() {
 
   function brushBegin() {
     if(document.getElementById('select').checked){
-      focus.classed("brush_select", true).classed("brush_deselect", false)
       brushType="select"
     }else if(document.getElementById('deselect').checked){
-      focus.classed("brush_select", false).classed("brush_deselect", true)
       brushType="deselect"
   }else{
     brushType="wrong"
@@ -444,16 +451,23 @@ function genomeLineChart() {
       window.addEventListener("keydown", event => {
         if (event.metaKey) {
           document.getElementById('deselect').checked = true
+          focus.classed("brush_select", false).classed("brush_deselect", true)
         }
       });
       window.addEventListener("keyup", event => {
           if (lastBrushTypeClick === 'select'){
             document.getElementById('select').checked = true
+            focus.classed("brush_select", true).classed("brush_deselect", false)
           }
       });
 
       d3.selectAll("input[name='mode']").on("change", function(){
         lastBrushTypeClick = this.value;
+        if ( this.value === 'select' ) {
+          focus.classed("brush_select", true).classed("brush_deselect", false)
+        } else if ( this.value === 'deselect' ) {
+           focus.classed("brush_select", false).classed("brush_deselect", true)
+        }
       });
 
       // add listener pressing a key on the keyboard
