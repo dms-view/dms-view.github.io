@@ -62,7 +62,7 @@ function loadStructure(input) {
 function selectSiteOnProtein(siteString, color) {
   // highlighted site representation should match main representation except
   // the highlighted site should be spacefill if main protein cartoon
-  backbone = ["cartoon", "licorice"]
+  backbone = ["cartoon"]
   if (backbone.includes(polymerSelect.value)) {
     fill = "spacefill";
   } else {
