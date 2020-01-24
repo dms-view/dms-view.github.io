@@ -98,6 +98,7 @@ var polymerSelect = createSelect([
         // on change, reselect the points so they are "on top"
       d3.selectAll(".selected").data().forEach(function(element) {
         element.protein_chain.forEach(function(chain){
+          deselectSiteOnProtein(":" + chain + " and " + element.protein_site)
           selectSiteOnProtein(
             ":" + chain + " and " + element.protein_site,
             color_key[element.site]
