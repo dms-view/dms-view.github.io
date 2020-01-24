@@ -22,17 +22,18 @@ var fontObject;
 
 // loader settings
 var opts = {
-  lines: 9, // The number of lines to draw
-  length: 9, // The length of each line
-  width: 5, // The line thickness
-  radius: 14, // The radius of the inner circle
-  color: '#EE3124', // #rgb or #rrggbb or array of colors
-  speed: 1.9, // Rounds per second
+  lines: 13, // The number of lines to draw
+  length: 38, // The length of each line
+  width: 17, // The line thickness
+  top: '20%', // Top position relative to parent
+  radius: 45, // The radius of the inner circle
+  color: greyColor, // #rgb or #rrggbb or array of colors
+  corners: 1, // Corner roundness (0..1)
+  fadeColor: 'transparent', // CSS color or array of colors
+  speed: 1, // Rounds per second
   trail: 40, // Afterglow percentage
   className: 'spinner', // The CSS class to assign to the spinner
 };
-
-var target = document.getElementById("line_plot");
 
 
 window.addEventListener('DOMContentLoaded', (event) => {
@@ -78,7 +79,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // Wait for all data to load before initializing content across the entire
   // application.
   console.log("Waiting for promises...");
-  var spinner = new Spinner(opts).spin(target);
+  var spinner = new Spinner(opts).spin(document.getElementById("line_plot"));
   Promise.all([promise1, promise3, promiseFontLoaded]).then(
     values => {
       console.log("Promises fulfilled!");
@@ -150,6 +151,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         console.log("click site " + max_y_record[0].site);
         d3.select("#site_" + max_y_record[0].site).dispatch("click");
       }
-      spinner.stop();
+      spinner.stop();  //app is loaded, stop the spinner
     });
 });
