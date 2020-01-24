@@ -134,5 +134,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         console.log("click site " + max_y_record[0].site);
         d3.select("#site_" + max_y_record[0].site).dispatch("click");
       }
+      d3.select("#loader").classed("is-active", false)
     });
 });
