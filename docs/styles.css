@@ -40,3 +40,7 @@ button, select {
   stroke: darkgrey;
   stroke-width: 2px;
 }
+
+.brush_deselect .overlay {
+  cursor: pointer;
+}
