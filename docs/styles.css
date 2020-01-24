@@ -42,5 +42,6 @@ button, select {
 }
 
 .brush_deselect .overlay {
-  cursor: url(explanaicon_2317285.png) 10 3, default;
+  /* pixels left  pixels down */
+  cursor: url(explanaicon_2317285.png) 0 32, default;
 }
