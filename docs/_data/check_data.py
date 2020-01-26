@@ -9,7 +9,7 @@ import argparse
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-                         description='calculate pvalues from pps')
+                         description='check input data for dms-view')
     parser.add_argument('datafile',
                         type=str,
                         help='path to datafile')
