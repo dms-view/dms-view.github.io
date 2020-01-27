@@ -101,7 +101,7 @@ function genomeLineChart() {
     .call(brushFocus);
 
   // Create the base tooltip object.
-  var tooltip = d3.select(svgId)
+  const tooltip = d3.select(svgId)
     .append("div")
     .style("font-family", "'Open Sans', sans-serif")
     .style("text-align", "left")

@@ -17,7 +17,7 @@ var greyColor = "#999999";
 
 // Bitstream Vera Fonts provided by Gnome:
 // https://www.gnome.org/fonts/
-var fontPath = "_data/fonts/VeraMono.ttf";
+var fontPath = "_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
 window.addEventListener('DOMContentLoaded', (event) => {
@@ -73,6 +73,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
       site_metrics = Array.from(chart.data.get(conditions[0]).keys());
       mut_metrics = Array.from(chart.mutData.get(conditions[0]).keys());
 
+      var clearButton = d3.select("#line_plot")
+        .insert("button", "svg")
+        .text("clear selections")
+        .attr("id", "clearButton")
+        .classed("button", true)
+        .on('click', clearbuttonchange);
+
       var conditiondropdown = d3.select("#line_plot")
         .insert("select", "svg")
         .attr("id", 'condition')
@@ -82,13 +89,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .insert("select", "svg")
         .attr("id", 'site')
         .on("change", dropdownChange);
-
-      var clearButton = d3.select("#line_plot")
-        .append("button")
-        .text("clear selections")
-        .attr("id", "clearButton")
-        .classed("button", true)
-        .on('click', clearbuttonchange);
 
       conditiondropdown.selectAll("option")
         .data(conditions)
