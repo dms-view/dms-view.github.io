@@ -5,7 +5,7 @@
  */
 var chart;
 var perSiteData;
-var punchCard;
+var logoplot;
 var dataPath = "_data/IAV/flu_dms-view.csv";
 var proteinPath = "_data/IAV/4O5N_trimer.pdb";
 
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   addElement(polymerSelect);
 
   // Initialize the mutation/site chart.
-  punchCard = punchCardChart("#punchcard_chart");
+  logoplot = logoplotChart("#logo_plot");
 
   // Request data for charts.
   var promise1 = d3.csv(dataPath).then(function(data) {
@@ -110,7 +110,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
           return d.substring(5, );
         })
 
-      var mutdropdown = d3.select("#punchcard_chart")
+      var mutdropdown = d3.select("#logo_plot")
         .insert("select", "svg")
         .attr("id", 'mutation_metric')
         .on("change", dropdownChange);
