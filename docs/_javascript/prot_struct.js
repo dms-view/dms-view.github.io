@@ -62,7 +62,8 @@ function loadStructure(input) {
 function selectSiteOnProtein(siteString, color) {
   // highlighted site representation should match main representation except
   // the highlighted site should be spacefill if main protein cartoon
-  if (polymerSelect.value == "cartoon") {
+  backbone = ["cartoon"]
+  if (backbone.includes(polymerSelect.value)) {
     fill = "spacefill";
   } else {
     fill = polymerSelect.value
@@ -83,6 +84,7 @@ function deselectSiteOnProtein(siteString) {
 var polymerSelect = createSelect([
   ["cartoon", "cartoon"],
   ["spacefill", "spacefill"],
+  ["licorice", "sticks"],
   ["surface", "surface"]
 ], {
   onchange: function(e) {
@@ -96,6 +98,7 @@ var polymerSelect = createSelect([
         // on change, reselect the points so they are "on top"
       d3.selectAll(".selected").data().forEach(function(element) {
         element.protein_chain.forEach(function(chain){
+          deselectSiteOnProtein(":" + chain + " and " + element.protein_site)
           selectSiteOnProtein(
             ":" + chain + " and " + element.protein_site,
             color_key[element.site]
