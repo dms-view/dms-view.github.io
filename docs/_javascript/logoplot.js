@@ -1,4 +1,4 @@
-function punchCardChart(selection) {
+function logoplotChart(selection) {
   var colorScheme = 'functional';
   var divWidth = 760,
       divHeight = 250,
@@ -45,7 +45,7 @@ function punchCardChart(selection) {
   svg
     .append("text")
     .attr("transform", "translate(" + (12) + ", " + (height - 40) + ") rotate(-90)")
-    .attr("id", "punchcard_y_label");
+    .attr("id", "logoplot_y_label");
 
   // Create a genome line chart for the given selection.
   function chart(selection) {
@@ -159,11 +159,11 @@ function punchCardChart(selection) {
           return siteMap.get(site)["label"];
       }));
 
-      svg.select("#punchcard_y_label").text(metric_name.substring(4, ));
+      svg.select("#logoplot_y_label").text(metric_name.substring(4, ));
       svg.select(".y-axis").call(yAxis);
 
       // Create the base tooltip object.
-      const logoTooltip = d3.select("#punchcard_chart")
+      const logoTooltip = d3.select("#logo_plot")
         .append("div")
         .style("font-family", "'Open Sans', sans-serif")
         .style("text-align", "left")

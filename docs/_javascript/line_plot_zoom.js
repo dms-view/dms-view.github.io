@@ -273,9 +273,9 @@ function genomeLineChart() {
   var updateLogoPlot = function(){
     // LOGOPLOT includes all `.selected`points
     chart.selectedSites = d3.selectAll(".selected").data().map(d => +d.site);
-    d3.select("#punchcard_chart")
+    d3.select("#logo_plot")
       .data([chart.condition_mut_data.filter(d => chart.selectedSites.includes(d.site))])
-      .call(punchCard);
+      .call(logoplot);
     console.log("Selected sites: ", chart.selectedSites)
   };
 
