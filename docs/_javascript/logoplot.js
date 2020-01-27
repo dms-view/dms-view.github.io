@@ -44,7 +44,8 @@ function logoplotChart(selection) {
   // Set y-axis label.
   svg
     .append("text")
-    .attr("transform", "translate(" + (12) + ", " + (height - 40) + ") rotate(-90)")
+    .attr("transform", "translate(" + (12) + ", " + (height - 80) + ") rotate(-90)")
+    .style("text-anchor", "middle")
     .attr("id", "logoplot_y_label");
 
   // Create a genome line chart for the given selection.

@@ -174,7 +174,8 @@ function genomeLineChart() {
     // Set y-axis label for the focus plot.
     svg
       .append("text")
-      .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus - -10) + ") rotate(-90)")
+      .attr("transform", "translate(" + (12) + ", " + (plotHeightFocus - 85) + ") rotate(-90)")
+      .style("text-anchor", "middle")
       .attr("id", "context_y_label");
 
   // Set title for the context plot.
