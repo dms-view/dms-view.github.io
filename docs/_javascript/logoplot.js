@@ -51,7 +51,7 @@ function logoplotChart(selection) {
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function (data) {
-      var sites = [...new Set(data.map(d => d.site))].sort();
+      var sites = [...new Set(data.map(d => +d.site))].sort((a, b) => a - b);
       var mutations = [...new Set(data.map(d => d.mutation))].sort();
       if(data.length == 0){
         var metric_name = "";
