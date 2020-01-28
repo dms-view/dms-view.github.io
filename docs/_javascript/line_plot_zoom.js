@@ -138,7 +138,11 @@ function genomeLineChart() {
         min_y_value = d3.min(data, d => +d.metric),
         range = d3.max(data, d => +d.metric) - min_y_value;
     data.forEach(function(d) {
+      if(d.metric == undefined){
+        colors[d.site] = greyColor
+      }else{
       colors[d.site] = d3.interpolateViridis((d.metric - min_y_value) / range)
+    }
     })
     return colors;
   };
@@ -367,6 +371,12 @@ function genomeLineChart() {
       alldata.forEach( function(row) {
         Object.keys(row).forEach( function(colname){
           if(colname.startsWith('site_')) {
+            var metric_value;
+            if(row[colname] === ""){
+              metric_value = undefined
+            }else{
+              metric_value = row[colname]
+            }
             long_data.push({
               "site": +row["site"],
               "label_site": row["label_site"],
@@ -374,7 +384,7 @@ function genomeLineChart() {
               "protein_chain": row["protein_chain"].split(" "),
               "protein_site": row["protein_site"],
               "condition": row["condition"],
-              "metric": +row[colname],
+              "metric": metric_value,
               "metric_name": colname});
           }
           else if (colname.startsWith('mut_')) {
@@ -449,9 +459,6 @@ function genomeLineChart() {
         svg.select("#context_y_label")
               .text(data[0]["metric_name"].substring(5, ));
 
-        // filter out null values
-        data = data.filter(function (d) {return d.metric != "";});
-
         // get the new color map
         color_key = generateColorMap(data);
 
@@ -474,7 +481,7 @@ function genomeLineChart() {
 
         circlePoint.enter()
           .append("circle")
-          .attr("r", 5)
+          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}})
           .attr("cx", XFocus)
           .attr("cy", YFocus)
           .attr("id", d => "site_" + d.site)
@@ -493,7 +500,8 @@ function genomeLineChart() {
         // Update old ones, already have x / width from before
         circlePoint
           .transition().duration(250)
-          .attr("cy", YFocus);
+          .attr("cy", YFocus)
+          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}});
 
         // Remove old ones
         circlePoint.exit().remove();
