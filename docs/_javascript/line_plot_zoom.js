@@ -68,7 +68,8 @@ function genomeLineChart() {
     .extent([
       [0, 0],
       [plotWidth, plotHeightContext]
-    ]).on("zoom", zoomed);
+    ]).on("zoom", zoomed),
+    missingData = [undefined, null, NaN, false, ""];
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -372,7 +373,7 @@ function genomeLineChart() {
         Object.keys(row).forEach( function(colname){
           if(colname.startsWith('site_')) {
             var metric_value;
-            if(row[colname] === ""){
+            if(missingData.includes(row[colname])){
               metric_value = undefined
             }else{
               metric_value = row[colname]
