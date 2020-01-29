@@ -460,7 +460,23 @@ function genomeLineChart() {
             focus.classed("brush_select", true).classed("brush_deselect", false)
           }
       });
+    exportbuttonchange = function(){
+      var state = {
+        "site": d3.selectAll('.selected').data().map(d => +d.site),
+        "condition": d3.select("#condition").property('value'),
+        "site-metric": d3.select("#site").property('value'),
+        "mut-metric": d3.select("#mutation_metric").property('value'),
+        "protein-representation": polymerSelect.value
+      }
+      var fname = prompt("File name: ")
+      if(fname === null){
+        fname = "dms-view.json"
+      }
+      state = new Blob([JSON.stringify(state)], {type: "text/plain;charset=utf-8"});
+      saveAs(state, fname);
+    };
 
+    // brush select/deselect choices
       d3.selectAll("input[name='mode']").on("change", function(){
         lastBrushTypeClick = this.value;
         if ( this.value === 'select' ) {

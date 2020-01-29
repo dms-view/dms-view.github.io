@@ -80,6 +80,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .classed("button", true)
         .on('click', clearbuttonchange);
 
+      var exportButton = d3.select("#line_plot")
+        .insert("button", "svg")
+        .text("export state")
+        .attr("id", "exportButton")
+        .classed("button", true)
+        .on('click', exportbuttonchange);
+
       var conditiondropdown = d3.select("#line_plot")
         .insert("select", "svg")
         .attr("id", 'condition')
