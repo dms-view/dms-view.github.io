@@ -532,9 +532,9 @@ function genomeLineChart() {
             return dataMap.get(site).label_site
           }));
 
-        // Create the context plot.
+        // Create the context plot excluding sites with missing data.
         context.selectAll("path.area")
-          .data([data])
+          .data([data.filter(d => d.metric !== undefined)])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
