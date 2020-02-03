@@ -6,8 +6,6 @@
 var chart;
 var perSiteData;
 var logoplot;
-var dataPath = "_data/IAV/flu_dms-view.csv";
-var proteinPath = "_data/IAV/4O5N_trimer.pdb";
 
 var dropdownChange;
 var clearbuttonchange;
@@ -17,7 +15,7 @@ var greyColor = "#999999";
 
 // Bitstream Vera Fonts provided by Gnome:
 // https://www.gnome.org/fonts/
-var fontPath = "_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
+var fontPath = "/_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
 window.addEventListener('DOMContentLoaded', (event) => {
