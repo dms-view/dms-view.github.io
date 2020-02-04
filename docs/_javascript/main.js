@@ -73,6 +73,45 @@ window.addEventListener('DOMContentLoaded', (event) => {
       site_metrics = Array.from(chart.data.get(conditions[0]).keys());
       mut_metrics = Array.from(chart.mutData.get(conditions[0]).keys());
 
+      function renderMarkdown (data) {
+        console.log("Loaded markdown file with content:");
+        // Render Markdown text to HTML.
+        const markdownOutput = marked(data);
+        console.log(markdownOutput);
+
+        // If there is any rendered output, update the DOM.
+        if (markdownOutput.length > 0) {
+          d3.select("#markdown-output")
+            .html(markdownOutput);
+        }
+      }
+
+      // Check if the URL already provides a Markdown URL. If it does, use that
+      // URL to load and render the Markdown.
+      const url = new URL(window.location);
+      if (url.searchParams.get("markdown-url") !== null) {
+        d3.text(url.searchParams.get("markdown-url")).then(renderMarkdown);
+      }
+
+      function markdownButtonChange () {
+        // Try to load the user's provided URL to a Markdown document.
+        const markdownUrl = d3.select("#markdown-url").property('value');
+        console.log(markdownUrl);
+        if (markdownUrl.length > 0) {
+          d3.text(markdownUrl).then(renderMarkdown);
+
+          // Update the document's query string to reflect the requested URL.
+          // This should help maintain state if the user copies and pastes the
+          // document's URL.
+          const url = new URL(window.location);
+          url.searchParams.set("markdown-url", markdownUrl);
+          history.replaceState({}, "", url.toString());
+        }
+      }
+
+      var markdownButton = d3.select("#markdown-url-submit")
+        .on("click", markdownButtonChange);
+
       var clearButton = d3.select("#line_plot")
         .insert("button", "svg")
         .text("clear selections")
