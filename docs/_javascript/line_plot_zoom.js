@@ -58,7 +58,8 @@ function genomeLineChart() {
     brushFocus = d3.brush().extent([
       [0, 0],
       [plotWidth, plotHeightFocus]
-    ]).on("end", brushPoints),
+    ]).on("end", brushPoints)
+    .on("start", brushBegin),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -69,7 +70,9 @@ function genomeLineChart() {
       [0, 0],
       [plotWidth, plotHeightContext]
     ]).on("zoom", zoomed),
-    missingData = [undefined, null, NaN, false, ""];
+    missingData = [undefined, null, NaN, false, ""],
+    brushTypem,
+    lastBrushTypeClick='select';
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -99,6 +102,15 @@ function genomeLineChart() {
   // Enable brushing in the FOCUS plot.
   focus.append("g")
     .attr("class", "brush")
+    .attr("class", function(){
+    if(document.getElementById('select').checked){
+      return "brush_select"
+    }else if(document.getElementById('deselect').checked){
+      return "brush_deselect"
+    }else{
+      return "error"
+    }
+    })
     .call(brushFocus);
 
   // Create the base tooltip object.
@@ -300,6 +312,16 @@ function genomeLineChart() {
     }
   }
 
+  function brushBegin() {
+    if(document.getElementById('select').checked){
+      brushType="select"
+    }else if(document.getElementById('deselect').checked){
+      brushType="deselect"
+  }else{
+    brushType="wrong"
+  }
+};
+
   // FOCUS plot brush functions
   function brushPoints() {
     /*
@@ -309,7 +331,6 @@ function genomeLineChart() {
     var extent = d3.event.selection // FOCUS brush's coordinates
 
     if(extent){
-      var brushType = d3.select("#brushmenu").property('value');
       // a point is either in the newly brushed area or it is not
       var circlePoint = d3.select(".focus").selectAll("circle");
 
@@ -323,24 +344,24 @@ function genomeLineChart() {
           targets;
 
       // selection or deselection?
-      if(brushType == 'select'){
+      if(brushType === "select"){
         targets = _.without.apply(_, [brushed].concat(selected));
         targets.forEach(function(target) {
           selectSite(d3.select("#site_" + target))
         });
 
-      }else if(brushType == 'deselect'){
+      }else if(brushType === "deselect"){
         targets = brushed.filter(value => selected.includes(value))
         targets.forEach(function(target) {
           deselectSite(d3.select("#site_" + target))
         });
 
       }else{
-        console.log('Unknown brush type of ' + brushType)
+        console.log('Unknown brush type')
       }
 
       updateLogoPlot();
-      focus.select(".brush").call(brushFocus.move, null);
+      focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
     }
   };
 
@@ -410,7 +431,7 @@ function genomeLineChart() {
 
       // Handler for the brush button
       brushdropdownchange = function(){
-        focus.select(".brush").call(brushFocus.move, null);
+        focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       }
 
       // Handler for clear button change
@@ -421,25 +442,44 @@ function genomeLineChart() {
 
         updateLogoPlot();
         // clear the physical brush (classification as 'brushed' remains)
-        focus.select(".brush").call(brushFocus.move, null);
+        focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       };
 
-    // brush select/deselect choices
+      // brush select/deselect choices
+      // add listener pressing a key on the keyboard
+      // if metaKey down, change brush to eraser
+      window.addEventListener("keydown", event => {
+        if (event.metaKey) {
+          document.getElementById('deselect').checked = true
+          focus.classed("brush_select", false).classed("brush_deselect", true)
+        }
+      });
+      window.addEventListener("keyup", event => {
+          if (lastBrushTypeClick === 'select'){
+            document.getElementById('select').checked = true
+            focus.classed("brush_select", true).classed("brush_deselect", false)
+          }
+      });
 
-    var brushdropdown = d3.select("#line_plot")
-      .insert("select", "svg")
-      .attr("id", 'brushmenu')
-      .on('click', brushdropdownchange);
+      d3.selectAll("input[name='mode']").on("change", function(){
+        lastBrushTypeClick = this.value;
+        if ( this.value === 'select' ) {
+          focus.classed("brush_select", true).classed("brush_deselect", false)
+        } else if ( this.value === 'deselect' ) {
+           focus.classed("brush_select", false).classed("brush_deselect", true)
+        }
+      });
 
-      brushdropdown.selectAll("option")
-        .data(['select', 'deselect'])
-        .enter().append("option")
-        .attr("value", function(d) {
-          return d;
-        })
-        .text(function(d) {
-          return d;
-        })
+      // add listener pressing a key on the keyboard
+      // if metaKey down, change brush to eraser
+      window.addEventListener("keydown", event => {
+        if (event.metaKey) {
+          document.getElementById('deselect').checked = true
+        }
+      });
+      window.addEventListener("keyup", event => {
+          document.getElementById('select').checked = true
+      });
 
       // Handler for dropdown value change
       dropdownChange = function() {
@@ -540,7 +580,7 @@ function genomeLineChart() {
           .attr("d", areaContext);
 
         // clear the physical brush (classification as 'brushed' remains)
-        focus.select(".brush").call(brushFocus.move, null);
+        focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       }; // end of update chart
       chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0]);
       chart.condition_mut_data = chart.mutData.get(conditions[0]).get(mut_metrics[0]);

@@ -27,3 +27,21 @@ tr:nth-child(even) {
 button, select {
     margin-left: 0.5em;
 }
+
+.brush_select .selection {
+  fill: grey;
+  stroke: darkgrey;
+  stroke-width: 2px;
+}
+
+.brush_deselect .selection {
+  fill: grey;
+  stroke-dasharray: 10;
+  stroke: darkgrey;
+  stroke-width: 2px;
+}
+
+.brush_deselect .overlay {
+  /* pixels left  pixels down */
+  cursor: url(_data/eraser.png) 0 32, default;
+}
