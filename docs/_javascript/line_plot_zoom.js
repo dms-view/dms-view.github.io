@@ -68,7 +68,8 @@ function genomeLineChart() {
     .extent([
       [0, 0],
       [plotWidth, plotHeightContext]
-    ]).on("zoom", zoomed);
+    ]).on("zoom", zoomed),
+    missingData = [undefined, null, NaN, false, ""];
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -138,7 +139,11 @@ function genomeLineChart() {
         min_y_value = d3.min(data, d => +d.metric),
         range = d3.max(data, d => +d.metric) - min_y_value;
     data.forEach(function(d) {
+      if(d.metric == undefined){
+        colors[d.site] = greyColor
+      }else{
       colors[d.site] = d3.interpolateViridis((d.metric - min_y_value) / range)
+    }
     })
     return colors;
   };
@@ -367,6 +372,12 @@ function genomeLineChart() {
       alldata.forEach( function(row) {
         Object.keys(row).forEach( function(colname){
           if(colname.startsWith('site_')) {
+            var metric_value;
+            if(missingData.includes(row[colname])){
+              metric_value = undefined
+            }else{
+              metric_value = row[colname]
+            }
             long_data.push({
               "site": +row["site"],
               "label_site": row["label_site"],
@@ -374,7 +385,7 @@ function genomeLineChart() {
               "protein_chain": row["protein_chain"].split(" "),
               "protein_site": row["protein_site"],
               "condition": row["condition"],
-              "metric": +row[colname],
+              "metric": metric_value,
               "metric_name": colname});
           }
           else if (colname.startsWith('mut_')) {
@@ -389,7 +400,6 @@ function genomeLineChart() {
           }
         })
       });
-
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
       chart.data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site);
@@ -445,6 +455,11 @@ function genomeLineChart() {
 
       function updateChart(dataMap) {
         data = Array.from(dataMap.values())
+
+        // extract y-axis label from metric_name
+        svg.select("#context_y_label")
+              .text(data[0]["metric_name"].substring(5, ));
+
         // get the new color map
         color_key = generateColorMap(data);
 
@@ -467,7 +482,7 @@ function genomeLineChart() {
 
         circlePoint.enter()
           .append("circle")
-          .attr("r", 5)
+          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}})
           .attr("cx", XFocus)
           .attr("cy", YFocus)
           .attr("id", d => "site_" + d.site)
@@ -486,7 +501,8 @@ function genomeLineChart() {
         // Update old ones, already have x / width from before
         circlePoint
           .transition().duration(250)
-          .attr("cy", YFocus);
+          .attr("cy", YFocus)
+          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}});
 
         // Remove old ones
         circlePoint.exit().remove();
@@ -516,12 +532,9 @@ function genomeLineChart() {
             return dataMap.get(site).label_site
           }));
 
-        svg.select("#context_y_label")
-              .text(data[0]["metric_name"].substring(5, ));
-
-        // Create the context plot.
+        // Create the context plot excluding sites with missing data.
         context.selectAll("path.area")
-          .data([data])
+          .data([data.filter(d => d.metric !== undefined)])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
