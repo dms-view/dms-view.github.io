@@ -70,8 +70,8 @@ function genomeLineChart() {
       [0, 0],
       [plotWidth, plotHeightContext]
     ]).on("zoom", zoomed),
-    missingData = [undefined, null, NaN, false, ""];
-    brushType;
+    missingData = [undefined, null, NaN, false, ""],
+    brushTypem,
     lastBrushTypeClick='select';
 
   // Create the base chart SVG object.
