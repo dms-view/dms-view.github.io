@@ -74,10 +74,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
       mut_metrics = Array.from(chart.mutData.get(conditions[0]).keys());
 
       function renderMarkdown (data) {
-        console.log("Loaded markdown file with content:");
         // Render Markdown text to HTML.
         const markdownOutput = marked(data);
-        console.log(markdownOutput);
 
         // If there is any rendered output, update the DOM.
         if (markdownOutput.length > 0) {
@@ -89,28 +87,41 @@ window.addEventListener('DOMContentLoaded', (event) => {
       // Check if the URL already provides a Markdown URL. If it does, use that
       // URL to load and render the Markdown.
       const url = new URL(window.location);
-      if (url.searchParams.get("markdown-url") !== null) {
-        d3.text(url.searchParams.get("markdown-url")).then(renderMarkdown);
+      const markdownUrl = url.searchParams.get("markdown-url");
+      if (markdownUrl !== null) {
+        renderMarkdownUrl(markdownUrl);
+
+        // Update the Markdown URL text field to reflect the provided value.
+        d3.select("#markdown-url").property('value', markdownUrl);
       }
 
-      function markdownButtonChange () {
+      function renderMarkdownUrl (markdownUrl) {
         // Try to load the user's provided URL to a Markdown document.
-        const markdownUrl = d3.select("#markdown-url").property('value');
-        console.log(markdownUrl);
         if (markdownUrl.length > 0) {
-          d3.text(markdownUrl).then(renderMarkdown);
+          d3.text(markdownUrl).then(data => {
+            // Render the given markdown.
+            renderMarkdown(data);
 
-          // Update the document's query string to reflect the requested URL.
-          // This should help maintain state if the user copies and pastes the
-          // document's URL.
-          const url = new URL(window.location);
-          url.searchParams.set("markdown-url", markdownUrl);
-          history.replaceState({}, "", url.toString());
+            // Remove any invalid input status for the URL text field.
+            d3.select("#markdown-url").classed('is-invalid', false);
+
+            // Update the document's query string to reflect the requested URL.
+            // This should help maintain state if the user copies and pastes the
+            // document's URL.
+            const url = new URL(window.location);
+            url.searchParams.set("markdown-url", markdownUrl);
+            history.replaceState({}, "", url.toString());
+          }).catch(reason => {
+            // Let the user know their URL could not be loaded.
+            d3.select("#markdown-url").classed('is-invalid', true);
+          });
         }
       }
 
-      var markdownButton = d3.select("#markdown-url-submit")
-        .on("click", markdownButtonChange);
+      var markdownField = d3.select("#markdown-url")
+        .on("change", () => renderMarkdownUrl(
+          d3.select("#markdown-url").property('value'))
+        );
 
       var clearButton = d3.select("#line_plot")
         .insert("button", "svg")
