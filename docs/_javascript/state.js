@@ -36,7 +36,7 @@ function JSONButtonChange () {
   }
 }
 
-var markdownButton = d3.select("#state-url-submit")
+var JSONButton = d3.select("#state-url-submit")
   .on("click", JSONButtonChange);
 
 function updateState(state){
