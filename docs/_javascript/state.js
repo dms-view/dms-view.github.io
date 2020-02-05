@@ -30,7 +30,7 @@ function JSONButtonChange () {
   if (JSONUrl.length > 0) {
     d3.json(JSONUrl)
     .then(updateState)
-    // .catch(err =>alert("Couldn't parse " + JSONUrl + ".\nIs it a proper JSON?"))
+    .catch(err =>alert("Couldn't parse " + JSONUrl + ".\nIs it a proper JSON?"))
   }else{
     alert("No state URL entered.")
   }
