@@ -24,18 +24,24 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
-function markdownButtonChange () {
+function JSONButtonChange () {
   // Try to load the user's provided URL to a Markdown document.
-  const markdownUrl = d3.select("#state-url").property('value');
-  if (markdownUrl.length > 0) {
-    d3.json(markdownUrl).then(updateState);
+  const JSONUrl = d3.select("#state-url").property('value');
+  if (JSONUrl.length > 0) {
+    d3.json(JSONUrl)
+    .then(updateState)
+    .catch(err =>alert("Couldn't parse " + JSONUrl + ".\nIs it a proper JSON?"))
+  }else{
+    alert("No state URL entered.")
   }
 }
 
 var markdownButton = d3.select("#state-url-submit")
-  .on("click", markdownButtonChange);
+  .on("click", JSONButtonChange);
 
 function updateState(state){
+  // check state form
+  checkState(state)
   // select sites
   state["site"].forEach(function(site){
     selectSite(d3.select("#site_" + site))
@@ -60,4 +66,17 @@ function updateDropDownMenu(dropdownid, target){
      .selectAll("option")
      .property('selected', function(d){return d === target;})
  d3.select(dropdownid).dispatch("change")
+}
+
+function checkState(state){
+  var alertMsg;
+  ["condition", "site-metric", "mut-metric", "protein-representation"]
+  .forEach(function(target){
+    if(!(target in state)){
+      alertMsg = alertMsg + "\nCouldn't find " + target + " in JSON. Reverting to current value."
+    }
+  })
+  if(alertMsg){
+    alert(alertMsg)
+  }
 }
