@@ -10,9 +10,19 @@ exportbuttonchange = function(){
   if(fname === null){
     fname = "dms-view.json"
   }
-  state = new Blob([JSON.stringify(state)], {type: "text/plain;charset=utf-8"});
-  saveAs(state, fname);
+  state = JSON.stringify(state);
+  download(fname, state);
 };
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
 
 function markdownButtonChange () {
   // Try to load the user's provided URL to a Markdown document.
