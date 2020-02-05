@@ -69,10 +69,12 @@ function selectSiteOnProtein(siteString, color) {
     fill = polymerSelect.value
   }
   // color the site
+  if(protein){
   protein.addRepresentation(fill, {
     color: color,
     name: siteString
   }).setSelection(siteString)
+}
 }
 
 // remove color from a site
