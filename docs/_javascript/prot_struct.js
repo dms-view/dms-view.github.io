@@ -88,30 +88,35 @@ var polymerSelect = createSelect([
   ["surface", "surface"]
 ], {
   onchange: function(e) {
-    stage.getRepresentationsByName("polymer").dispose()
-    stage.eachComponent(function(o) {
-      o.addRepresentation(e.target.value, {
-          sele: "polymer",
-          name: "polymer",
-          color: greyColor
-        })
-        // on change, reselect the points so they are "on top"
-      d3.selectAll(".selected").data().forEach(function(element) {
-        element.protein_chain.forEach(function(chain){
-          deselectSiteOnProtein(":" + chain + " and " + element.protein_site)
-          selectSiteOnProtein(
-            ":" + chain + " and " + element.protein_site,
-            color_key[element.site]
-          )
-        })
-
-      });
-    })
+    const representation = e.target.value;
+    changeProteinRepresentation(representation)
   }
 }, {
   top: "36px",
   left: "12px"
 })
+
+function changeProteinRepresentation(representation){
+  stage.getRepresentationsByName("polymer").dispose()
+  stage.eachComponent(function(o) {
+    o.addRepresentation(representation, {
+        sele: "polymer",
+        name: "polymer",
+        color: greyColor
+      })
+      // on change, reselect the points so they are "on top"
+    d3.selectAll(".selected").data().forEach(function(element) {
+      element.protein_chain.forEach(function(chain){
+        deselectSiteOnProtein(":" + chain + " and " + element.protein_site)
+        selectSiteOnProtein(
+          ":" + chain + " and " + element.protein_site,
+          color_key[element.site]
+        )
+      })
+
+    });
+  })
+}
 
 // tooltip setup
 tooltip = createElement("div", {}, {
