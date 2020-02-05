@@ -272,7 +272,7 @@ function genomeLineChart() {
     });
   };
 
-  var deselectSite = function(circlePoint){
+  deselectSite = function(circlePoint){
     var circleData = circlePoint.data()[0];
     // update FOCUS plot
     circlePoint.style("fill", greyColor)

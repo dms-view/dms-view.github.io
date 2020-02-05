@@ -30,7 +30,7 @@ function JSONButtonChange () {
   if (JSONUrl.length > 0) {
     d3.json(JSONUrl)
     .then(updateState)
-    .catch(err =>alert("Couldn't parse " + JSONUrl + ".\nIs it a proper JSON?"))
+    // .catch(err =>alert("Couldn't parse " + JSONUrl + ".\nIs it a proper JSON?"))
   }else{
     alert("No state URL entered.")
   }
@@ -42,8 +42,16 @@ var markdownButton = d3.select("#state-url-submit")
 function updateState(state){
   // check state form
   checkState(state)
-  // select sites
-  state["site"].forEach(function(site){
+  // figure out what sites to select/deselect
+  var current_selection = d3.selectAll(".selected").data().map(d => +d.site),
+      sites_to_deselect = _.without.apply(_, [current_selection].concat(state["site"])),
+      sites_to_select = _.without.apply(_, [state["site"]].concat(current_selection))
+  // deselect sites.
+  sites_to_deselect.forEach(function(site){
+    deselectSite(d3.select("#site_" + site))
+  })
+  // select sites.
+  sites_to_select.forEach(function(site){
     selectSite(d3.select("#site_" + site))
   })
 
@@ -59,13 +67,15 @@ function updateState(state){
 // update protein representation
 polymerSelect.value = state["protein-representation"]
 changeProteinRepresentation(state["protein-representation"])
+
+// call change on dropdowns to re-up chart
+d3.select("#site").dispatch("change")
 }
 
 function updateDropDownMenu(dropdownid, target){
   d3.select(dropdownid)
      .selectAll("option")
      .property('selected', function(d){return d === target;})
- d3.select(dropdownid).dispatch("change")
 }
 
 function checkState(state){
