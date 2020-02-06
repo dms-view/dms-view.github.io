@@ -123,11 +123,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
           d3.select("#markdown-url").property('value'))
         );
 
-      var clearButton = d3.select("#line_plot")
-        .insert("button", "svg")
-        .text("clear selections")
-        .attr("id", "clearButton")
-        .classed("button", true)
+      var clearButton = d3.select("#clearButton")
         .on('click', clearbuttonchange);
 
       var conditiondropdown = d3.select("#line_plot")
