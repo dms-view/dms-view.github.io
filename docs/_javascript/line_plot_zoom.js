@@ -256,7 +256,7 @@ function genomeLineChart() {
     updateLogoPlot();
   }
 
-  var selectSite = function(circlePoint){
+  selectSite = function(circlePoint){
       var circleData = circlePoint.data()[0];
       // update the FOCUS plot
        circlePoint.style("fill", color_key[circleData.site])
@@ -272,7 +272,7 @@ function genomeLineChart() {
     });
   };
 
-  var deselectSite = function(circlePoint){
+  deselectSite = function(circlePoint){
     var circleData = circlePoint.data()[0];
     // update FOCUS plot
     circlePoint.style("fill", greyColor)
@@ -461,6 +461,7 @@ function genomeLineChart() {
           }
       });
 
+    // brush select/deselect choices
       d3.selectAll("input[name='mode']").on("change", function(){
         lastBrushTypeClick = this.value;
         if ( this.value === 'select' ) {
