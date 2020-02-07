@@ -40,22 +40,6 @@ function createSelect(options, properties, style) {
   return select
 }
 
-// main function
-function loadStructure(input) {
-  stage.removeAllComponents()
-  return stage.loadFile(input).then(function(o) {
-    protein = o;
-    protein.setRotation([2, 0, 0])
-    protein.autoView()
-    protein.addRepresentation(polymerSelect.value, {
-      sele: "polymer",
-      name: "polymer",
-      color: greyColor
-    });
-    return protein;
-  })
-}
-
 // color a site by a certain color
 function selectSiteOnProtein(siteString, color) {
   // highlighted site representation should match main representation except
