@@ -136,6 +136,14 @@ function renderPdb(data) {
     color: greyColor
   });
 
+  // If data have been loaded into the site plot, select any sites from that
+  // panel in the protein view, too.
+  if (chart !== undefined) {
+    d3.selectAll(".selected").each(function(){
+      chart.selectSite(d3.select(this));
+    });
+  }
+
   return protein;
 }
 

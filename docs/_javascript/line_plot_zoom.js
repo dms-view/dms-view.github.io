@@ -610,5 +610,8 @@ function genomeLineChart() {
     return chart;
   };
 
+  // Expose the function to select individual sites.
+  chart.selectSite = selectSite;
+
   return chart;
 } // end of genomeLineChart
