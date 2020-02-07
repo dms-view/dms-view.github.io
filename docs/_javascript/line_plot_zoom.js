@@ -59,7 +59,8 @@ function genomeLineChart() {
       [0, 0],
       [plotWidth, plotHeightFocus]
     ]).on("end", brushPoints)
-    .on("start", brushBegin),
+    .on("start", brushBegin)
+    .keyModifiers(false),
     zoomContext = d3.zoom()
     .scaleExtent([1, Infinity])
     .translateExtent([
@@ -449,7 +450,7 @@ function genomeLineChart() {
       // add listener pressing a key on the keyboard
       // if metaKey down, change brush to eraser
       window.addEventListener("keydown", event => {
-        if (event.metaKey) {
+        if (event.shiftKey) {
           document.getElementById('deselect').checked = true
           focus.classed("brush_select", false).classed("brush_deselect", true)
         }
@@ -468,17 +469,6 @@ function genomeLineChart() {
         } else if ( this.value === 'deselect' ) {
            focus.classed("brush_select", false).classed("brush_deselect", true)
         }
-      });
-
-      // add listener pressing a key on the keyboard
-      // if metaKey down, change brush to eraser
-      window.addEventListener("keydown", event => {
-        if (event.metaKey) {
-          document.getElementById('deselect').checked = true
-        }
-      });
-      window.addEventListener("keyup", event => {
-          document.getElementById('select').checked = true
       });
 
       // Handler for dropdown value change
