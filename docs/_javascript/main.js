@@ -50,10 +50,7 @@ function renderCsv(data) {
     .data([data])
     .call(chart);
 
-  console.log(chart.data)
   let conditions = Array.from(chart.data.keys());
-  console.log("conditions:");
-  console.log(conditions);
   let site_metrics = Array.from(chart.data.get(conditions[0]).keys());
   let mut_metrics = Array.from(chart.mutData.get(conditions[0]).keys());
 
