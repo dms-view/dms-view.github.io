@@ -166,6 +166,7 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
   else if (dataType === "pdb") {
     dataFunction = (d) => {
       stage.removeAllComponents();
+      stage.animationControls.clear()
       return stage.loadFile(d)
     };
     renderFunction = renderPdb;
