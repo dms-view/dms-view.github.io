@@ -499,47 +499,41 @@ function genomeLineChart() {
         xScaleContext.domain(xScaleFocus.domain());
         yScaleContext.domain(yScaleFocus.domain());
 
-        // Create the context plot, drawing a line through all of the data points.
-        // focus.selectAll("path.line")
-        //   .data([data])
-        //   .join("path")
-        //   .attr("class", "line")
-        //   .style("clip-path", "url(#clip)")
-        //   .attr("d", lineFocus);
-
         // Plot a circle for each site in the given data.
-        var circlePoint = focus.selectAll("circle").data(data);
+        const radius = (d) => {
+          if(d.metric == undefined) {
+            return 0;
+          }
+          else {
+            return 5;
+          }
+        };
+        const transition = svg.transition().duration(500);
 
-        circlePoint.enter()
-          .append("circle")
-          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}})
-          .attr("cx", XFocus)
-          .attr("cy", YFocus)
-          .attr("id", d => "site_" + d.site)
-          .attr("class", "non_brushed")
-          .classed("brushed", false)
-          .classed("selected", false)
-          .style("clip-path", "url(#clip)")
-          .style("fill", greyColor)
-          .style("opacity", unselected_opacity)
-          .style("stroke", "grey")
-          .style("stroke-width", "0px")
-          .on("mouseover", showTooltip)
-          .on("mouseout", hideTooltip)
-          .on("click", clickOnPoint);
-
-        // Update old ones, already have x / width from before
-        circlePoint
-          .transition().duration(250)
-          .attr("cy", YFocus)
-          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}});
-
-        // Remove old ones
-        circlePoint.exit().remove();
-
-        d3.selectAll(".selected").each(function(){
-          selectSite(d3.select(this))
-        })
+        const circlePoint = focus.selectAll("circle")
+            .data(data)
+            .join(
+              enter => enter.append("circle")
+                .attr("r", radius)
+                .attr("cx", XFocus)
+                .attr("cy", YFocus)
+                .attr("id", d => "site_" + d.site)
+                .attr("class", "non_brushed")
+                .style("clip-path", "url(#clip)")
+                .style("fill", greyColor)
+                .style("opacity", unselected_opacity)
+                .style("stroke", "grey")
+                .style("stroke-width", "0px")
+                .on("mouseover", showTooltip)
+                .on("mouseout", hideTooltip)
+                .on("click", clickOnPoint),
+              update => update.attr("r", radius)
+                .attr("cx", XFocus)
+                .attr("id", d => "site_" + d.site)
+                .call(update => update.transition(transition)
+                      .attr("cy", YFocus)),
+              exit => exit.remove()
+            );
 
         // fix the axes (including labels)
         focus.select("#axis_y_focus")
