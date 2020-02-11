@@ -509,6 +509,14 @@ function genomeLineChart() {
           }
         };
         const transition = svg.transition().duration(500);
+        function colorSelectedCircles (d) {
+          if (d3.select(this).classed("selected")) {
+            return color_key[d.site];
+          }
+          else {
+            return greyColor;
+          }
+        }
 
         const circlePoint = focus.selectAll("circle")
             .data(data)
@@ -530,6 +538,7 @@ function genomeLineChart() {
               update => update.attr("r", radius)
                 .attr("cx", XFocus)
                 .attr("id", d => "site_" + d.site)
+                .style("fill", colorSelectedCircles)
                 .call(update => update.transition(transition)
                       .attr("cy", YFocus)),
               exit => exit.remove()
