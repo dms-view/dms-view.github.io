@@ -114,13 +114,10 @@ function renderCsv(data) {
 
   // Select the site with the maximum y value by default.
   console.log("Select site with maximum y value");
-  var max_y_value = d3.max(Array.from(chart.condition_data.values()), d => +d.metric);
-  var max_y_record = Array.from(chart.condition_data.values()).filter(d => +d.metric == max_y_value);
-
-  if (max_y_record.length > 0) {
-    console.log("click site " + max_y_record[0].site);
-    d3.select("#site_" + max_y_record[0].site).dispatch("click");
-  }
+  const circles = d3.selectAll("circle");
+  const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
+  const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
+  chart.selectSite(maxMetricRecord);
 }
 
 function renderPdb(data) {
