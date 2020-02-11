@@ -185,7 +185,7 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
     // document's URL.
     const url = new URL(window.location);
     url.searchParams.set(dataFieldId, dataUrl);
-    history.replaceState({}, "", url.toString());
+    history.pushState({}, "", url.toString());
     console.log("Changed URL to: " + url.toString());
 
     // Update the URL text field to reflect the provided value.
