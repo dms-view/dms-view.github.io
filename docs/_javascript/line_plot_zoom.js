@@ -72,7 +72,7 @@ function genomeLineChart() {
       [plotWidth, plotHeightContext]
     ]).on("zoom", zoomed),
     missingData = [undefined, null, NaN, false, ""],
-    brushTypem,
+    brushType,
     lastBrushTypeClick='select';
 
   // Create the base chart SVG object.
@@ -300,8 +300,9 @@ function genomeLineChart() {
 
   // determines if a point is in the brush or not
   function isBrushed(brush_coords, d) {
-    cx = xScaleFocus(d.site);
-    cy = yScaleFocus(d.metric);
+    const cx = xScaleFocus(+d.site);
+    const cy = yScaleFocus(+d.metric);
+
     if (brush_coords == null) {
       return false
     } else {
@@ -315,11 +316,11 @@ function genomeLineChart() {
 
   function brushBegin() {
     if(document.getElementById('select').checked){
-      brushType="select"
+      brushType="select";
     }else if(document.getElementById('deselect').checked){
-      brushType="deselect"
+      brushType="deselect";
   }else{
-    brushType="wrong"
+    brushType="wrong";
   }
 };
 
@@ -329,7 +330,7 @@ function genomeLineChart() {
     updates PROTEIN structure and LOGOPLOTS based on the brush selection
     from the CONTEXT plot.
     */
-    var extent = d3.event.selection // FOCUS brush's coordinates
+    var extent = d3.event.selection; // FOCUS brush's coordinates
 
     if(extent){
       // a point is either in the newly brushed area or it is not
@@ -337,7 +338,7 @@ function genomeLineChart() {
 
       circlePoint.classed("brushed",
         function(d) {
-          return isBrushed(extent, d)
+          return isBrushed(extent, d);
         });
 
       var selected = d3.selectAll(".selected").data().map(d => +d.site),
@@ -348,7 +349,7 @@ function genomeLineChart() {
       if(brushType === "select"){
         targets = _.without.apply(_, [brushed].concat(selected));
         targets.forEach(function(target) {
-          selectSite(d3.select("#site_" + target))
+          selectSite(d3.select("#site_" + target));
         });
 
       }else if(brushType === "deselect"){
@@ -484,7 +485,7 @@ function genomeLineChart() {
       };
 
       function updateChart(dataMap) {
-        data = Array.from(dataMap.values())
+        const data = Array.from(dataMap.values());
 
         // extract y-axis label from metric_name
         svg.select("#context_y_label")
