@@ -10,20 +10,16 @@ import pandas as pd
 def main():
     # inputs
     fname = "avg_sel_tidy.csv"
-    prefs = "rescaled_prefs.csv"
-    freqs = "H3_human_freqs.csv"
-    sera = ["2015-age-25-prevacc",
-            "2015-age-25-vacc",
-            "2015-age-29-prevacc",
-            "2015-age-29-vacc",
-            "2015-age-48-prevacc",
-            "2015-age-48-vacc",
-            "2015-age-49-prevacc",
-            "2015-age-49-vacc"]
+    prefs = "_processing/rescaled_prefs.csv"
+    freqs = "_processing/H3_human_freqs.csv"
+    sera = ["VIDD1",
+            "VIDD2",
+            "VIDD4",
+            "VIDD5"]
 
     # read in data and subset
     df = pd.read_csv(fname, low_memory=False)
-    df = df[df["serum_name_formatted"].isin(sera)]
+    df = df[df["serum"].isin(sera)]
 
     # drop unnecessary columns
     df = df.drop(["serum", "serum_group",
@@ -48,7 +44,7 @@ def main():
     # process the preferences
     prefs = pd.read_csv(prefs).rename(columns={'site': 'label_site'})
     prefs = pd.melt(prefs, id_vars='label_site',
-                    value_name="mut_No Sera", var_name="mutation")
+                    value_name="mut_DMS prefs", var_name="mutation")
     df = pd.merge(df, prefs, on=['label_site', 'mutation'])
 
     # process the frequences
