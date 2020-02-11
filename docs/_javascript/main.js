@@ -118,6 +118,7 @@ function renderCsv(data) {
   const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
   const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
   chart.selectSite(maxMetricRecord);
+  chart.updateLogoPlot();
 }
 
 function renderPdb(data) {

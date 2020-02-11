@@ -610,6 +610,7 @@ function genomeLineChart() {
 
   // Expose the function to select individual sites.
   chart.selectSite = selectSite;
+  chart.updateLogoPlot = updateLogoPlot;
 
   return chart;
 } // end of genomeLineChart
