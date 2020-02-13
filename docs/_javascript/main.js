@@ -198,11 +198,17 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
   });
 }
 
-function initializeDataUrl(dataFieldId, dataType) {
-  // Check if the URL already provides a Markdown URL. If it does, use that
-  // URL to load and render the Markdown.
+function initializeDataUrl(dataFieldId, dataType, defaultDataUrl) {
+  // Check if the URL already provides a data URL. If it does, use that URL to
+  // load and render the data by type. Otherwise, use the provided default URL.
   const url = new URL(window.location);
-  renderDataUrl(url.searchParams.get(dataFieldId), dataFieldId, dataType);
+
+  let dataUrl = url.searchParams.get(dataFieldId);
+  if (dataUrl === null) {
+    dataUrl = defaultDataUrl;
+  }
+
+  renderDataUrl(dataUrl, dataFieldId, dataType);
 
   // Listen for changes to the URL from this field id.
   const dataField = d3.select("#" + dataFieldId)
@@ -243,8 +249,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
       // Initialize URLs for user-provided data. Tries to find URLs in the
       // current app URL and listens for changes to the given text field ids.
-      initializeDataUrl("data-url", "csv");
-      initializeDataUrl("pdb-url", "pdb");
-      initializeDataUrl("markdown-url", "markdown");
+      initializeDataUrl("data-url", "csv", "/_data/IAV/flu_dms-view.csv");
+      initializeDataUrl("pdb-url", "pdb", "/_data/IAV/4O5N_trimer.pdb");
+      initializeDataUrl("markdown-url", "markdown", "/_data/IAV/lee2019mapping.md");
     });
 });
