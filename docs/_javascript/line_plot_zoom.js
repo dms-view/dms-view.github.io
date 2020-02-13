@@ -528,7 +528,6 @@ function genomeLineChart() {
                 .on("mouseout", hideTooltip)
                 .on("click", clickOnPoint),
               update => update.attr("r", radius)
-                .attr("cx", XFocus)
                 .attr("id", d => "site_" + d.site)
                 .call(update => update.transition(transition)
                       .attr("cy", YFocus)),
