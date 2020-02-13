@@ -72,7 +72,7 @@ function genomeLineChart() {
       [plotWidth, plotHeightContext]
     ]).on("zoom", zoomed),
     missingData = [undefined, null, NaN, false, ""],
-    brushTypem,
+    brushType,
     lastBrushTypeClick='select';
 
   // Create the base chart SVG object.
@@ -300,8 +300,9 @@ function genomeLineChart() {
 
   // determines if a point is in the brush or not
   function isBrushed(brush_coords, d) {
-    cx = xScaleFocus(d.site);
-    cy = yScaleFocus(d.metric);
+    const cx = xScaleFocus(+d.site);
+    const cy = yScaleFocus(+d.metric);
+
     if (brush_coords == null) {
       return false
     } else {
@@ -315,11 +316,11 @@ function genomeLineChart() {
 
   function brushBegin() {
     if(document.getElementById('select').checked){
-      brushType="select"
+      brushType="select";
     }else if(document.getElementById('deselect').checked){
-      brushType="deselect"
+      brushType="deselect";
   }else{
-    brushType="wrong"
+    brushType="wrong";
   }
 };
 
@@ -329,7 +330,7 @@ function genomeLineChart() {
     updates PROTEIN structure and LOGOPLOTS based on the brush selection
     from the CONTEXT plot.
     */
-    var extent = d3.event.selection // FOCUS brush's coordinates
+    var extent = d3.event.selection; // FOCUS brush's coordinates
 
     if(extent){
       // a point is either in the newly brushed area or it is not
@@ -337,7 +338,7 @@ function genomeLineChart() {
 
       circlePoint.classed("brushed",
         function(d) {
-          return isBrushed(extent, d)
+          return isBrushed(extent, d);
         });
 
       var selected = d3.selectAll(".selected").data().map(d => +d.site),
@@ -348,7 +349,7 @@ function genomeLineChart() {
       if(brushType === "select"){
         targets = _.without.apply(_, [brushed].concat(selected));
         targets.forEach(function(target) {
-          selectSite(d3.select("#site_" + target))
+          selectSite(d3.select("#site_" + target));
         });
 
       }else if(brushType === "deselect"){
@@ -484,7 +485,7 @@ function genomeLineChart() {
       };
 
       function updateChart(dataMap) {
-        data = Array.from(dataMap.values())
+        const data = Array.from(dataMap.values());
 
         // extract y-axis label from metric_name
         svg.select("#context_y_label")
@@ -499,47 +500,43 @@ function genomeLineChart() {
         xScaleContext.domain(xScaleFocus.domain());
         yScaleContext.domain(yScaleFocus.domain());
 
-        // Create the context plot, drawing a line through all of the data points.
-        // focus.selectAll("path.line")
-        //   .data([data])
-        //   .join("path")
-        //   .attr("class", "line")
-        //   .style("clip-path", "url(#clip)")
-        //   .attr("d", lineFocus);
-
         // Plot a circle for each site in the given data.
-        var circlePoint = focus.selectAll("circle").data(data);
-
-        circlePoint.enter()
-          .append("circle")
-          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}})
-          .attr("cx", XFocus)
-          .attr("cy", YFocus)
-          .attr("id", d => "site_" + d.site)
-          .attr("class", "non_brushed")
-          .classed("brushed", false)
-          .classed("selected", false)
-          .style("clip-path", "url(#clip)")
-          .style("fill", greyColor)
-          .style("opacity", unselected_opacity)
-          .style("stroke", "grey")
-          .style("stroke-width", "0px")
-          .on("mouseover", showTooltip)
-          .on("mouseout", hideTooltip)
-          .on("click", clickOnPoint);
-
-        // Update old ones, already have x / width from before
-        circlePoint
-          .transition().duration(250)
-          .attr("cy", YFocus)
-          .attr("r", function(d){if(d.metric == undefined){return 0}else{return 5}});
-
-        // Remove old ones
-        circlePoint.exit().remove();
+        const radius = (d) => {
+          if(d.metric == undefined) {
+            return 0;
+          }
+          else {
+            return 5;
+          }
+        };
+        const transition = svg.transition().duration(500);
+        const circlePoint = focus.selectAll("circle")
+            .data(data)
+            .join(
+              enter => enter.append("circle")
+                .attr("r", radius)
+                .attr("cx", XFocus)
+                .attr("cy", YFocus)
+                .attr("id", d => "site_" + d.site)
+                .attr("class", "non_brushed")
+                .style("clip-path", "url(#clip)")
+                .style("fill", greyColor)
+                .style("opacity", unselected_opacity)
+                .style("stroke", "grey")
+                .style("stroke-width", "0px")
+                .on("mouseover", showTooltip)
+                .on("mouseout", hideTooltip)
+                .on("click", clickOnPoint),
+              update => update.attr("r", radius)
+                .attr("id", d => "site_" + d.site)
+                .call(update => update.transition(transition)
+                      .attr("cy", YFocus)),
+              exit => exit.remove()
+            );
 
         d3.selectAll(".selected").each(function(){
-          selectSite(d3.select(this))
-        })
+          selectSite(d3.select(this));
+        });
 
         // fix the axes (including labels)
         focus.select("#axis_y_focus")
@@ -609,6 +606,10 @@ function genomeLineChart() {
     divHeight = _;
     return chart;
   };
+
+  // Expose the function to select individual sites.
+  chart.selectSite = selectSite;
+  chart.updateLogoPlot = updateLogoPlot;
 
   return chart;
 } // end of genomeLineChart

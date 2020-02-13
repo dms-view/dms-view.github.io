@@ -1,9 +1,7 @@
 // Code for example: interactive/simple-viewer
-var protein;
-var greyColor = "#999999";
 
 // Create NGL Stage object
-var stage = new NGL.Stage("protein");
+const stage = new NGL.Stage("protein");
 stage.setParameters({
   backgroundColor: "white"
 });
@@ -40,22 +38,6 @@ function createSelect(options, properties, style) {
     }))
   })
   return select
-}
-
-// main function
-function loadStructure(input) {
-  stage.removeAllComponents()
-  return stage.loadFile(input).then(function(o) {
-    protein = o;
-    protein.setRotation([2, 0, 0])
-    protein.autoView()
-    protein.addRepresentation(polymerSelect.value, {
-      sele: "polymer",
-      name: "polymer",
-      color: greyColor
-    });
-    return protein;
-  })
 }
 
 // color a site by a certain color
@@ -116,7 +98,7 @@ var polymerSelect = createSelect([
 })
 
 // tooltip setup
-tooltip = createElement("div", {}, {
+const tooltip = createElement("div", {}, {
   display: "none",
   position: "absolute",
   zIndex: 10,
