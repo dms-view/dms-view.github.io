@@ -114,11 +114,6 @@ stage.viewer.container.appendChild(tooltip);
 // remove default hoverPick mouse action
 // this appears to remve the default tooltip behavior
 stage.mouseControls.remove("hoverPick")
-nan_data = {
-  "site": NaN,
-  "label_site": NaN,
-  "wildtype": NaN
-}
 
 // listen to `hovered` signal to move tooltip around and change its text
 stage.signals.hovered.add(function(pickingProxy) {
@@ -137,24 +132,23 @@ stage.signals.hovered.add(function(pickingProxy) {
     } catch (err) {
       console.log(err)
     }
-    // if there are no entries ues NaN data
+    // if there are no entries, don't display tooltip
     if (residue_data.length == 0) {
-      residue_data = nan_data
+      tooltip.style.display = "none";
     } else {
       residue_data = residue_data[0]
+      // write to the tooltip
+      tooltip.innerHTML =
+        `Atom: ${chain_name} ${site_name}
+         <hr/>
+         Site: ${residue_data.label_site}<br/>
+         ${residue_data.metric_name.substring(5,)}: ${parseFloat(residue_data.metric).toFixed(2)}
+         Wildtype: ${residue_data.wildtype}<br/>
+         `
+      tooltip.style.bottom = cp.y + 3 + "px";
+      tooltip.style.left = cp.x + 3 + "px";
+      tooltip.style.display = "block";
     }
-
-    // write to the tooltip
-    tooltip.innerHTML =
-      `Atom: ${chain_name} ${site_name}
-       <hr/>
-       site: ${residue_data.site}<br/>
-       site label: ${residue_data.label_site}<br/>
-       wildtype: ${residue_data.wildtype}<br/>
-       `
-    tooltip.style.bottom = cp.y + 3 + "px";
-    tooltip.style.left = cp.x + 3 + "px";
-    tooltip.style.display = "block";
   } else {
     tooltip.style.display = "none";
   }
