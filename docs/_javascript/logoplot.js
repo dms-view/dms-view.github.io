@@ -5,7 +5,9 @@ function logoplotChart(selection) {
       margin = {top: 40, left: 40, bottom: 0, right: 0},
       width = divWidth - margin.left - margin.right,
       height = divHeight - margin.top - margin.bottom,
-      fontSize = 100;
+      fontSize = 100,
+      maxSitesToLabel = 20,
+      siteLabelInterval = 5;
 
   // Create the base chart SVG object.
   var svg = d3.select(selection)
@@ -175,8 +177,17 @@ function logoplotChart(selection) {
         var colorMap = zScale;
       };
 
-      svg.select(".x-axis").call(xAxis.tickFormat(function(site) {
+      svg.select(".x-axis").call(xAxis.tickFormat(function(site, i) {
+        // Display a tick label for each site up to the maximum number of
+        // allowed sites and then switch to displaying tick labels at a fixed
+        // interval defined above (e.g., every 5 sites). This prevents crowding
+        // of tick labels that make them unreadable.
+        if (sites.length < maxSitesToLabel || i % siteLabelInterval == 0) {
           return siteMap.get(site)["label"];
+        }
+        else {
+          return "";
+        }
       }));
 
       svg.select("#logoplot_y_label").text(metric_name.substring(4, ));
