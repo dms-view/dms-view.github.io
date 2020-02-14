@@ -5,7 +5,9 @@ function logoplotChart(selection) {
       margin = {top: 40, left: 40, bottom: 0, right: 0},
       width = divWidth - margin.left - margin.right,
       height = divHeight - margin.top - margin.bottom,
-      fontSize = 100;
+      fontSize = 100,
+      maxSitesToLabel = 20,
+      siteLabelInterval = 5;
 
   // Create the base chart SVG object.
   var svg = d3.select(selection)
@@ -50,6 +52,13 @@ function logoplotChart(selection) {
 
   // Create a genome line chart for the given selection.
   function chart(selection) {
+    // Get the width of each letter for the requested font size. For fixed width
+    // font, the advance width should always be the same size for all
+    // letters. We calculate this width once here and reuse it during logoploto
+    // transforms later. See also, the opentype.js docs for more details:
+    // https://github.com/opentypejs/opentype.js/blob/master/README.md#fontgetadvancewidthtext-fontsize-options
+    var letterWidth = fontObject.getAdvanceWidth("X", fontSize);
+
     selection.each(function (data) {
       var sites = [...new Set(data.map(d => +d.site))].sort((a, b) => a - b);
       var mutations = [...new Set(data.map(d => d.mutation))].sort();
@@ -62,6 +71,18 @@ function logoplotChart(selection) {
 
       xScale.domain(sites);
       zScale.domain(mutations);
+
+      // When the width of the logo letters is less than the width of the
+      // scale's bandwidth, each letter needs to be repositioned to the right
+      // such that it centers above the corresponding axis tick. This
+      // repositioning is calculated by an x-axis offset based on half the
+      // bandwidth minus half the letter width. This offset is not needed when
+      // the bandwidth is less than the letter width, since the letters will be
+      // scaled down to the bandwidth by a transform.
+      let logoXOffset = 0;
+      if (letterWidth < xScale.bandwidth()) {
+        logoXOffset = (xScale.bandwidth() / 2) - letterWidth / 2;
+      }
 
       // Convert long data to wide format for stacking.
       var siteMap = new Map();
@@ -156,8 +177,17 @@ function logoplotChart(selection) {
         var colorMap = zScale;
       };
 
-      svg.select(".x-axis").call(xAxis.tickFormat(function(site) {
+      svg.select(".x-axis").call(xAxis.tickFormat(function(site, i) {
+        // Display a tick label for each site up to the maximum number of
+        // allowed sites and then switch to displaying tick labels at a fixed
+        // interval defined above (e.g., every 5 sites). This prevents crowding
+        // of tick labels that make them unreadable.
+        if (sites.length < maxSitesToLabel || i % siteLabelInterval == 0) {
           return siteMap.get(site)["label"];
+        }
+        else {
+          return "";
+        }
       }));
 
       svg.select("#logoplot_y_label").text(metric_name.substring(4, ));
@@ -203,18 +233,12 @@ function logoplotChart(selection) {
       .join("path")
         .attr("class", "logo")
         .attr("d", d => {
-          //console.log(d);
           var letter = fontObject.getPath(d["mutation"]);
           var height = letter.getBoundingBox().y2 - letter.getBoundingBox().y1;
-          var letterWidth = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
 
-          // TODO: letter widths are hardcoded here to some reasonable maximum
-          // but we should dynamically identify the maximum width from all the
-          // letters.
-          letterWidth = 60;
           return fontObject.getPath(
             d["mutation"],
-            xScale(d["site"]) + (xScale.bandwidth() / 2) - letterWidth / 2,
+            xScale(d["site"]) + logoXOffset,
             yScale(d["yStart"]),
             fontSize
           ).toPathData();
@@ -230,12 +254,7 @@ function logoplotChart(selection) {
           var rectangle_height = yScale(d["yStart"]) - yScale(d["yEnd"]);
           var scale = (rectangle_height / height);
           var y = yScale(d["yStart"]);
-
-          var letterWidth = letter.getBoundingBox().x2 - letter.getBoundingBox().x1;
-
-          // TODO: calculate max letter width dynamically
-          letterWidth = 60;
-          var x = xScale(d["site"]); // + (xScale.bandwidth() / 2);
+          var x = xScale(d["site"]) + logoXOffset;
           var desiredWidth = xScale.bandwidth();
 
           // Scale the width of letters to match the bandwidth of the x-axis
