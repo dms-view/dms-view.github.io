@@ -136,9 +136,9 @@ function genomeLineChart() {
       .style("visibility", "visible")
       .style("left", mousePosition[0] + "px")
       .style("top", mousePosition[1] + 50 + "px")
-      .html("Site: (" + d.protein_chain.join(" ") + ")" + d.protein_site + " <br/> " +
+      .html("Site: " + d.label_site + "<br/>"  +
         d.metric_name + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
-        "seq number: " + d.site)
+        "Wildtype: " + d.wildtype)
   }
 
   function hideTooltip(d) {
