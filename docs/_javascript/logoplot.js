@@ -190,7 +190,8 @@ function logoplotChart(selection) {
           .style("visibility", "visible")
           .style("left", mousePosition[0] + "px")
           .style("top", mousePosition[1] + 400 + "px")
-          .html(d.mutation + ": " + round(d.metric, 2));
+          .html("Site: " + d.label_site + "<br/>"  +
+                d.mutation + ": " + round(d.metric, 2))
       }
 
       function hideTooltip(d) {
