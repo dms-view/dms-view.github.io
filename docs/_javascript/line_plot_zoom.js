@@ -49,7 +49,7 @@ function genomeLineChart() {
     xAxisContext = d3.axisBottom(xScaleContext),
     yAxis = d3.axisLeft(yScaleFocus),
     lineFocus = d3.line().x(XFocus).y(YFocus),
-    areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(
+    areaContext = d3.area().defined(d => !isNaN(d.metric)).x(XContext).y0(
       plotHeightContext).y1(YContext),
     brushContext = d3.brushX().extent([
       [0, 0],
@@ -425,7 +425,20 @@ function genomeLineChart() {
       });
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
-      chart.data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site);
+      data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
+      conditions.forEach(function(condition){
+        site_metrics.forEach(function(site_metric){
+          let sites = Array.from(data.get(condition).get(site_metric).keys()),
+              minSite = Math.min.apply(null, sites),
+              maxSite = Math.max.apply(null, sites),
+          fullRange = _.range(minSite, maxSite+1);
+          missing = _.without.apply(_, [fullRange].concat(sites));
+          missing.forEach(function(m){
+            data.get(condition).get(site_metric).set(m, {"condition": condition, "metric_name": site_metric, "metric": NaN, "label_site": undefined, "site":m})
+          })
+        })
+      })
+      chart.data = data;
 
       // Group data by condition and mutation metric, keeping all records to get
       // site- and mutation-level data.
@@ -561,7 +574,7 @@ function genomeLineChart() {
 
         // Create the context plot excluding sites with missing data.
         context.selectAll("path.area")
-          .data([data.filter(d => d.metric !== undefined)])
+          .data([data])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
