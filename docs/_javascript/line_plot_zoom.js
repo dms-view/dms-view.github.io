@@ -49,7 +49,10 @@ function genomeLineChart() {
     xAxisContext = d3.axisBottom(xScaleContext),
     yAxis = d3.axisLeft(yScaleFocus),
     lineFocus = d3.line().x(XFocus).y(YFocus),
-    areaContext = d3.area().defined(d => !isNaN(d.metric)).x(XContext).y0(
+    areaContext = d3.area().defined(function(d){
+      console.log(d.site, d.metric===undefined)
+      return !(d.metric===undefined);
+    }).x(XContext).y0(
       plotHeightContext).y1(YContext),
     brushContext = d3.brushX().extent([
       [0, 0],
@@ -434,7 +437,7 @@ function genomeLineChart() {
           fullRange = _.range(minSite, maxSite+1);
           missing = _.without.apply(_, [fullRange].concat(sites));
           missing.forEach(function(m){
-            data.get(condition).get(site_metric).set(m, {"condition": condition, "metric_name": site_metric, "metric": NaN, "label_site": undefined, "site":m})
+            data.get(condition).get(site_metric).set(m, {"condition": condition, "metric_name": site_metric, "metric": undefined, "label_site": undefined, "site":m})
           })
         })
       })
@@ -574,7 +577,7 @@ function genomeLineChart() {
 
         // Create the context plot excluding sites with missing data.
         context.selectAll("path.area")
-          .data([data])
+          .data([data.filter(areaContext.defined())])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
