@@ -10,6 +10,7 @@ var logoplot;
 let conditiondropdown;
 let sitedropdown;
 let mutdropdown;
+const dropdownsToTrack = ["condition", "site", "mutation_metric"];
 
 var dropdownChange;
 var clearbuttonchange;
@@ -21,6 +22,35 @@ const greyColor = "#999999";
 // https://www.gnome.org/fonts/
 var fontPath = "_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
+
+function updateStateFromUrl(field) {
+  const url = new URL(window.location);
+  const fieldValue = url.searchParams.get(field);
+
+  if (fieldValue !== null && fieldValue.length > 0) {
+    console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
+
+    console.log(d3.select("#" + field));
+    d3.select("#" + field).property('value', fieldValue);
+  }
+  else {
+    console.log("Did not find field '" + field + "' in the URL.");
+  }
+}
+
+function updateUrlFromFieldIds(fieldIds) {
+  // Update the document's query string to reflect the requested URL.
+  // This should help maintain state if the user copies and pastes the
+  // document's URL.
+  const url = new URL(window.location);
+
+  fieldIds.forEach(field => {
+    url.searchParams.set(field, d3.select("#" + field).property('value'));
+  });
+
+  history.pushState({}, "", url.toString());
+  console.log("Changed URL to: " + url.toString());
+}
 
 // Define functions to load and render data URLs including Markdown, CSV, and
 // PDB files.
@@ -113,6 +143,14 @@ function renderCsv(data, dataUrl) {
       return d.substring(4, );
     });
 
+  // Initialize the state of each dropdown based on values in the URL.
+  console.log("Initialize dropdowns from URL");
+  dropdownsToTrack.forEach(updateStateFromUrl);
+
+  // Update the chart from the current state of the dropdowns, after
+  // initializing their state from the URL.
+  dropdownChange();
+
   // Select the site with the maximum y value by default.
   console.log("Select site with maximum y value");
   const circles = d3.selectAll("circle");
@@ -182,16 +220,11 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
     // Remove any invalid input status for the URL text field.
     d3.select("#" + dataFieldId).classed('is-invalid', false);
 
-    // Update the document's query string to reflect the requested URL.
-    // This should help maintain state if the user copies and pastes the
-    // document's URL.
-    const url = new URL(window.location);
-    url.searchParams.set(dataFieldId, dataUrl);
-    history.pushState({}, "", url.toString());
-    console.log("Changed URL to: " + url.toString());
-
     // Update the URL text field to reflect the provided value.
     d3.select("#" + dataFieldId).property('value', dataUrl);
+
+    // Update the URL.
+    updateUrlFromFieldIds([dataFieldId]);
   }).catch(reason => {
     // Let the user know their URL could not be loaded.
     console.log("Failed to load data: " + reason);

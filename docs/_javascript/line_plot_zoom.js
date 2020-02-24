@@ -484,6 +484,9 @@ function genomeLineChart() {
         chart.condition_mut_data = chart.mutData.get(current_condition).get(current_mut_metric);
         updateChart(chart.condition_data);
         updateLogoPlot();
+
+        // Update URL to reflect dropdown values.
+        updateUrlFromFieldIds(dropdownsToTrack);
       };
 
       function updateChart(dataMap) {
@@ -581,10 +584,6 @@ function genomeLineChart() {
         // clear the physical brush (classification as 'brushed' remains)
         focus.select(".brush,.brush_select,.brush_deselect").call(brushFocus.move, null);
       }; // end of update chart
-      chart.condition_data = chart.data.get(conditions[0]).get(site_metrics[0]);
-      chart.condition_mut_data = chart.mutData.get(conditions[0]).get(mut_metrics[0]);
-
-      updateChart(chart.condition_data);
     }); // end of for each for the selection
   } // end of selection
 
