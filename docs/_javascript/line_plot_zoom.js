@@ -137,7 +137,7 @@ function genomeLineChart() {
       .style("left", (d3.event.pageX + 10) + "px")
       .style("top", (d3.event.pageY + 10) + "px")
       .html("Site: " + d.label_site + "<br/>"  +
-        d.metric_name + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
+        d.metric_name.substring(5,) + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
         "Wildtype: " + d.wildtype)
   }
 
