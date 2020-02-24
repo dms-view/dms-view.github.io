@@ -115,8 +115,9 @@ function genomeLineChart() {
     .call(brushFocus);
 
   // Create the base tooltip object.
-  const tooltip = d3.select(svgId)
+  const tooltip = d3.select("body")
     .append("div")
+    .attr("id", "tooltip-for-site-plot")
     .style("font-family", "'Open Sans', sans-serif")
     .style("text-align", "left")
     .style("position", "absolute")
@@ -129,16 +130,15 @@ function genomeLineChart() {
     .style("visibility", "hidden");
 
   function showTooltip(d) {
-    mousePosition = d3.mouse(d3.event.target);
     d3.select(this).classed("hovered", true);
 
     return tooltip
       .style("visibility", "visible")
-      .style("left", mousePosition[0] + "px")
-      .style("top", mousePosition[1] + 50 + "px")
-      .html("Site: (" + d.protein_chain.join(" ") + ")" + d.protein_site + " <br/> " +
-        d.metric_name + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
-        "seq number: " + d.site)
+      .style("left", (d3.event.pageX + 10) + "px")
+      .style("top", (d3.event.pageY + 10) + "px")
+      .html("Site: " + d.label_site + "<br/>"  +
+        d.metric_name.substring(5,) + ": " + parseFloat(d.metric).toFixed(2) + " <br/> " +
+        "Wildtype: " + d.wildtype)
   }
 
   function hideTooltip(d) {

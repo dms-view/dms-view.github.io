@@ -194,8 +194,9 @@ function logoplotChart(selection) {
       svg.select(".y-axis").call(yAxis);
 
       // Create the base tooltip object.
-      const logoTooltip = d3.select("#logo_plot")
+      const logoTooltip = d3.select("body")
         .append("div")
+        .attr("id", "tooltip-for-logo-plot")
         .style("font-family", "'Open Sans', sans-serif")
         .style("text-align", "left")
         .style("position", "absolute")
@@ -213,14 +214,14 @@ function logoplotChart(selection) {
       }
 
       function showTooltip(d) {
-        mousePosition = d3.mouse(d3.event.target);
         d3.select(this).classed("hovered", true);
 
         return logoTooltip
           .style("visibility", "visible")
-          .style("left", mousePosition[0] + "px")
-          .style("top", mousePosition[1] + 400 + "px")
-          .html(d.mutation + ": " + round(d.metric, 2));
+          .style("left", (d3.event.pageX + 10) + "px")
+          .style("top", (d3.event.pageY + 10) + "px")
+          .html("Site: " + d.label_site + "<br/>"  +
+                d.mutation + ": " + round(d.metric, 2))
       }
 
       function hideTooltip(d) {
