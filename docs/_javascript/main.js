@@ -25,7 +25,7 @@ var fontObject;
 // Define functions to load and render data URLs including Markdown, CSV, and
 // PDB files.
 
-function renderMarkdown (data) {
+function renderMarkdown (data, dataUrl) {
   // Render Markdown text to HTML.
   const markdownOutput = marked(data);
 
@@ -36,10 +36,11 @@ function renderMarkdown (data) {
   }
 }
 
-function renderCsv(data) {
+function renderCsv(data, dataUrl) {
   // Sort data by site
   data.forEach(function(d) {
     d.site = +d.site;
+    d.data_url = dataUrl;
     return d;
   })
   data = data.sort(function(a, b) {
@@ -121,7 +122,7 @@ function renderCsv(data) {
   chart.updateLogoPlot();
 }
 
-function renderPdb(data) {
+function renderPdb(data, dataUrl) {
   protein = data;
   protein.setRotation([2, 0, 0])
   protein.autoView()
@@ -176,7 +177,7 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
 
   dataFunction(dataUrl).then(data => {
     // Render the given markdown.
-    renderFunction(data);
+    renderFunction(data, dataUrl);
 
     // Remove any invalid input status for the URL text field.
     d3.select("#" + dataFieldId).classed('is-invalid', false);

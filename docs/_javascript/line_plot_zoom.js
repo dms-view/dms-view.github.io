@@ -73,7 +73,8 @@ function genomeLineChart() {
     ]).on("zoom", zoomed),
     missingData = [undefined, null, NaN, false, ""],
     brushType,
-    lastBrushTypeClick='select';
+    lastBrushTypeClick='select',
+    dataUrl;
 
   // Create the base chart SVG object.
   var svg = d3.select(svgId)
@@ -402,6 +403,7 @@ function genomeLineChart() {
               metric_value = row[colname]
             }
             long_data.push({
+              "data_url": row["data_url"],
               "site": +row["site"],
               "label_site": row["label_site"],
               "wildtype": row["wildtype"],
@@ -487,6 +489,16 @@ function genomeLineChart() {
       function updateChart(dataMap) {
         const data = Array.from(dataMap.values());
 
+        // Track the URL of the current dataset and use this information to
+        // clear or reset elements of the chart that shouldn't be maintained
+        // across datasets.
+        if (data[0]["data_url"] !== dataUrl) {
+          dataUrl = data[0]["data_url"];
+
+          // Clear the brush in the context view.
+          context.select(".brush").call(brushContext.clear);
+        }
+
         // extract y-axis label from metric_name
         svg.select("#context_y_label")
               .text(data[0]["metric_name"].substring(5, ));
@@ -511,7 +523,7 @@ function genomeLineChart() {
         };
         const transition = svg.transition().duration(500);
         const circlePoint = focus.selectAll("circle")
-            .data(data)
+            .data(data, d => d.data_url + "_" + d.site)
             .join(
               enter => enter.append("circle")
                 .attr("r", radius)
