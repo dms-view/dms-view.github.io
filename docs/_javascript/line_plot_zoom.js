@@ -50,7 +50,7 @@ function genomeLineChart() {
     yAxis = d3.axisLeft(yScaleFocus),
     lineFocus = d3.line().x(XFocus).y(YFocus),
     areaContext = d3.area().defined(function(d){
-      console.log(d.site, d.metric===undefined)
+      console.log(d.site, d.metric===undefined, d.metric)
       return !(d.metric===undefined);
     }).x(XContext).y0(
       plotHeightContext).y1(YContext),
@@ -441,7 +441,7 @@ function genomeLineChart() {
           })
         })
       })
-      chart.data = data;
+      chart.data = new Map([...data.entries()].sort());;
 
       // Group data by condition and mutation metric, keeping all records to get
       // site- and mutation-level data.
@@ -576,8 +576,9 @@ function genomeLineChart() {
           }));
 
         // Create the context plot excluding sites with missing data.
+        console.log('here', data)
         context.selectAll("path.area")
-          .data([data.filter(areaContext.defined())])
+          .data([data])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
