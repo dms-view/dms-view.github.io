@@ -23,19 +23,22 @@ const greyColor = "#999999";
 var fontPath = "_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
-function updateStateFromUrl(field) {
+function updateStateFromUrl(fieldIds) {
+  // Update the current value of the given field ids based on the corresponding
+  // fields in the URL.
   const url = new URL(window.location);
-  const fieldValue = url.searchParams.get(field);
 
-  if (fieldValue !== null && fieldValue.length > 0) {
-    console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
+  fieldIds.forEach(field => {
+    const fieldValue = url.searchParams.get(field);
 
-    console.log(d3.select("#" + field));
-    d3.select("#" + field).property('value', fieldValue);
-  }
-  else {
-    console.log("Did not find field '" + field + "' in the URL.");
-  }
+    if (fieldValue !== null && fieldValue.length > 0) {
+      console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
+      d3.select("#" + field).property('value', fieldValue);
+    }
+    else {
+      console.log("Did not find field '" + field + "' in the URL.");
+    }
+  });
 }
 
 function updateUrlFromFieldIds(fieldIds) {
@@ -145,7 +148,7 @@ function renderCsv(data, dataUrl) {
 
   // Initialize the state of each dropdown based on values in the URL.
   console.log("Initialize dropdowns from URL");
-  dropdownsToTrack.forEach(updateStateFromUrl);
+  updateStateFromUrl(dropdownsToTrack);
 
   // Update the chart from the current state of the dropdowns, after
   // initializing their state from the URL.
