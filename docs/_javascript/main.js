@@ -27,13 +27,26 @@ function updateStateFromUrl(fieldIds) {
   // Update the current value of the given field ids based on the corresponding
   // fields in the URL.
   const url = new URL(window.location);
+  let validOptions;
 
   fieldIds.forEach(field => {
     const fieldValue = url.searchParams.get(field);
 
     if (fieldValue !== null && fieldValue.length > 0) {
       console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
-      d3.select("#" + field).property('value', fieldValue);
+
+      // Find the list of valid options for the current field.
+      validOptions = d3.select("#" + field).selectAll("option").nodes().map(d => d["value"]);
+
+      // Check whether the requested field value is valid.
+      // If it is, update the field.
+      // Otherwise, replace the URL field with the first valid option.
+      if (validOptions.includes(fieldValue)) {
+        d3.select("#" + field).property('value', fieldValue);
+      }
+      else {
+        console.log("WARNING:", fieldValue, "is not a validation option for the field", field);
+      }
     }
     else {
       console.log("Did not find field '" + field + "' in the URL.");
