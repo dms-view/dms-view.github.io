@@ -172,8 +172,7 @@ function renderCsv(data, dataUrl) {
   const circles = d3.selectAll("circle");
   const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
   const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
-  chart.selectSite(maxMetricRecord);
-  chart.updateLogoPlot();
+  chart.updateSites([maxMetricRecord]);
 }
 
 function renderPdb(data, dataUrl) {
@@ -189,9 +188,7 @@ function renderPdb(data, dataUrl) {
   // If data have been loaded into the site plot, select any sites from that
   // panel in the protein view, too.
   if (chart !== undefined) {
-    d3.selectAll(".selected").each(function(){
-      chart.selectSite(d3.select(this));
-    });
+    chart.updateSites(d3.selectAll(".selected").nodes().map(d => d3.select(d)));
   }
 
   return protein;
