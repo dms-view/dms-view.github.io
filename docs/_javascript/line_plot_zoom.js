@@ -477,7 +477,7 @@ function genomeLineChart() {
       // Handler for dropdown value change
       dropdownChange = function() {
         current_condition = d3.select("#condition").property('value');
-        current_site = d3.select("#site").property('value');
+        current_site = d3.select("#site_metric").property('value');
         current_mut_metric = d3.select("#mutation_metric").property('value');
 
         chart.condition_data = chart.data.get(current_condition).get(current_site);

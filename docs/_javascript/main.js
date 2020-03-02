@@ -10,7 +10,7 @@ var logoplot;
 let conditiondropdown;
 let sitedropdown;
 let mutdropdown;
-const dropdownsToTrack = ["condition", "site", "mutation_metric"];
+const dropdownsToTrack = ["condition", "site_metric", "mutation_metric"];
 
 var dropdownChange;
 var clearbuttonchange;
@@ -118,7 +118,7 @@ function renderCsv(data, dataUrl) {
   if (sitedropdown === undefined) {
     sitedropdown = d3.select("#line_plot")
       .insert("select", "svg")
-      .attr("id", 'site')
+      .attr("id", 'site_metric')
       .on("change", dropdownChange);
   }
 
