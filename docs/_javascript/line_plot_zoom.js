@@ -27,15 +27,15 @@ function genomeLineChart() {
     divWidth = 760,
     divHeight = 350,
     marginFocus = {
-      top: divHeight * 0.04,
+      top: divHeight * (1 / 5),
       right: 20,
-      bottom: divHeight * (1 / 3),
+      bottom: divHeight * (13 / 75),
       left: 40
     },
     marginContext = {
-      top: divHeight * (4 / 5),
+      top: divHeight * 0.04,
       right: 20,
-      bottom: divHeight * 0.1,
+      bottom: divHeight * (6 / 7),
       left: 40
     },
     plotWidth = divWidth - marginFocus.right - marginFocus.left,
@@ -43,8 +43,8 @@ function genomeLineChart() {
     plotHeightContext = divHeight - marginContext.top - marginContext.bottom,
     xScaleFocus = d3.scaleLinear().range([0, plotWidth]),
     xScaleContext = d3.scaleLinear().range([0, plotWidth]),
-    yScaleFocus = d3.scaleLinear().range([plotHeightFocus, marginFocus.top]),
-    yScaleContext = d3.scaleLinear().range([plotHeightContext, marginFocus.top]),
+    yScaleFocus = d3.scaleLinear().range([plotHeightFocus, marginContext.top]),
+    yScaleContext = d3.scaleLinear().range([plotHeightContext, marginContext.top]),
     xAxisFocus = d3.axisBottom(xScaleFocus),
     xAxisContext = d3.axisBottom(xScaleContext),
     yAxis = d3.axisLeft(yScaleFocus),
