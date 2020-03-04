@@ -10,7 +10,7 @@ var logoplot;
 let conditiondropdown;
 let sitedropdown;
 let mutdropdown;
-const dropdownsToTrack = ["condition", "site_metric", "mutation_metric"];
+const dropdownsToTrack = ["condition", "site_metric", "mutation_metric", "selected_sites"];
 
 var dropdownChange;
 var clearbuttonchange;
@@ -26,31 +26,36 @@ var fontObject;
 function updateStateFromUrl(fieldIds) {
   // Update the current value of the given field ids based on the corresponding
   // fields in the URL.
-  const url = new URL(window.location);
-  let validOptions;
+  return new Promise(resolve => {
+    const url = new URL(window.location);
+    let validOptions;
 
-  fieldIds.forEach(field => {
-    const fieldValue = url.searchParams.get(field);
+    fieldIds.forEach(field => {
+      const fieldValue = url.searchParams.get(field);
 
-    if (fieldValue !== null && fieldValue.length > 0) {
-      console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
+      if (fieldValue !== null && fieldValue.length > 0) {
+        console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
 
-      // Find the list of valid options for the current field.
-      validOptions = d3.select("#" + field).selectAll("option").nodes().map(d => d["value"]);
+        // Find the list of valid options for the current field.
+        validOptions = d3.select("#" + field).selectAll("option").nodes().map(d => d["value"]);
 
-      // Check whether the requested field value is valid.
-      // If it is, update the field.
-      // Otherwise, replace the URL field with the first valid option.
-      if (validOptions.includes(fieldValue)) {
-        d3.select("#" + field).property('value', fieldValue);
+        // Check whether the requested field value is valid.
+        // If it is, update the field.
+        // Otherwise, replace the URL field with the first valid option.
+        if (d3.select("#" + field).property("type") === "text" || validOptions.includes(fieldValue)) {
+          console.log("Updated field", field);
+          d3.select("#" + field).property('value', fieldValue);
+        }
+        else {
+          console.log("WARNING:", fieldValue, "is not a valid option for the field", field);
+        }
       }
       else {
-        console.log("WARNING:", fieldValue, "is not a validation option for the field", field);
+        console.log("Did not find field '" + field + "' in the URL.");
       }
-    }
-    else {
-      console.log("Did not find field '" + field + "' in the URL.");
-    }
+    });
+
+    resolve(fieldIds);
   });
 }
 
@@ -159,20 +164,41 @@ function renderCsv(data, dataUrl) {
       return d.substring(4, );
     });
 
+  function selectedSitesChanged() {
+    const labelSites = d3.select("#selected_sites").property("value").split(",");
+    console.log("Changed sites input");
+    console.log(labelSites);
+
+    clearbuttonchange();
+    const selectedSiteData = Array.from(chart.condition_data.values()).filter(d => labelSites.includes(d.label_site));
+    console.log(selectedSiteData.map(d => d3.select("#site_" + d.site)));
+    chart.updateSites(selectedSiteData.map(d => d3.select("#site_" + d.site)));
+  }
+
+  d3.select("#selected_sites")
+    .on("change", selectedSitesChanged);
+
   // Initialize the state of each dropdown based on values in the URL.
   console.log("Initialize dropdowns from URL");
-  updateStateFromUrl(dropdownsToTrack);
+  updateStateFromUrl(dropdownsToTrack).then(values => {
+    // Update the chart from the current state of the dropdowns, after
+    // initializing their state from the URL.
+    console.log(values);
+    dropdownChange();
 
-  // Update the chart from the current state of the dropdowns, after
-  // initializing their state from the URL.
-  dropdownChange();
-
-  // Select the site with the maximum y value by default.
-  console.log("Select site with maximum y value");
-  const circles = d3.selectAll("circle");
-  const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
-  const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
-  chart.updateSites([maxMetricRecord]);
+    // Select the site with the maximum y value by default.
+    console.log("selected sites:", d3.select("#selected_sites").property("value"));
+    if (d3.select("#selected_sites").property("value").length > 0) {
+      selectedSitesChanged();
+    }
+    else {
+      console.log("Select site with maximum y value");
+      const circles = d3.selectAll("circle");
+      const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
+      const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
+      chart.updateSites([maxMetricRecord]);
+    }
+  });
 }
 
 function renderPdb(data, dataUrl) {

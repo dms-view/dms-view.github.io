@@ -321,6 +321,12 @@ function genomeLineChart() {
     // avoid repeating expensive calculations.
     if (sitesUpdated) {
       updateLogoPlot();
+
+      d3.select("#selected_sites").property(
+        "value",
+        d3.selectAll(".selected").data().map(d => d.label_site).join(",")
+      );
+      updateUrlFromFieldIds(["selected_sites"]);
     }
   };
 
