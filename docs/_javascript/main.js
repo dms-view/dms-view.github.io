@@ -10,6 +10,7 @@ var logoplot;
 let conditiondropdown;
 let sitedropdown;
 let mutdropdown;
+const dropdownsToTrack = ["condition", "site_metric", "mutation_metric", "selected_sites"];
 
 var dropdownChange;
 var clearbuttonchange;
@@ -21,6 +22,56 @@ const greyColor = "#999999";
 // https://www.gnome.org/fonts/
 var fontPath = "_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
+
+function updateStateFromUrl(fieldIds) {
+  // Update the current value of the given field ids based on the corresponding
+  // fields in the URL.
+  return new Promise(resolve => {
+    const url = new URL(window.location);
+    let validOptions;
+
+    fieldIds.forEach(field => {
+      const fieldValue = url.searchParams.get(field);
+
+      if (fieldValue !== null && fieldValue.length > 0) {
+        console.log("Found field '" + field + "' in the URL with value: " + fieldValue);
+
+        // Find the list of valid options for the current field.
+        validOptions = d3.select("#" + field).selectAll("option").nodes().map(d => d["value"]);
+
+        // Check whether the requested field value is valid.
+        // If it is, update the field.
+        // Otherwise, replace the URL field with the first valid option.
+        if (d3.select("#" + field).property("type") === "text" || validOptions.includes(fieldValue)) {
+          console.log("Updated field", field);
+          d3.select("#" + field).property('value', fieldValue);
+        }
+        else {
+          console.log("WARNING:", fieldValue, "is not a valid option for the field", field);
+        }
+      }
+      else {
+        console.log("Did not find field '" + field + "' in the URL.");
+      }
+    });
+
+    resolve(fieldIds);
+  });
+}
+
+function updateUrlFromFieldIds(fieldIds) {
+  // Update the document's query string to reflect the requested URL.
+  // This should help maintain state if the user copies and pastes the
+  // document's URL.
+  const url = new URL(window.location);
+
+  fieldIds.forEach(field => {
+    url.searchParams.set(field, d3.select("#" + field).property('value'));
+  });
+
+  history.pushState({}, "", url.toString());
+  console.log("Changed URL to: " + url.toString());
+}
 
 // Define functions to load and render data URLs including Markdown, CSV, and
 // PDB files.
@@ -72,7 +123,7 @@ function renderCsv(data, dataUrl) {
   if (sitedropdown === undefined) {
     sitedropdown = d3.select("#line_plot")
       .insert("select", "svg")
-      .attr("id", 'site')
+      .attr("id", 'site_metric')
       .on("change", dropdownChange);
   }
 
@@ -113,13 +164,52 @@ function renderCsv(data, dataUrl) {
       return d.substring(4, );
     });
 
-  // Select the site with the maximum y value by default.
-  console.log("Select site with maximum y value");
-  const circles = d3.selectAll("circle");
-  const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
-  const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
-  chart.selectSite(maxMetricRecord);
-  chart.updateLogoPlot();
+  function selectedSitesChanged() {
+    const labelSites = d3.select("#selected_sites").property("value").split(",");
+    console.log("Changed sites input");
+    console.log(labelSites);
+
+    clearbuttonchange();
+    const selectedSiteData = Array.from(chart.condition_data.values()).filter(d => labelSites.includes(d.label_site));
+    console.log(selectedSiteData.map(d => d3.select("#site_" + d.site)));
+    chart.updateSites(selectedSiteData.map(d => d3.select("#site_" + d.site)));
+  }
+
+  d3.select("#selected_sites")
+    .on("change", selectedSitesChanged);
+
+  // Initialize the state of each dropdown based on values in the URL.
+  console.log("Initialize dropdowns from URL");
+  updateStateFromUrl(dropdownsToTrack).then(values => {
+    // Check whether the URL provides a non-empty list of selected sites. If
+    // not, we will select the maximum site by default.
+    const url = new URL(window.location);
+    let selectMaximumSite = true;
+    if (url.searchParams.get("selected_sites") !== null) {
+      selectMaximumSite = false;
+    }
+
+    // Update the chart from the current state of the dropdowns, after
+    // initializing their state from the URL. This updates the URL to reflect
+    // the state of all tracked form fields.
+    console.log(values);
+    dropdownChange();
+
+    // If the user does not provide any selected sites from the URL, select the
+    // site with the maximum y value by default.
+    if (selectMaximumSite) {
+      console.log("Select site with maximum y value");
+      const circles = d3.selectAll("circle");
+      const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
+      const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
+      chart.updateSites([maxMetricRecord]);
+    }
+    else {
+      // If we are not selecting the maximum site in the data, select the
+      // user-provided sites. This can be an empty list.
+      selectedSitesChanged();
+    }
+  });
 }
 
 function renderPdb(data, dataUrl) {
@@ -135,9 +225,7 @@ function renderPdb(data, dataUrl) {
   // If data have been loaded into the site plot, select any sites from that
   // panel in the protein view, too.
   if (chart !== undefined) {
-    d3.selectAll(".selected").each(function(){
-      chart.selectSite(d3.select(this));
-    });
+    chart.updateSites(d3.selectAll(".selected").nodes().map(d => d3.select(d)));
   }
 
   return protein;
@@ -182,16 +270,11 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
     // Remove any invalid input status for the URL text field.
     d3.select("#" + dataFieldId).classed('is-invalid', false);
 
-    // Update the document's query string to reflect the requested URL.
-    // This should help maintain state if the user copies and pastes the
-    // document's URL.
-    const url = new URL(window.location);
-    url.searchParams.set(dataFieldId, dataUrl);
-    history.pushState({}, "", url.toString());
-    console.log("Changed URL to: " + url.toString());
-
     // Update the URL text field to reflect the provided value.
     d3.select("#" + dataFieldId).property('value', dataUrl);
+
+    // Update the URL.
+    updateUrlFromFieldIds([dataFieldId]);
   }).catch(reason => {
     // Let the user know their URL could not be loaded.
     console.log("Failed to load data: " + reason);
