@@ -1,6 +1,4 @@
-# [An Antigenic Atlas of HIV-1 Escape from Broadly
-Neutralizing Antibodies Distinguishes Functional
-and Structural Epitopes](https://research.fhcrc.org/content/dam/stripe/bloom/labfiles/publications/Dingens2019.pdf)
+# [An Antigenic Atlas of HIV-1 Escape from Broadly Neutralizing Antibodies Distinguishes Functional and Structural Epitopes](https://research.fhcrc.org/content/dam/stripe/bloom/labfiles/publications/Dingens2019.pdf)
 
 Adam S. Dingens, Dana Arenz, Haidyn Weight, Julie Overbaugh, Jesse D. Bloom
 
