@@ -6,7 +6,7 @@ permalink: /dms/
 
 [`dms-view`](https://jbloomlab.github.io/dms-view) was designed to facilitate the analysis of deep mutational scanning experiments.
 However, there are other datasets which might also be suitable for [`dms-view`](https://jbloomlab.github.io/dms-view).
-Here, we will go into a brief introduction to deep mutational scanning to help contextualize the [data upload](/dataupload) instructions.
+Here, we will go into a brief introduction to deep mutational scanning to help contextualize the [data upload](/docs/dataupload) instructions.
 
 ## Deep mutational scanning experiments
 [Deep mutational scanning](https://www.nature.com/articles/nmeth.3027) is a high-throughput functional assay that measures the effect of every genetic change at every site in a protein.
@@ -36,7 +36,7 @@ For each site (row), you would have a measurement for each amino acid (column).
 ## Converting dms data to `dms-view` format
 
 [`dms-view`](https://jbloomlab.github.io/dms-view) is a flexible tool for data exploration.
-This means that it does not simply accept the output of a deep mutational scan and calculate standard metrics but instead the tool display whichever metrics the user chooses. For a complete discussion of the input file format, please see the [data upload](/dataupload) page but below we will touch on how three different aspects of the data input file format map to the experiment outlined above. Finally, you can view the final [`dms-view`](https://jbloomlab.github.io/dms-view) input data file [HERE](https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/IAV/flu_dms-view.csv)
+This means that it does not simply accept the output of a deep mutational scan and calculate standard metrics but instead the tool display whichever metrics the user chooses. For a complete discussion of the input file format, please see the [data upload](/docs/dataupload) page but below we will touch on how three different aspects of the data input file format map to the experiment outlined above. Finally, you can view the final [`dms-view`](https://jbloomlab.github.io/dms-view) input data file [HERE](https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/IAV/flu_dms-view.csv)
 
 ### mutation-level metrics
 

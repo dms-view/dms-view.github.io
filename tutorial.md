@@ -5,7 +5,7 @@ permalink: /tutorial/
 ---
 
 # Goal
-The overall goal of [`dms-view`](jbloomlab.github.io/dms-view) is to facilitate the analysis of deep [mutational scanning experiments](/dms) through interactive visualizations.
+The overall goal of [`dms-view`](jbloomlab.github.io/dms-view) is to facilitate the analysis of deep [mutational scanning experiments](/docs/dms) through interactive visualizations.
 [`dms-view`](jbloomlab.github.io/dms-view) links together three pieces of information: a site-level summary metric, mutation-level metrics, and the 3-D protein structure.
 
 This tutorial consists of two sections
@@ -27,7 +27,7 @@ The metadata section is at the bottom of the page.
 This flexible section can be used to hold information about the experiment, give credit to those who generated the data, or hold notes about a particular analysis.
 You can change the information using the URL form field above the section.
 
-For more information on the data format for the data file, the protein structure, or the metadata file, please see the [data upload](/dataupload) page.
+For more information on the data format for the data file, the protein structure, or the metadata file, please see the [data upload](/docs/dataupload) page.
 
 ## How you select sites
 The goal of [`dms-view`](jbloomlab.github.io/dms-view) is to link site-level, mutation-level, and protein-structure information from a deep mutational scan.
@@ -64,7 +64,7 @@ This color corresponds to the value of site-level metric.
 You can hover over the sites on the site plot or the protein structure to see a tooltip with more information about the site.
 
 The mutation plot shows additional measurements at the selected site as a logoplot.
-In a typical [deep mutational scanning](/dms) experiment, multiple genetic variants are assayed at each site and the logoplot shows the effect of each amino acid at each site in the protein.
+In a typical [deep mutational scanning](/docs/dms) experiment, multiple genetic variants are assayed at each site and the logoplot shows the effect of each amino acid at each site in the protein.
 
 ## Dropdown menus
 
@@ -74,14 +74,14 @@ You can toggle between different datasets, different metrics, and different prot
 
 There is a dropdown menu for the site dot plot and the mutation logoplot to toggle between different metrics.
 These menus are autofilled based on the input data.
-For more information on the input data format, please see the [data upload](/dataupload) page.
+For more information on the input data format, please see the [data upload](/docs/dataupload) page.
 
 ### Condition dropdown
 
 Changing the condition dropdown changes the data that is shown in both the site dot plot and the mutation logoplot.
-For a typical [deep mutational scanning](/dms) experiment, these conditions would be different selection pressures.
+For a typical [deep mutational scanning](/docs/dms) experiment, these conditions would be different selection pressures.
 This menu is also autofilled based on the input data.
-For more information on the input data format, please see the [data upload](/dataupload) page.
+For more information on the input data format, please see the [data upload](/docs/dataupload) page.
 
 ### Protein dropdown
 
@@ -96,7 +96,7 @@ As an example, here are two different views of the same dataset with slightly di
 ## Adding your own data to the site
 
 [`dms-view`](jbloomlab.github.io/dms-view) uses three different files: the data file, the protein structure file, and the metadata file.
-You can upload your data using each file's specific form field. Please see the [data upload](/dataupload) page for specifics on the file formats for each file.
+You can upload your data using each file's specific form field. Please see the [data upload](/docs/dataupload) page for specifics on the file formats for each file.
 
 [`dms-view`](jbloomlab.github.io/dms-view) does not host the data itself, the files must be hosted on some other server such as [GitHub](https://www.github.com), [Dropbox](https://www.dropbox.com), or [Google Drive](https://www.google.com/drive/).
 
@@ -113,7 +113,7 @@ We can compare sera from different people to see individual differences in Influ
 ### Set up with Analysis with [`dms-view`](jbloomlab.github.io/dms-view)
 
 As mentioned above, [`dms-view`](jbloomlab.github.io/dms-view) takes up to three files: the data file with the deep mutational scanning measurements, the protein structure file, and the metadata file.
-We followed the [data upload](/dataupload) guidelines and created a [data file](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/flu_dms-view.csv), a [metadata file](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/lee2019mapping.md), and retrieved a [protein structure](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb) for this experiment.
+We followed the [data upload](/docs/dataupload) guidelines and created a [data file](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/flu_dms-view.csv), a [metadata file](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/lee2019mapping.md), and retrieved a [protein structure](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb) for this experiment.
 
 The conditions in this experiment are the sera from different individuals.
 
