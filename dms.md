@@ -51,7 +51,7 @@ For [example](https://jbloomlab.github.io/dms-view/?markdown-url=https%3A%2F%2Fj
 For the site-level metrics, the L sites X M mutations matrix is collapsed to a L site X 1 matrix.
 So each site has only one summary value.
 
-||site-metric
+||site_mean
 ---|---
 1|0.09
 2|0.2
@@ -65,6 +65,6 @@ In [`dms-view`](https://jbloomlab.github.io/dms-view), you can access different 
 ### conditions
 
 Deep mutational scans can be designed with different selective pressures (conditions).
-In the experiment cartoon above, this could be different cell types or growth conditions.
+In the experiment cartoon above, this could be different cell types or different antibodies.
 Each condition produces a different L sites X M mutations matrix.
 In [`dms-view`](https://jbloomlab.github.io/dms-view), you can access different conditions using the condition dropdown menu.
