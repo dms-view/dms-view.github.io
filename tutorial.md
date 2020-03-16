@@ -5,8 +5,8 @@ permalink: /tutorial/
 ---
 
 # Goal
-The overall goal of [`dms-view`](jbloomlab.github.io/dms-view) is to facilitate the analysis of deep [mutational scanning experiments](/docs/dms) through interactive visualizations.
-[`dms-view`](jbloomlab.github.io/dms-view) links together three pieces of information: a site-level summary metric, mutation-level metrics, and the 3-D protein structure.
+The goal of [`dms-view`](jbloomlab.github.io/dms-view) is to facilitate the analysis of deep [mutational scanning experiments](/docs/dms) through interactive visualizations.
+[`dms-view`](jbloomlab.github.io/dms-view) links together three pieces of information: a site-level summary metric, a mutation-level metric, and the 3-D protein structure.
 
 This tutorial consists of two sections
 1. [Introduction to the tool and its features](#introduction)
@@ -20,7 +20,7 @@ This tutorial consists of two sections
 
 The data section at the top of the page has three panels: the site panel, the mutation panel, and the protein structure panel.
 The site panel dot plot shows a summary value for each site in the experiment.
-When sites are selected, the mutation panel logoplot shows individual mutations at that site and the site is highlighted on the protein structure.
+When sites are selected, the individual mutation values are shown in the the mutation panel logoplot and the site is highlighted on the protein structure.
 You can change the data file or protein structure using the URL form fields above the panels.
 
 The metadata section is at the bottom of the page.
@@ -34,9 +34,9 @@ The goal of [`dms-view`](jbloomlab.github.io/dms-view) is to link site-level, mu
 When a site is selected on the site dot plot its mutation-level information is shown below as a logoplot and it is highlighted on the protein structure.
 
 ### Selecting sites
-There are three ways to select a site in the site dot plot: clicking a site, brushing a site(s), or listing specific sites by their label.
+There are three ways to select a site in the site dot plot: clicking a site, brushing a site(s), or listing a specific site(s) by its label.
 
-1. Clicking on a site: You can click on a site using the mouse. Click on the site again will deselect the site.  
+1. Clicking on a site: You can click on a site using the mouse. Clicking on the site again will deselect the site.  
 2. Brushing a site(s): You can brush several sites at once by clicking, holding, and swiping the mouse. Sites within the brush box will be selected.
 3. Listing a site(s): You can select a site by adding it to the selected site form field. This form field will also be updated with sites selected by clicking or brushing. The selected site field is a comma-separated list without leading or trailing spaces.
 
