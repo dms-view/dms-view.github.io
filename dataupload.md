@@ -9,7 +9,7 @@ permalink: /dataupload/
 2. [protein structure file ](#protein-structure)
 3. [metadata file](#metatdata-file)
 
-Below are instructions on [how to construct the input files](#input-files), [how to host the input files](#hosting-input-files), and [how to load the input files to the site](#loading-input-files)
+Below are instructions on [how to construct the input files](#input-files), [how to host the input files](#hosting-input-files), and [how to load the input files to the site](#loading-input-files).
 
 # Input files
 
@@ -22,7 +22,7 @@ The data file is a `csv` (comma-separated file) and it must have the following c
 * **site**: The site dot plot will be ordered by this column. The values must be ordinal.  
 * **label_site**: The site dot plot will be labeled by this column. The values can be numeric or a string.
 * **wildtype**: The wildtype at a given site. The tooltips will display this information. The values can be numeric or a string.
-* **mutation**: The mutation logoplot will display this mutation. The values must be a single uppercase letter character.
+* **mutation**: The mutation logoplot will display this mutation. The values must be a single uppercase letter.
 * **condition**: The experimental condition used in the experiment to generate the data for the site dot plot and the mutation logoplot. The dropdown menu will display the conditions and the user can toggle between different conditions.
 * **protein_chain**: The protein chain(s) in the pdb file for a given site. The values must be in a space-separated list.
 * **protein_site**: The protein site in the pdb file for a given site.
@@ -34,9 +34,8 @@ The data file must contain at least one column from each of the following catego
 
 ## example: HIV antibody escape
 
-Virologists are interested in which mutations allow an antibody to bind to a virus and which mutations allow the virus to "escape" the antibody.
-Common experiments include making many mutations to different sites in a protein and testing whether or not the virus can "escape" different antibodies.
-Imagine this experiment tested the effect of an alanine mutation at either position 1 or position 2 of a protein for antibody A and for antibody B.
+Imagine an experiment to test the effect of alanine mutations on the ability of antibodies to bind to HIV.
+In this small experiment, the effect of an alanine mutation was measured at position 1 or position 2 for antibody A and antibody B. 
 
 Here is what the data file might look like for this experiment.  
 
