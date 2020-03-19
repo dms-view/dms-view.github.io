@@ -57,13 +57,14 @@ def main():
     conditions = len(df["condition"].unique())
     # add in the DMS numbering
     m = (pd.read_csv(HXB2_map)
-           .rename(columns={"original": "site", "new": "label_site"})
-         [["site", "label_site"]])
-    df = pd.merge(df, m, on=["label_site"]).astype({'site': 'int32'})
-    df = df.sort_values("site", ascending=True)
+           .rename(columns={"new": "label_site"})
+         [["original", "label_site"]]).sort_values(by='original')
+    m['isite'] = [x+1 for x in range(len(m))]
+    df = pd.merge(df, m, on=["label_site"]).astype({'isite': 'int32'})
+    df = df.sort_values("isite", ascending=True)
 
     # check data
-    for name, group in df.groupby(["site"]):
+    for name, group in df.groupby(["isite"]):
         assert len(group) == 19 * conditions
 
     # add in the protein numbers
@@ -72,6 +73,10 @@ def main():
 
     # output the data
     df = df.drop_duplicates()
+    sites = ((df.sort_values(by='isite', ascending=True)['isite'])
+             .unique().tolist())
+    site_map = {site: sites.index(site) + 1 for site in sites}
+    df['site'] = df['isite'].map(site_map)
     df.to_csv("HIV_dms-view.csv", index=False)
 
 
