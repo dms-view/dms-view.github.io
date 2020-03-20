@@ -9,7 +9,7 @@ permalink: /dataupload/
 2. [protein structure file ](#protein-structure)
 3. [metadata file](#metatdata-file)
 
-Below are instructions on [how to construct the input files](#input-files), [how to host the input files](#hosting-input-files), and [how to load the input files to the site](#loading-input-files).
+Below are instructions on [how to construct the input files](#input-files), [how to host the input files](#hosting-input-files), and [how to load the input files to the site](#how-to-load-your-data).
 
 # Input files
 
@@ -42,16 +42,18 @@ Here is what the data file might look like for this experiment.
 site|site_label|wildtype|mutation|condition|protein_chain|protein_site|mut_max|mut_mean|site_median|
 ---|---|---|---|---|---|---|---|---|---|
 1|pos1|G|A|Ab1|A|27|5|3.5|7
-1|pos1|G|A|Ab2|A|27|0|0|0
-2|pos2|D|A|Ab1|A|27|0|0|0
+1|pos1|G|A|Ab2|A|27|0|0|7
+2|pos2|D|A|Ab1|A|27|0|0|45
 2|pos2|D|A|Ab2|A|27|100|50|45
 
+Note how the the **site_*** values are repeated for each mutation at that site.
 You can see the data file used in the default [`dms-view`](https://jbloomlab.github.io/dms-view) view [HERE](https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/IAV/flu_dms-view.csv).
 
 ## protein structure
 
 The protein structure file is a [pdb file](https://en.wikipedia.org/wiki/Protein_Data_Bank_(file_format)).
 The data file columns **site**, **protein_chain**,  and **protein_site** map differences in numbering between the site/mutation plot and the protein structure.
+Specifically, the **protein_site** column contains the correspondence between the site/mutation values and the protein structure.
 
 You can see the protein file used in the default [`dms-view`](https://jbloomlab.github.io/dms-view) view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb).
 
