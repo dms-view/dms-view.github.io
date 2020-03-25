@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>dms-view</title>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-array.v2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-12">
+        <h1>dms-view</h1>
+        dms-view is an interactive visualization tool for deep mutational scanning.
+        Please see the <a href="https://dms-view.github.io/docs">documentation (dms-view.github.io/docs)</a> for detailed instructions on <a href="https://dms-view.github.io/docs/tutorial/">using the tool</a> or <a href="https://dms-view.github.io/docs/dataupload/">uploading your own data</a>. 
+        <h4>Instructions:</h4>
+        Select points of interest by <span style="font-weight:bold">clicking</span> or <span style="font-weight:bold">brushing</span> (click, hold and swipe).
+        Deselect points by <span style="font-weight:bold">clicking</span> again or <span style="font-weight:bold">brushing</span> while holding down the <span style="font-style:italic">shift key</span> or after changing the radio button from <span style="font-style:italic">select</span> to <span style="font-style:italic">deselect</span>.
+        Change between different <span style="font-style:italic">conditions</span>, different <span style="font-style:italic">site-level metrics</span>, different <span style="font-style:italic">mutation-level metrics</span> and different <span style="font-style:italic">protein-representations</span> using the dropdown menus.
+      </div>
+    </div>
+
+    <div class="row mb-5 border-top border-bottom pt-3 pb-3">
+      <div class="col-8">
+        <p><input id="data-url" text="text" class="form-control" placeholder="Data URL (relative or absolute paths allowed)" /></p>
+        <p>
+          <input type='radio' id="select" name="mode" value="select" checked /> select
+          <input type='radio' id="deselect" name="mode" value="deselect" /> deselect
+          <input id="selected_sites" text="text" class="form-control" style="display: inline; width: 50%" placeholder="Selected sites (e.g., '144' or '144,160')" />
+          <button id="clearButton" class="button">clear selections</button>
+        </p>
+
+        <div id="line_plot" class="row"></div>
+        <div id="logo_plot" class="row"></div>
+      </div>
+      <div class="col-4">
+        <p><input id="pdb-url" text="text" class="form-control" placeholder="PDB URL" /></p>
+        <div id="protein" style="width: 400px; height: 550px;"></div>
+      </div>
+    </div>
+
+    <div id="description" class="row mt-3">
+      <div class="col-12">
+        <p><input id="markdown-url" text="text" class="form-control" placeholder="markdown URL" /></p>
+        <div id="markdown-output"></div>
+      </div>
+    </div>
+
+    <footer class="footer-copyright bg-light text-center pl-3 mt-4 mb-4">
+      <div class="row p-3 mb-0">
+        <span>Copyright 2020 by Sarah Hilton and John Huddleston.
+        <a href="https://thenounproject.com/search/?q=eraser&creator=1997209&i=1144641">Eraser icon</a> by Setyo Ari Wibowo from <a href="https://thenounproject.com/">The Noun Project</a></span>
+      </div>
+    </footer>
+  </div>
+  <script src="_javascript/main.js"></script>
+  <script src="_javascript/line_plot_zoom.js" type="text/javascript"></script>
+  <script src="_javascript/ngl.js"></script>
+  <script src="_javascript/prot_struct.js" type="text/javascript"></script>
+  <script src="_javascript/logoplot.js" type="text/javascript"></script>
+</body>
+</html>

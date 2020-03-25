@@ -1,0 +1,47 @@
+/* Styles for genome line chart. */
+.line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1px;
+}
+
+.area {
+  fill: grey;
+  clip-path: url(#clip);
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
+tr:nth-child(even) {
+    background-color: #d9d9d9;
+}
+
+.rect {
+    fill: #ffab00;
+}
+
+button, select {
+    margin-left: 0.5em;
+}
+
+.brush_select .selection {
+  fill: grey;
+  stroke: darkgrey;
+  stroke-width: 2px;
+}
+
+.brush_deselect .selection {
+  fill: grey;
+  stroke-dasharray: 10;
+  stroke: darkgrey;
+  stroke-width: 2px;
+}
+
+.brush_deselect .overlay {
+  /* pixels left  pixels down */
+  cursor: url(_data/eraser.png) 0 32, default;
+}
