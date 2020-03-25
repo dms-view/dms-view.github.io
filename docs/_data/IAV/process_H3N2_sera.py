@@ -53,6 +53,10 @@ def main():
                     value_name="mut_Natural Frequencies", var_name="mutation")
     df = pd.merge(df, freqs, on=['site', 'mutation'])
 
+    # positive mutation differential selection
+    df['mut_Positive Differential Selection'] = (df['mut_Differential Selection']
+                                                 .clip(lower=0))
+
     # check the data
     # per site, there should be 20 AA and identical site-level metrics
     for name, group in df.groupby(["site", "condition"]):
