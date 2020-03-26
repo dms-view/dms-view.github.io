@@ -4,7 +4,7 @@ title: How to upload your own data
 permalink: /dataupload/
 ---
 
-<a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> takes three input files.
+<a href="https://dms-view.github.io" target="_blank">`dms_view`</a> takes three input files.
 1. [data file for the site dot plot and mutation logoplot](#data-file)
 2. [protein structure file ](#protein-structure)
 3. [metadata file](#metatdata-file)
@@ -15,7 +15,7 @@ Below are instructions on [how to construct the input files](#input-files), [how
 
 ## Data file
 
-The data file is the main source of data for <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a>.
+The data file is the main source of data for <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>.
 
 This file contains the measurements for the site dot plot, the measurements for the mutation logoplot, and the map between the site plot numbering and the protein structure numbering.
 
@@ -48,7 +48,7 @@ site|site_label|wildtype|mutation|condition|protein_chain|protein_site|mut_max|m
 2|pos2|D|A|Ab2|A|27|100|50|45
 
 Note how the the **site_*** values are repeated for each mutation at that site.
-You can see the data file used in the default <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> view <a href="https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/IAV/flu_dms-view.csv" target="_blank">HERE</a>.
+You can see the data file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view <a href="https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/IAV/flu_dms-view.csv" target="_blank">HERE</a>.
 
 ## protein structure
 
@@ -56,26 +56,26 @@ The protein structure file is a [pdb file](https://en.wikipedia.org/wiki/Protein
 The data file columns **site**, **protein_chain**,  and **protein_site** map differences in numbering between the site/mutation plot and the protein structure.
 Specifically, the **protein_site** column contains the correspondence between the site/mutation values and the protein structure.
 
-You can see the protein file used in the default <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb).
+You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb).
 
 ## metadata file
 
 The metadata file is a [markdown file](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
 You can use the metadata file to explain your experiment, acknowledge contributors, or make analysis notes.
 
-You can see the protein file used in the default <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/lee2019mapping.md).
+You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/lee2019mapping.md).
 
 # Hosting input files
 
-Before you can load any of the three files to <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a>, you must host the files somewhere else.  
+Before you can load any of the three files to <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>, you must host the files somewhere else.  
 This can be as easy as uploading them to [GitHub](https://github.com/), [Google Drive](https://www.google.com/drive/), or [Dropbox](https://www.dropbox.com/).
 
-You can still use <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> even if you data is a private repo or directory.
-The only caveat is that the <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> URL will expire at some point and you will have to reload your data.
+You can still use <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> even if you data is a private repo or directory.
+The only caveat is that the <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> URL will expire at some point and you will have to reload your data.
 
 # How to load your data
 
-Once you have your input files hosted, you can load the data into <a href="https://jbloomlab.github.io/dms-view" target="_blank">`dms_view`</a> by filling in the form fields on the front page.
+Once you have your input files hosted, you can load the data into <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> by filling in the form fields on the front page.
 The [data file](#data-file) form field is above the site dot plot, the [protein file](#protein-structure) form field is above the protein structure and the [metadata file](#metadata-file) form field is above the metadata section at the bottom of the site.
 
 All of the data files are saved in the URL.
