@@ -48,7 +48,7 @@ site|site_label|wildtype|mutation|condition|protein_chain|protein_site|mut_max|m
 2|pos2|D|A|Ab2|A|27|100|50|45
 
 Note how the the **site_*** values are repeated for each mutation at that site.
-You can see the data file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view <a href="https://raw.githubusercontent.com/jbloomlab/dms-view/master/docs/_data/IAV/flu_dms-view.csv" target="_blank">HERE</a>.
+You can see the data file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view <a href="https://raw.githubusercontent.com/dms-view/dms-view.github.io/master/flu_dms-view.csv" target="_blank">HERE</a>.
 
 ## protein structure
 
@@ -56,14 +56,14 @@ The protein structure file is a [pdb file](https://en.wikipedia.org/wiki/Protein
 The data file columns **site**, **protein_chain**,  and **protein_site** map differences in numbering between the site/mutation plot and the protein structure.
 Specifically, the **protein_site** column contains the correspondence between the site/mutation values and the protein structure.
 
-You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb).
+You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://raw.githubusercontent.com/dms-view/dms-view.github.io/master/4O5N_trimer.pdb).
 
 ## metadata file
 
 The metadata file is a [markdown file](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
 You can use the metadata file to explain your experiment, acknowledge contributors, or make analysis notes.
 
-You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/lee2019mapping.md).
+You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/dms-view/dms-view.github.io/blob/master/lee2019mapping.md).
 
 # Hosting input files
 

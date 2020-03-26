@@ -44,7 +44,7 @@ The dataframe above is one way to represent the mutation-level metrics.
 Each site has measurements for multiple variants.
 
 However, <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> does not require that there is only mutation-level metric or that the mutation-level metric is from a deep mutational scan.
-For <a href="https://dms-view.github.io/?markdown-url=https%3A%2F%2Fjbloomlab.github.io%2Fdms-view%2F_data%2FIAV%2Flee2019mapping.md&data-url=https%3A%2F%2Fjbloomlab.github.io%2Fdms-view%2F_data%2FIAV%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Absolute+Differential+Selection&mutation_metric=mut_Natural+Frequencies&selected_sites=144%2C159%2C160%2C193%2C220%2C222%2C226%2C244&pdb-url=https%3A%2F%2Fjbloomlab.github.io%2Fdms-view%2F_data%2FIAV%2F4O5N_trimer.pdb" target="_blank">example</a>, you could use the mutation plot dropdown menu to toggle between deep mutational scanning data and the frequency of amino acids in nature.
+For <a href="https://dms-view.github.io/?markdown-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Flee2019mapping.md&data-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Absolute+Differential+Selection&mutation_metric=mut_Natural+Frequencies&selected_sites=144%2C159%2C160%2C193%2C220%2C222%2C226%2C244&pdb-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2F4O5N_trimer.pdb" target="_blank">example</a>, you could use the mutation plot dropdown menu to toggle between deep mutational scanning data and the frequency of amino acids in nature.
 
 ### site-level metrics
 
