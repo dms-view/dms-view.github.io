@@ -333,8 +333,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
       // Initialize URLs for user-provided data. Tries to find URLs in the
       // current app URL and listens for changes to the given text field ids.
-      initializeDataUrl("data-url", "csv", "https://jbloomlab.github.io/dms-view/_data/IAV/flu_dms-view.csv");
-      initializeDataUrl("pdb-url", "pdb", "https://jbloomlab.github.io/dms-view/_data/IAV/4O5N_trimer.pdb");
-      initializeDataUrl("markdown-url", "markdown", "https://jbloomlab.github.io/dms-view/_data/IAV/lee2019mapping.md");
+      initializeDataUrl("data-url", "csv", "https://dms-view.github.io/flu_dms-view.csv");
+      initializeDataUrl("pdb-url", "pdb", "https://dms-view.github.io/4O5N_trimer.pdb");
+      initializeDataUrl("markdown-url", "markdown", "https://dms-view.github.io/lee2019mapping.md");
     });
 });
