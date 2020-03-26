@@ -20,7 +20,7 @@ const greyColor = "#999999";
 
 // Bitstream Vera Fonts provided by Gnome:
 // https://www.gnome.org/fonts/
-var fontPath = "_data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
+var fontPath = "DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
 function updateStateFromUrl(fieldIds) {
