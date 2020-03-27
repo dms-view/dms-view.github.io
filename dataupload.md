@@ -69,6 +69,7 @@ You can see the protein file used in the default <a href="https://dms-view.githu
 
 Before you can load any of the three files to <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>, you must host the files somewhere else.  
 This can be as easy as uploading them to [GitHub](https://github.com/), [Google Drive](https://www.google.com/drive/), or [Dropbox](https://www.dropbox.com/).
+Note that if your data are on GitHub, you need to link the **Raw** files (click the `Raw` button to do this), not the HTML rendering GitHub shows by default.
 
 You can still use <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> even if you data is a private repo or directory.
 The only caveat is that the <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> URL will expire at some point and you will have to reload your data.
