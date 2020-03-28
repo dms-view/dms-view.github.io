@@ -10,6 +10,6 @@ The goal of `dms-view` is to facilitate easy exploration of deep mutational scan
 
 ## Getting started
 
-If you want to learn how to use the tool or explore pre-existing datasets, check out the [tutorial](./tutorial), the [case studies](./casestudies), or the [manifest](manifest).
+If you want to learn how to use the tool or explore pre-existing datasets, check out the [tutorial](./tutorial) or the [case studies](./casestudies).
 
 If you would like to upload your own data, check out [upload your own data](dataupload) or [deep mutational scanning primer](dms).
