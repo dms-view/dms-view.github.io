@@ -28,14 +28,14 @@ There are two categories of files in this repo: code to run the website and defa
 - [`prot_struct.js`](prot_struct.js): JavaScript and [NGL](http://nglviewer.org/ngl/api/manual/) code for the protein structure panel.
 
 #### external packages and files
-- [`DejaVuSansMonoBold_SeqLogo.tff`](DejaVuSansMonoBold_SeqLogo.tff): font for the mutation logoplot panel. More info on the font [HERE](https://github.com/jbloomlab/dmslogo/tree/master/dmslogo/ttf_fonts).
+- [`DejaVuSansMonoBold_SeqLogo.ttf`](DejaVuSansMonoBold_SeqLogo.ttf): font for the mutation logoplot panel. More info on the font [HERE](https://github.com/jbloomlab/dmslogo/tree/master/dmslogo/ttf_fonts).
 - [`node_modules/`](node_modules/): External JavaScript modules.
 - [`ngl.js`](ngl.js): [NGL](http://nglviewer.org/ngl/api/manual/) module code.
 
 
 ### (2) default data
 
-If [`dms-view.github.io`](dms-view.github.io) is loaded without datafiles specified in the URL, influenza serum mapping data from [Lee _et al.,_ 2019](https://elifesciences.org/articles/49324) is loaded by default.
+If [`dms-view.github.io`](https://dms-view.github.io) is loaded without datafiles specified in the URL, influenza serum mapping data from [Lee _et al.,_ 2019](https://elifesciences.org/articles/49324) is loaded by default.
 For more information on how to create the data files, see [`dms-view.github.io/docs/dataupload`](https://dms-view.github.io/docs/dataupload).
 
 - [`flu_dms-view.csv`](flu_dms-view.csv): [data file](https://dms-view.github.io/docs/dataupload/#data-file)
