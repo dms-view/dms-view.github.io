@@ -1,13 +1,13 @@
-# [`dms-view`](dms-view.github.io)
+# [`dms-view`](https://dms-view.github.io)
 
 Sarah Hilton\*, John Huddleston\*, Allison Black, Khrystyna North, Adam Dingens, Trevor Bedford, and Jesse Bloom.   
 (* equal contribution)  
 
-[`dms-view`](dms-view.github.io) is an interactive visualization tool for deep mutational scanning experiments.
-You can find the tool at [`dms-view.github.io`](dms-view.github.io).
+[`dms-view`](https://dms-view.github.io) is an interactive visualization tool for deep mutational scanning experiments.
+You can find the tool at [`dms-view.github.io`](https://dms-view.github.io).
 
 This repo contains the JavaScript and D3 code to run the tool itself.
-For information on how to use the tool, please see the [documentation](dms-view.github.io/docs).
+For information on how to use the tool, please see the [documentation](https://dms-view.github.io/docs).
 
 Please raise issues with the tool at [`github.com/dms-view/dms-view.github.io/issues`](github.com/dms-view/dms-view.github.io/issues).
 
@@ -36,7 +36,7 @@ There are two categories of files in this repo: code to run the website and defa
 ### (2) default data
 
 If [`dms-view.github.io`](dms-view.github.io) is loaded without datafiles specified in the URL, influenza serum mapping data from [Lee _et al.,_ 2019](https://elifesciences.org/articles/49324) is loaded by default.
-For more information on how to create the data files, see [`dms-view.github.io/docs/dataupload`](dms-view.github.io/docs/dataupload).
+For more information on how to create the data files, see [`dms-view.github.io/docs/dataupload`](https://dms-view.github.io/docs/dataupload).
 
 - [`flu_dms-view.csv`](flu_dms-view.csv): [data file](https://dms-view.github.io/docs/dataupload/#data-file)
 - [`4O5N_trimer.pdb`](4O5N_trimer.pdb): [protein structure file](https://dms-view.github.io/docs/dataupload/#protein-structure)
