@@ -9,7 +9,7 @@ You can find the tool at [`dms-view.github.io`](https://dms-view.github.io).
 This repo contains the JavaScript and D3 code to run the tool itself.
 For information on how to use the tool, please see the [documentation](https://dms-view.github.io/docs).
 
-Please raise issues with the tool at [`github.com/dms-view/dms-view.github.io/issues`](github.com/dms-view/dms-view.github.io/issues).
+Please raise issues with the tool at [`github.com/dms-view/dms-view.github.io/issues`](https://github.com/dms-view/dms-view.github.io/issues).
 
 ## Organization
 
