@@ -269,7 +269,7 @@ function genomeLineChart() {
 
     // update the PROTEIN structure
     circleData.protein_chain.forEach(function(chain){
-      if(!missingData.includes(chain) ||
+      if(!missingData.includes(chain) &&
          !missingData.includes(circleData.protein_site)){
         selectSiteOnProtein(":" + chain + " and " +
           circleData.protein_site,
