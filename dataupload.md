@@ -31,7 +31,9 @@ The data file is a `csv` (comma-separated file) and it must have the following c
 The data file must contain at least one column from each of the following categories.
 
 * **site_***: The value for a given site for a given metric (represented by `*`). The values must be numeric. For example, `site_mean`.
-* **mut_***: The value for a given site for a given mutation for a given metric (represented by `*`). For example, `mut_mean`.  
+* **mut_***: The value for a given site for a given mutation for a given metric (represented by `*`). The values must be numeric. For example, `mut_mean`.  
+
+The metric names represented by _*_ above will populate the site metric and mutation metric dropdown menus.
 
 ## example: HIV antibody escape
 
