@@ -181,13 +181,7 @@ function renderCsv(data, dataUrl) {
   // Initialize the state of each dropdown based on values in the URL.
   console.log("Initialize dropdowns from URL");
   updateStateFromUrl(dropdownsToTrack).then(values => {
-    // Check whether the URL provides a non-empty list of selected sites. If
-    // not, we will select the maximum site by default.
     const url = new URL(window.location);
-    let selectMaximumSite = true;
-    if (url.searchParams.get("selected_sites") !== null) {
-      selectMaximumSite = false;
-    }
 
     // Update the chart from the current state of the dropdowns, after
     // initializing their state from the URL. This updates the URL to reflect
@@ -195,20 +189,13 @@ function renderCsv(data, dataUrl) {
     console.log(values);
     dropdownChange();
 
-    // If the user does not provide any selected sites from the URL, select the
-    // site with the maximum y value by default.
-    if (selectMaximumSite) {
+    // select the site with the maximum y value
       console.log("Select site with maximum y value");
+      clearbuttonchange()
       const circles = d3.selectAll("circle");
       const maxMetricIndex = d3.maxIndex(circles.data(), d => +d.metric);
       const maxMetricRecord = d3.select(circles.nodes()[maxMetricIndex]);
       chart.updateSites([maxMetricRecord]);
-    }
-    else {
-      // If we are not selecting the maximum site in the data, select the
-      // user-provided sites. This can be an empty list.
-      selectedSitesChanged();
-    }
   });
 }
 
