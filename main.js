@@ -241,14 +241,17 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
 
   let dataFunction;
   let renderFunction;
+  let dataAlert;
 
   if (dataType === "markdown") {
     dataFunction = d3.text;
     renderFunction = renderMarkdown;
+    dataAlert = document.getElementById('markdownFormFieldAlert')
   }
   else if (dataType === "csv") {
     dataFunction = d3.csv;
     renderFunction = renderCsv;
+    dataAlert = document.getElementById('dataFormFieldAlert');
   }
   else if (dataType === "pdb") {
     dataFunction = (d) => {
@@ -257,6 +260,7 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
       return stage.loadFile(d)
     };
     renderFunction = renderPdb;
+    dataAlert = document.getElementById('proteinFormFieldAlert');
   }
   else {
     console.log("Unsupported data type: " + dataType);
@@ -275,10 +279,14 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
 
     // Update the URL.
     updateUrlFromFieldIds([dataFieldId]);
+    // make sure the alert is hidden
+    dataAlert.hidden = true
   }).catch(reason => {
     // Let the user know their URL could not be loaded.
     console.log("Failed to load data: " + reason);
     d3.select("#" + dataFieldId).classed('is-invalid', true);
+    // show the error
+    dataAlert.hidden = false
   });
 }
 
