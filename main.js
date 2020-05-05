@@ -309,9 +309,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // Initialize line chart.
   chart = genomeLineChart();
 
-  // Initialize protein view.
-  addElement(polymerSelect);
-
   // Initialize the mutation/site chart.
   logoplot = logoplotChart("#logo_plot");
 
