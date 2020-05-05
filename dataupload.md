@@ -5,9 +5,9 @@ permalink: /dataupload/
 ---
 
 <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> takes three input files.
-1. [data file for the site dot plot and mutation logoplot](#data-file)
+1. [data file for the site plot and mutation plot](#data-file)
 2. [protein structure file ](#protein-structure)
-3. [metadata file](#metatdata-file)
+3. [description file](#description-file)
 
 Below are instructions on [how to construct the input files](#input-files), [how to host the input files](#hosting-input-files), and [how to load the input files to the site](#how-to-load-your-data).
 
@@ -17,14 +17,14 @@ Below are instructions on [how to construct the input files](#input-files), [how
 
 The data file is the main source of data for <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>.
 
-This file contains the measurements for the site dot plot, the measurements for the mutation logoplot, and the map between the site plot numbering and the protein structure numbering.
+This file contains the measurements for the site plot, the measurements for the mutation plot, and the map between the site plot numbering and the protein structure numbering.
 
 The data file is a `csv` (comma-separated file) and it must have the following columns:
-* **site**: The site dot plot will be ordered by this column. The values must be ordinal.  
-* **label_site**: The site dot plot will be labeled by this column. The values can be numeric or a string.
+* **site**: The site plot will be ordered by this column. The values must be ordinal.  
+* **label_site**: The site plot will be labeled by this column. The values can be numeric or a string.
 * **wildtype**: The wildtype at a given site. The tooltips will display this information. The values can be numeric or a string.
-* **mutation**: The mutation logoplot will display this mutation. The values must be a single uppercase letter.
-* **condition**: The experimental condition used in the experiment to generate the data for the site dot plot and the mutation logoplot. The dropdown menu will display the conditions and the user can toggle between different conditions.
+* **mutation**: The mutation plot will display this mutation. The values must be a single uppercase letter.
+* **condition**: The experimental condition used in the experiment to generate the data for the site plot and the mutation plot. The dropdown menu will display the conditions and the user can toggle between different conditions.
 * **protein_chain**: The protein chain(s) in the pdb file for a given site. The values must be in a space-separated list.
 * **protein_site**: The protein site in the pdb file for a given site.
 
@@ -60,10 +60,10 @@ Specifically, the **protein_site** column contains the correspondence between th
 
 You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://raw.githubusercontent.com/dms-view/dms-view.github.io/master/4O5N_trimer.pdb).
 
-## metadata file
+## description file
 
-The metadata file is a [markdown file](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
-You can use the metadata file to explain your experiment, acknowledge contributors, or make analysis notes.
+The description file is a [markdown file](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
+You can use the description file to explain your experiment, acknowledge contributors, or make analysis notes.
 
 You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/dms-view/dms-view.github.io/blob/master/lee2019mapping.md).
 
@@ -78,7 +78,7 @@ The only caveat is that the <a href="https://dms-view.github.io" target="_blank"
 # How to load your data
 
 Once you have your input files hosted, you can load the data into <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> by filling in the form fields on the front page.
-The [data file](#data-file) form field is above the site dot plot, the [protein file](#protein-structure) form field is above the protein structure and the [metadata file](#metadata-file) form field is above the metadata section at the bottom of the site.
+The [data file](#data-file) form field is above the site plot, the [protein file](#protein-structure) form field is above the protein structure and the [description file](#description-file) form field is above the description section at the bottom of the site.
 
 All of the data files are saved in the URL.
 Once the data is loaded, you can share this new URL with others and _your_ data will load for them.  

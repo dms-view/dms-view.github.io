@@ -60,7 +60,7 @@ So each site has only one summary value.
 500|0.25
 
 For a deep mutational scanning experiment, common site-level metrics include entropy, effective number of amino acids, or simply the min/max value at a given site.
-In <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>, you can access different site-level metrics using the site dot plot dropdown menu.
+In <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>, you can access different site-level metrics using the site plot dropdown menu.
 
 ### conditions
 
