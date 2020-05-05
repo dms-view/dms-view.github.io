@@ -1,8 +1,0 @@
-*.
-!.
-summary*
-BG505-avg-rescaled-prefs_ADrealigned.csv
-BG505_to_HXB2.csv
-LANL_NatFreq_dropIndelsRelBG505.csv
-process_HIV_abs.py
-protein_map.csv
