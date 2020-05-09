@@ -7,6 +7,7 @@ var chart;
 var perSiteData;
 var logoplot;
 
+let csvDataUrl;
 let conditiondropdown;
 let sitedropdown;
 let mutdropdown;
@@ -88,6 +89,20 @@ function renderMarkdown (data, dataUrl) {
 }
 
 function renderCsv(data, dataUrl) {
+  // When the data URL for the CSV changes, note that we want to reset the
+  // selected sites to the default instead of those in the current URL.
+  let resetSites = false;
+  if (csvDataUrl !== dataUrl) {
+    // Only reset sites if a CSV URL is defined already. Otherwise, we want to
+    // keep any sites provided in the URL.
+    if (csvDataUrl !== undefined) {
+      resetSites = true;
+    }
+
+    // Update the CSV data URL, so we can detect when it changes again later.
+    csvDataUrl = dataUrl;
+  }
+
   // Sort data by site
   data.forEach(function(d) {
     d.site = +d.site;
@@ -184,9 +199,20 @@ function renderCsv(data, dataUrl) {
     // Check whether the URL provides a non-empty list of selected sites. If
     // not, we will select the maximum site by default.
     const url = new URL(window.location);
-    let selectMaximumSite = true;
-    if (url.searchParams.get("selected_sites") !== null) {
+    let selectMaximumSite;
+
+    if (resetSites) {
+      // Clear all selected sites before we join new data from the new
+      // URL. Otherwise, we lose track of which sites were selected and cannot
+      // clear all panels.
+      selectMaximumSite = true;
+      clearbuttonchange();
+    }
+    else if (url.searchParams.get("selected_sites") !== null) {
       selectMaximumSite = false;
+    }
+    else {
+      selectMaximumSite = true;
     }
 
     // Update the chart from the current state of the dropdowns, after
