@@ -41,3 +41,42 @@ For more information on how to create the data files, see [`dms-view.github.io/d
 - [`flu_dms-view.csv`](flu_dms-view.csv): [data file](https://dms-view.github.io/docs/dataupload/#data-file)
 - [`4O5N_trimer.pdb`](4O5N_trimer.pdb): [protein structure file](https://dms-view.github.io/docs/dataupload/#protein-structure)
 - [`lee2019mapping.md`](lee2019mapping.md): [metadata file](https://dms-view.github.io/docs/dataupload/#metatdata-file)
+
+## External dependencies
+
+- [d3 v5](https://d3js.org/d3.v5.min.js)
+- [d3 array v2](https://d3js.org/d3-array.v2.min.js)
+- [underscore v1.9.1](https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js)
+- [opentype v1.1.0](https://cdn.jsdelivr.net/npm/opentype.js@1.1.0/dist/opentype.min.js)
+- [min v0.8.2](https://cdn.jsdelivr.net/npm/marked@0.8.2/marked.min.js)
+- [bootstrap v4.3.1](https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css)
+
+The other dependencies are hosted within the repo.
+
+## Testing
+
+As described above, [`dms-view`](https://dms-view.github.io) uses a default dataset from [Lee _et al.,_ 2019](https://elifesciences.org/articles/49324).
+Below are two descriptions of different combinations of dropdown menus and selected sites, as well as pictures of what the tool should look like.
+
+### View 1 (default view)
+When [`dms-view.github.io`](https://dms-view.github.io) is loaded, the default view of the data section should look as follows:
+
+![](testing/view1.png)
+
+
+[Load view 1](https://dms-view.github.io/?markdown-url=https%3A%2F%2Fdms-view.github.io%2Flee2019mapping.md&data-url=https%3A%2F%2Fdms-view.github.io%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Positive+Differential+Selection&selected_sites=222&pdb-url=https%3A%2F%2Fdms-view.github.io%2F4O5N_trimer.pdb) to explore this example.
+
+### View 2
+The data section should look as follows when you change
+- condition to "2009-age-65"
+- mutation metric to "Natural Frequencies"
+- selected sites 144, 159, 192, 193, 222, 224
+
+![](testing/view2.png)
+
+[Load view 2](https://dms-view.github.io/?markdown-url=https%3A%2F%2Fdms-view.github.io%2Flee2019mapping.md&data-url=https%3A%2F%2Fdms-view.github.io%2Fflu_dms-view.csv&pdb-url=https%3A%2F%2Fdms-view.github.io%2F4O5N_trimer.pdb&selected_sites=144%2C159%2C192%2C193%2C222%2C244&condition=2009-age-65&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Natural+Frequencies) to explore this example.
+
+### Other views
+
+In the documentation, we use [`dms-view`](https://dms-view.github.io) to recreate paper figures for two different studies.
+Please see [dms-view.github.io/docs/casestudies](https://dms-view.github.io/docs/casestudies) to see these examples
