@@ -501,7 +501,7 @@ function genomeLineChart() {
       };
 
       function updateChart(dataMap) {
-        const data = Array.from(dataMap.values());
+        const data = Array.from(dataMap.values()).sort((a, b) => a.site - b.site);
 
         // extract y-axis label from metric_name
         svg.select("#context_y_label")
