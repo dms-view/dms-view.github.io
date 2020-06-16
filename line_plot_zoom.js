@@ -50,7 +50,6 @@ function genomeLineChart() {
     yAxis = d3.axisLeft(yScaleFocus),
     lineFocus = d3.line().x(XFocus).y(YFocus),
     areaContext = d3.area().defined(function(d){
-      console.log(d.site, d.metric===undefined, d.metric)
       return !(d.metric===undefined);
     }).x(XContext).y0(
       plotHeightContext).y1(YContext),
@@ -400,6 +399,41 @@ function genomeLineChart() {
     }
   };
 
+  /* Collect an array of sites (integers) into a minimal array of sites that are
+     not adjacent to each other on the number line. For example, the following array:
+
+       Array(1, 2, 3, 4, 5, 6, 9, 11, 12, 13, 15)
+
+     gets collected into this smaller array:
+
+       Array(1, 6, 9, 11, 13, 15)
+  */
+  const collector = (accumulator, currentValue, index, array) => {
+    let keepValue = true;
+
+    // If the previous value in the array is an integer that
+    // immediately precedes the current value or if the current
+    // value precedes the next value in the array, don't keep
+    // the current value.
+    const currentValueFollowsAnother = (
+      index > 0 && currentValue - 1 == array[index - 1]
+    );
+    const currentValuePrecedesAnother = (
+      index + 1 < array.length - 1 && currentValue + 1 == array[index + 1]
+    );
+
+    if (currentValueFollowsAnother && currentValuePrecedesAnother) {
+      keepValue = false;
+    }
+
+    if (keepValue) {
+      return accumulator.concat([currentValue]);
+    }
+    else {
+      return accumulator;
+    }
+  };
+
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function(alldata) {
@@ -466,7 +500,15 @@ function genomeLineChart() {
               minSite = Math.min.apply(null, sites),
               maxSite = Math.max.apply(null, sites),
           fullRange = _.range(minSite, maxSite+1);
-          missing = _.without.apply(_, [fullRange].concat(sites));
+          let missing = _.without.apply(_, [fullRange].concat(sites));
+
+          // Collapse missing sites into just those at the beginning or end of a
+          // gap interval. Only those sites at the edge are necessary to benefit
+          // from d3 area's defined functionality.
+          if (missing.length > 0) {
+            missing = missing.reduce(collector, Array());
+          }
+
           missing.forEach(function(m){
             data.get(condition).get(site_metric).set(m, {"condition": condition, "metric_name": site_metric, "metric": undefined, "label_site": undefined, "site":m})
           })
