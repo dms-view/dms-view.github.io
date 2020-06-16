@@ -49,7 +49,9 @@ function genomeLineChart() {
     xAxisContext = d3.axisBottom(xScaleContext),
     yAxis = d3.axisLeft(yScaleFocus),
     lineFocus = d3.line().x(XFocus).y(YFocus),
-    areaContext = d3.area().curve(d3.curveMonotoneX).x(XContext).y0(
+    areaContext = d3.area().defined(function(d){
+      return !(d.metric===undefined);
+    }).x(XContext).y0(
       plotHeightContext).y1(YContext),
     brushContext = d3.brushX().extent([
       [0, 0],
@@ -269,12 +271,9 @@ function genomeLineChart() {
 
     // update the PROTEIN structure
     circleData.protein_chain.forEach(function(chain){
-      if(!missingData.includes(chain) &&
-         !missingData.includes(circleData.protein_site)){
-        selectSiteOnProtein(":" + chain + " and " +
-          circleData.protein_site,
-          color_key[circleData.site]);
-      }
+      selectSiteOnProtein(":" + chain + " and " +
+        circleData.protein_site,
+        color_key[circleData.site]);
     });
   };
 
@@ -400,6 +399,41 @@ function genomeLineChart() {
     }
   };
 
+  /* Collect an array of sites (integers) into a minimal array of sites that are
+     not adjacent to each other on the number line. For example, the following array:
+
+       Array(1, 2, 3, 4, 5, 6, 9, 11, 12, 13, 15)
+
+     gets collected into this smaller array:
+
+       Array(1, 6, 9, 11, 13, 15)
+  */
+  const collector = (accumulator, currentValue, index, array) => {
+    let keepValue = true;
+
+    // If the previous value in the array is an integer that
+    // immediately precedes the current value or if the current
+    // value precedes the next value in the array, don't keep
+    // the current value.
+    const currentValueFollowsAnother = (
+      index > 0 && currentValue - 1 == array[index - 1]
+    );
+    const currentValuePrecedesAnother = (
+      index + 1 < array.length - 1 && currentValue + 1 == array[index + 1]
+    );
+
+    if (currentValueFollowsAnother && currentValuePrecedesAnother) {
+      keepValue = false;
+    }
+
+    if (keepValue) {
+      return accumulator.concat([currentValue]);
+    }
+    else {
+      return accumulator;
+    }
+  };
+
   // Create a genome line chart for the given selection.
   function chart(selection) {
     selection.each(function(alldata) {
@@ -459,7 +493,28 @@ function genomeLineChart() {
       });
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
-      chart.data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site);
+      data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
+      conditions.forEach(function(condition){
+        site_metrics.forEach(function(site_metric){
+          let sites = Array.from(data.get(condition).get(site_metric).keys()),
+              minSite = Math.min.apply(null, sites),
+              maxSite = Math.max.apply(null, sites),
+          fullRange = _.range(minSite, maxSite+1);
+          let missing = _.without.apply(_, [fullRange].concat(sites));
+
+          // Collapse missing sites into just those at the beginning or end of a
+          // gap interval. Only those sites at the edge are necessary to benefit
+          // from d3 area's defined functionality.
+          if (missing.length > 0) {
+            missing = missing.reduce(collector, Array());
+          }
+
+          missing.forEach(function(m){
+            data.get(condition).get(site_metric).set(m, {"condition": condition, "metric_name": site_metric, "metric": undefined, "label_site": undefined, "site":m})
+          })
+        })
+      })
+      chart.data = new Map([...data.entries()].sort());;
 
       // Group data by condition and mutation metric, keeping all records to get
       // site- and mutation-level data.
@@ -519,7 +574,7 @@ function genomeLineChart() {
       };
 
       function updateChart(dataMap) {
-        const data = Array.from(dataMap.values());
+        const data = Array.from(dataMap.values()).sort((a, b) => a.site - b.site);
 
         // Track the URL of the current dataset and use this information to
         // clear or reset elements of the chart that shouldn't be maintained
@@ -604,7 +659,7 @@ function genomeLineChart() {
 
         // Create the context plot excluding sites with missing data.
         context.selectAll("path.area")
-          .data([data.filter(d => d.metric !== undefined)])
+          .data([data])
           .join("path")
           .attr("class", "area")
           .attr("d", areaContext);
