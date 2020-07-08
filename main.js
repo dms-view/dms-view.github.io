@@ -155,6 +155,21 @@ function renderCsv(data, dataUrl) {
   var logoPlotDownloadButton = d3.select("#logo_plot_download")
       .on('click', function () { downloadSVG("logo_plot", "logo_plot.svg"); });
 
+  var proteinPlotDownloadButton = d3.select("#protein_plot_download")
+      .on(
+        'click',
+        function () {
+          stage.makeImage({
+            factor: 4,
+            antialias: true,
+            trim: false,
+            transparent: false
+          }).then(function (blob) {
+            NGL.download(blob, "protein_plot.png");
+          });
+        }
+      );
+
   if (conditiondropdown === undefined) {
     console.log("No condition dropdown exists yet.");
     conditiondropdown = d3.select("#line_plot")
