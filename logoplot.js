@@ -68,7 +68,6 @@ function logoplotChart(selection) {
       else {
         var metric_name = data[0].metric_name;
       }
-
       xScale.domain(sites);
       zScale.domain(mutations);
 
@@ -172,11 +171,13 @@ function logoplotChart(selection) {
       };
       if(colorScheme == "functional"){
         var colorMap = function(key){return functionalColors[key]};
+        dataToPlot.forEach(function(d){
+          d["colors"] = functionalColors[d["mutation"]]
+        })
       }
       else{
         var colorMap = zScale;
       };
-
       svg.select(".x-axis").call(xAxis.tickFormat(function(site, i) {
         // Display a tick label for each site up to the maximum number of
         // allowed sites and then switch to displaying tick labels at a fixed
@@ -271,7 +272,7 @@ function logoplotChart(selection) {
           // desired x, y position, scaled, and then moved back by the same amount.
           return `translate(+${x} +${y}) scale(${widthScale} ${scale}) translate(-${x} -${y})`;
         })
-        .attr("fill", d => colorMap(d["mutation"]))
+        .attr("fill", d => d["colors"])
         .on("mouseover", showTooltip)
         .on("mouseout", hideTooltip);
     });
