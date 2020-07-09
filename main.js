@@ -19,9 +19,7 @@ var clearbuttonchange;
 let protein;
 const greyColor = "#999999";
 
-// Bitstream Vera Fonts provided by Gnome:
-// https://www.gnome.org/fonts/
-var fontPath = "/data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
+var fontPath = "http://dms-view.github.io/data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
 const downloadSVG = (elementId, filename) => {
@@ -392,14 +390,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // Initialize the mutation/site chart.
   logoplot = logoplotChart("#logo_plot");
 
-  var promiseFontLoaded = opentype.load(fontPath, function(err, font) {
-    if (err) {
-      console.log("Font could not be loaded: " + err);
-    } else {
-      console.log("Font loaded: " + fontPath);
-      fontObject = font;
-    }
-  });
+  const promiseFontLoaded = opentype.load(fontPath);
 
   // Wait for all data to load before initializing content across the entire
   // application.
@@ -407,6 +398,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   Promise.all([promiseFontLoaded]).then(
     values => {
       console.log("Promises fulfilled!");
+      fontObject = values[0];
 
       // Initialize URLs for user-provided data. Tries to find URLs in the
       // current app URL and listens for changes to the given text field ids.
