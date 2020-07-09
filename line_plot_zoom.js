@@ -457,6 +457,12 @@ function genomeLineChart() {
         }
       });
 
+      if(Object.keys(alldata[0]).includes("colors_mutation")){
+        var colorScheme = 'custom';
+      }else{
+        var colorScheme = 'functional';
+      }
+
       var long_data = []
       var mut_long_data = [];
       alldata.forEach( function(row) {
@@ -486,7 +492,9 @@ function genomeLineChart() {
               "mutation": row["mutation"],
               "condition": row["condition"],
               "metric": +row[colname],
-              "metric_name": colname
+              "metric_name": colname,
+              "colors_mutation": row["colors_mutation"],
+              "color_scheme": colorScheme
             });
           }
         })
