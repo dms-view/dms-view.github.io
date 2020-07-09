@@ -24,6 +24,31 @@ const greyColor = "#999999";
 var fontPath = "/data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
+const downloadSVG = (elementId, filename) => {
+  // Download logic based on Curran Kelleher's example:
+  // http://bl.ocks.org/curran/7cf9967028259ea032e8
+
+  // Find the SVG element associated with the given panel element id.
+  const svg = document.getElementById(elementId).getElementsByTagName("svg")[0];
+
+  // Serialize the SVG element as XML.
+  const serializer = new XMLSerializer;
+  const svgAsXML = serializer.serializeToString(svg);
+
+  // Create a data URL with the SVG data embedded inside.
+  const svgDataURL = "data:image/svg+xml," + encodeURIComponent(svgAsXML);
+
+  // Prepare a link to download the data by inserting the link element into the
+  // DOM, clicking it, and removing it again.
+  // The following line makes the download work in Firefox.
+  const dl = document.createElement("a");
+  document.body.appendChild(dl);
+  dl.setAttribute("href", svgDataURL);
+  dl.setAttribute("download", filename);
+  dl.click();
+  document.body.removeChild(dl);
+};
+
 function updateStateFromUrl(fieldIds) {
   // Update the current value of the given field ids based on the corresponding
   // fields in the URL.
@@ -124,10 +149,31 @@ function renderCsv(data, dataUrl) {
   var clearButton = d3.select("#clearButton")
     .on('click', clearbuttonchange);
 
+  var linePlotDownloadButton = d3.select("#line_plot_download")
+      .on('click', function () { downloadSVG("line_plot", "line_plot.svg"); });
+
+  var logoPlotDownloadButton = d3.select("#logo_plot_download")
+      .on('click', function () { downloadSVG("logo_plot", "logo_plot.svg"); });
+
+  var proteinPlotDownloadButton = d3.select("#protein_plot_download")
+      .on(
+        'click',
+        function () {
+          stage.makeImage({
+            factor: 4,
+            antialias: true,
+            trim: false,
+            transparent: false
+          }).then(function (blob) {
+            NGL.download(blob, "protein_plot.png");
+          });
+        }
+      );
+
   if (conditiondropdown === undefined) {
     console.log("No condition dropdown exists yet.");
     conditiondropdown = d3.select("#line_plot")
-      .insert("select", "svg")
+      .insert("select", "button")
       .attr("id", 'condition')
       .on("change", dropdownChange);
   }
@@ -137,7 +183,7 @@ function renderCsv(data, dataUrl) {
 
   if (sitedropdown === undefined) {
     sitedropdown = d3.select("#line_plot")
-      .insert("select", "svg")
+      .insert("select", "button")
       .attr("id", 'site_metric')
       .on("change", dropdownChange);
   }
@@ -164,7 +210,7 @@ function renderCsv(data, dataUrl) {
 
   if (mutdropdown === undefined) {
     mutdropdown = d3.select("#logo_plot")
-      .insert("select", "svg")
+      .insert("select", "button")
       .attr("id", 'mutation_metric')
       .on("change", dropdownChange);
   }

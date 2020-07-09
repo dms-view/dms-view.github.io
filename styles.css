@@ -1,3 +1,7 @@
+p {
+    width: 100%;
+}
+
 /* Styles for genome line chart. */
 .line {
   fill: none;

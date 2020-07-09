@@ -53,11 +53,15 @@
           <input type='radio' id="select" name="mode" value="select" checked /> select
           <input type='radio' id="deselect" name="mode" value="deselect" /> deselect
           <input id="selected_sites" text="text" class="form-control" style="display: inline; width: 50%" placeholder="Selected sites (e.g., '144' or '144,160')" />
-          <button id="clearButton" class="button">clear selections</button>
+          <button id="clearButton" type="button" class="btn btn-light">clear selections</button>
         </p>
 
-        <div id="line_plot" class="row"></div>
-        <div id="logo_plot" class="row"></div>
+        <div id="line_plot" class="row">
+          <button id="line_plot_download" type="button" class="btn btn-light float-right"><img src="data/download.svg" /> Download SVG</button>
+        </div>
+        <div id="logo_plot" class="row">
+          <button id="logo_plot_download" type="button" class="btn btn-light float-right"><img src="data/download.svg" /> Download SVG</button>
+        </div>
       </div>
       <div class="col-4">
         <div class="alert alert-danger" role="alert" id="proteinFormFieldAlert" hidden>
@@ -65,13 +69,18 @@
           Please review the URL below or check the contents of the protein structure by reviewing the
           <a href="https://dms-view.github.io/docs/dataupload/" target="_blank">documentation</a>.
         </div>
-        <p><input id="pdb-url" text="text" class="form-control" placeholder="PDB URL" /></p>
-        <select name="polymerSelect">
-          <option value="cartoon">cartoon</option>
-          <option value="spacefill">spacefill</option>
-          <option value="licorice">sticks</option>
-          <option value="surface">surface</option>
-        </select>
+        <div class="row">
+          <p><input id="pdb-url" text="text" class="form-control" placeholder="PDB URL" /></p>
+        </div>
+        <div class="row mb-2">
+          <select id="polymer-dropdown" name="polymerSelect" class="ml-0">
+            <option value="cartoon">cartoon</option>
+            <option value="spacefill">spacefill</option>
+            <option value="licorice">sticks</option>
+            <option value="surface">surface</option>
+          </select>
+          <button id="protein_plot_download" type="button" class="btn btn-light float-right"><img src="data/download.svg" /> Download PNG</button>
+        </div>
         <div id="protein" style="width: 400px; height: 550px;"></div>
       </div>
     </div>
