@@ -177,7 +177,13 @@ function logoplotChart(selection) {
           d["colors_mutation"] = functionalColors[d["mutation"]]
         })
       }
-      else if(colorScheme == 'custom'){}
+      else if(colorScheme == 'custom'){
+        dataToPlot.forEach(function(d){
+          if(d["colors_mutation"] == 'functional'){
+            d["colors_mutation"] = functionalColors[d["mutation"]]
+          }
+        })
+      }
       else{
         dataToPlot.forEach(function(d){
           d["colors_mutation"] = zScale[d["mutation"]]
