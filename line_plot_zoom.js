@@ -444,14 +444,11 @@ function genomeLineChart() {
       conditions = conditions.filter((x, i, a) => a.indexOf(x) == i);
 
       var site_metrics = []
+      var mut_metrics = []
       Object.keys(alldata[0]).forEach(function(col){
         if (col.startsWith("site_")){
           site_metrics.push(col)
         }
-      });
-
-      var mut_metrics = []
-      Object.keys(alldata[0]).forEach(function(col){
         if (col.startsWith("mut_")){
           mut_metrics.push(col)
         }

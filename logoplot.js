@@ -179,7 +179,9 @@ function logoplotChart(selection) {
       }
       else if(colorScheme == 'custom'){}
       else{
-        var colorMap = zScale;
+        dataToPlot.forEach(function(d){
+          d["colors_mutation"] = zScale[d["mutation"]]
+        })
       };
       svg.select(".x-axis").call(xAxis.tickFormat(function(site, i) {
         // Display a tick label for each site up to the maximum number of
