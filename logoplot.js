@@ -174,19 +174,19 @@ function logoplotChart(selection) {
       };
       if(colorScheme == "functional"){
         dataToPlot.forEach(function(d){
-          d["colors_mutation"] = functionalColors[d["mutation"]]
+          d["color_for_mutation"] = functionalColors[d["mutation"]]
         })
       }
       else if(colorScheme == 'custom'){
         dataToPlot.forEach(function(d){
-          if(d["colors_mutation"] == 'functional'){
-            d["colors_mutation"] = functionalColors[d["mutation"]]
+          if(d["color_for_mutation"] == 'functional'){
+            d["color_for_mutation"] = functionalColors[d["mutation"]]
           }
         })
       }
       else{
         dataToPlot.forEach(function(d){
-          d["colors_mutation"] = zScale[d["mutation"]]
+          d["color_for_mutation"] = zScale[d["mutation"]]
         })
       };
       svg.select(".x-axis").call(xAxis.tickFormat(function(site, i) {
@@ -283,7 +283,7 @@ function logoplotChart(selection) {
           // desired x, y position, scaled, and then moved back by the same amount.
           return `translate(+${x} +${y}) scale(${widthScale} ${scale}) translate(-${x} -${y})`;
         })
-        .attr("fill", d => d["colors_mutation"])
+        .attr("fill", d => d["color_for_mutation"])
         .on("mouseover", showTooltip)
         .on("mouseout", hideTooltip);
     });
