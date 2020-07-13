@@ -444,18 +444,21 @@ function genomeLineChart() {
       conditions = conditions.filter((x, i, a) => a.indexOf(x) == i);
 
       var site_metrics = []
+      var mut_metrics = []
       Object.keys(alldata[0]).forEach(function(col){
         if (col.startsWith("site_")){
           site_metrics.push(col)
         }
-      });
-
-      var mut_metrics = []
-      Object.keys(alldata[0]).forEach(function(col){
         if (col.startsWith("mut_")){
           mut_metrics.push(col)
         }
       });
+
+      if(Object.keys(alldata[0]).includes("color_for_mutation")){
+        var colorScheme = 'custom';
+      }else{
+        var colorScheme = 'functional';
+      }
 
       var long_data = []
       var mut_long_data = [];
@@ -486,7 +489,9 @@ function genomeLineChart() {
               "mutation": row["mutation"],
               "condition": row["condition"],
               "metric": +row[colname],
-              "metric_name": colname
+              "metric_name": colname,
+              "color_for_mutation": row["color_for_mutation"],
+              "color_scheme": colorScheme
             });
           }
         })

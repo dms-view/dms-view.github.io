@@ -1,5 +1,5 @@
 function logoplotChart(selection) {
-  var colorScheme = 'functional';
+  var colorScheme = "functional";
   var divWidth = 760,
       divHeight = 250,
       margin = {top: 40, left: 40, bottom: 0, right: 0},
@@ -68,7 +68,6 @@ function logoplotChart(selection) {
       else {
         var metric_name = data[0].metric_name;
       }
-
       xScale.domain(sites);
       zScale.domain(mutations);
 
@@ -145,6 +144,9 @@ function logoplotChart(selection) {
       ]).nice();
 
       // Calculate the color domain.
+      if(dataToPlot[0]){
+        colorScheme =  dataToPlot[0].color_scheme
+      }
       zScale.range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), mutations.length).reverse())
         .unknown("#cccccc");
       var functionalColors = {
@@ -171,12 +173,22 @@ function logoplotChart(selection) {
        'unknown': "#cccccc"
       };
       if(colorScheme == "functional"){
-        var colorMap = function(key){return functionalColors[key]};
+        dataToPlot.forEach(function(d){
+          d["color_for_mutation"] = functionalColors[d["mutation"]]
+        })
+      }
+      else if(colorScheme == 'custom'){
+        dataToPlot.forEach(function(d){
+          if(d["color_for_mutation"] == 'functional'){
+            d["color_for_mutation"] = functionalColors[d["mutation"]]
+          }
+        })
       }
       else{
-        var colorMap = zScale;
+        dataToPlot.forEach(function(d){
+          d["color_for_mutation"] = zScale[d["mutation"]]
+        })
       };
-
       svg.select(".x-axis").call(xAxis.tickFormat(function(site, i) {
         // Display a tick label for each site up to the maximum number of
         // allowed sites and then switch to displaying tick labels at a fixed
@@ -271,7 +283,7 @@ function logoplotChart(selection) {
           // desired x, y position, scaled, and then moved back by the same amount.
           return `translate(+${x} +${y}) scale(${widthScale} ${scale}) translate(-${x} -${y})`;
         })
-        .attr("fill", d => colorMap(d["mutation"]))
+        .attr("fill", d => d["color_for_mutation"])
         .on("mouseover", showTooltip)
         .on("mouseout", hideTooltip);
     });
