@@ -1,7 +1,7 @@
 # [`dms-view`](https://dms-view.github.io)
 
-Sarah Hilton\*, John Huddleston\*, Allison Black, Khrystyna North, Adam Dingens, Trevor Bedford, and Jesse Bloom.   
-(* equal contribution)  
+Sarah Hilton\*, John Huddleston\*, Allison Black, Khrystyna North, Adam Dingens, Trevor Bedford, and Jesse Bloom.
+(* equal contribution)
 
 [`dms-view`](https://dms-view.github.io) is an interactive visualization tool for deep mutational scanning experiments.
 You can find the tool at [`dms-view.github.io`](https://dms-view.github.io).
@@ -80,3 +80,11 @@ The data section should look as follows when you change
 
 In the documentation, we use [`dms-view`](https://dms-view.github.io) to recreate paper figures for two different studies.
 Please see [dms-view.github.io/docs/casestudies](https://dms-view.github.io/docs/casestudies) to see these examples
+
+## Contribute to dms-view
+
+We welcome contributions to the `dms-view` code and documentation.
+[Consult our contributing guide for more details](CONTRIBUTING.md).
+
+Have you used `dms-view` for your own analyses and think these would make a great case study for our documentation?
+[Open a new issue on GitHub](https://github.com/dms-view/dms-view.github.io/issues/new) to let us know more.
