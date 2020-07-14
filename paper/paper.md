@@ -47,7 +47,7 @@ bibliography: paper.bib
 
 # Summary and Purpose
 
-The high-throughput technique of deep mutational scanning (DMS) has recently made it possible to experimentally measure the effects of all amino-acid mutations to a protein [@fowler2014deep]\autoref{fig:dms}.
+The high-throughput technique of deep mutational scanning (DMS) has recently made it possible to experimentally measure the effects of all amino-acid mutations to a protein [@fowler2014deep, \autoref{fig:dms}].
 Over the past five years, this technique has been used to study dozens of different proteins [@esposito2019mavedb] and answer a variety of research questions.
 For example, DMS has been used for protein engineering [@wrenbeck2017deep], understanding the human immune response to viruses [@lee2019mapping], and interpreting human variation in a clinical setting [@starita2017variant; @gelman2019recommendations].
 Accompanying this proliferation of DMS studies has been the development of software tools [@bloom2015software; @rubin2017statistical] and databases [@esposito2019mavedb] for data analysis and sharing.
@@ -111,9 +111,9 @@ In \autoref{fig:fig}A, we can see that these sites cluster on the "head" of HA, 
 
 # Figures
 
-![Using *dms-view* to analyze DMS data. For further exploration, please visit https://dms-view.github.io. **(A)** The *dms-view* data section has three panels: the site plot, the mutation plot, and the protein structure plot. The interactive features for selecting sites and navigating are in the site plot panel. Here we show the five sites most highly targeted by human serum "2010-Age-21" from the study by @lee2019mapping. All five sites fall in the ``globular head" of influenza virus HA. **(B)** The same five sites as in panel **A** but now plotted with the data from a different human serum, "2009-age-53". Using *dms-view* to compare, we see that different sites on HA are targeted by different sera. \label{fig:fig}](fig.pdf)
-
 ![Example deep mutational scanning workflow, modified from @lee2019mapping. The goal of this experiment is to quantify the how mutations affect a virus's ability to escape an antibody. The viral variant library contain all single amino-acid changes away from wildtype. The viral library is passaged in cell culture, with and without antibodies, to select for functional variants. Mutational effects are calculated based on deep sequencing on the pre-selected and post-selected libraries.\label{fig:dms}](dms.pdf)
+
+![Using *dms-view* to analyze DMS data. For further exploration, please visit https://dms-view.github.io. **(A)** The *dms-view* data section has three panels: the site plot, the mutation plot, and the protein structure plot. The interactive features for selecting sites and navigating are in the site plot panel. Here we show the five sites most highly targeted by human serum "2010-Age-21" from the study by @lee2019mapping. All five sites fall in the ``globular head" of influenza virus HA. **(B)** The same five sites as in panel **A** but now plotted with the data from a different human serum, "2009-age-53". Using *dms-view* to compare, we see that different sites on HA are targeted by different sera. \label{fig:fig}](fig.pdf)
 
 # Acknowledgements
 
