@@ -1,7 +1,7 @@
 # [`dms-view`](https://dms-view.github.io)
 
-Sarah Hilton\*, John Huddleston\*, Allison Black, Khrystyna North, Adam Dingens, Trevor Bedford, and Jesse Bloom.   
-(* equal contribution)  
+Sarah Hilton\*, John Huddleston\*, Allison Black, Khrystyna North, Adam Dingens, Trevor Bedford, and Jesse Bloom.
+(* equal contribution)
 
 [`dms-view`](https://dms-view.github.io) is an interactive visualization tool for deep mutational scanning experiments.
 You can find the tool at [`dms-view.github.io`](https://dms-view.github.io).
