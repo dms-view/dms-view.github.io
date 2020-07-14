@@ -355,8 +355,10 @@ function renderDataUrl (dataUrl, dataFieldId, dataType) {
     // Let the user know their URL could not be loaded.
     console.log("Failed to load data: " + reason);
     d3.select("#" + dataFieldId).classed('is-invalid', true);
+
     // show the error
-    dataAlert.hidden = false
+    d3.select(dataAlert).select("code").text(reason.message);
+    dataAlert.hidden = false;
   });
 }
 
