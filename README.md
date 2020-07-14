@@ -64,7 +64,7 @@ When [`dms-view.github.io`](https://dms-view.github.io) is loaded, the default v
 ![](testing/view1.png)
 
 
-[Load view 1](https://dms-view.github.io/?markdown-url=https%3A%2F%2Fdms-view.github.io%2Flee2019mapping.md&data-url=https%3A%2F%2Fdms-view.github.io%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Positive+Differential+Selection&selected_sites=222&pdb-url=https%3A%2F%2Fdms-view.github.io%2F4O5N_trimer.pdb) to explore this example.
+[Load view 1](https://dms-view.github.io/?markdown-url=https%3A%2F%2Fdms-view.github.io%2Fdata%2FIAV%2Flee2019mapping.md&data-url=https%3A%2F%2Fdms-view.github.io%2Fdata%2FIAV%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Positive+Differential+Selection&selected_sites=222&pdb-url=https%3A%2F%2Fdms-view.github.io%2Fdata%2FIAV%2F4O5N_trimer.pdb) to explore this example.
 
 ### View 2
 The data section should look as follows when you change
@@ -74,7 +74,7 @@ The data section should look as follows when you change
 
 ![](testing/view2.png)
 
-[Load view 2](https://dms-view.github.io/?markdown-url=https%3A%2F%2Fdms-view.github.io%2Flee2019mapping.md&data-url=https%3A%2F%2Fdms-view.github.io%2Fflu_dms-view.csv&pdb-url=https%3A%2F%2Fdms-view.github.io%2F4O5N_trimer.pdb&selected_sites=144%2C159%2C192%2C193%2C222%2C244&condition=2009-age-65&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Natural+Frequencies) to explore this example.
+[Load view 2](https://dms-view.github.io/?markdown-url=https%3A%2F%2Fdms-view.github.io%2Fdata%2FIAV%2Flee2019mapping.md&data-url=https%3A%2F%2Fdms-view.github.io%2Fdata%2FIAV%2Fflu_dms-view.csv&pdb-url=https%3A%2F%2Fdms-view.github.io%2Fdata%2FIAV%2F4O5N_trimer.pdb&selected_sites=144%2C159%2C192%2C193%2C222%2C244&condition=2009-age-65&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Natural+Frequencies) to explore this example.
 
 ### Other views
 
