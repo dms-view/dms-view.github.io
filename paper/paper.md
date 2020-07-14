@@ -52,8 +52,8 @@ Over the past five years, this technique has been used to study dozens of differ
 For example, DMS has been used for protein engineering [@wrenbeck2017deep], understanding the human immune response to viruses [@lee2019mapping], and interpreting human variation in a clinical setting [@starita2017variant; @gelman2019recommendations].
 Accompanying this proliferation of DMS studies has been the development of software tools [@bloom2015software; @rubin2017statistical] and databases [@esposito2019mavedb] for data analysis and sharing.
 However, for many purposes it is important to integrate and visualize the DMS data in the context of other information, such as the 3-D protein structure or natural sequence-variation data.
-Currently this is done using custom scripts, static visualization tools like MaveVis [@weile] or protein structure software such as PyMol [@schrodinger].
-However, there lacks a single tool that easily links the protein structure and DMS data to faciliate quick data exploration and sharing.
+Currently, this visualization requires the use of multiple different tools including custom scripts, static visualization tools like MaveVis [@weile], or protein structure software such as PyMol [@PyMOL].
+No existing tools provide linked views of the protein structure and DMS data in a single interface to faciliate dynamic data exploration and sharing.
 
 Here we describe *dms-view* (https://dms-view.github.io/), a flexible, web-based, interactive visualization tool for DMS data.
 *dms-view* is written in JavaScript and [D3](https://d3js.org), and links site-level and mutation-level DMS data to a 3-D protein structure.
@@ -111,7 +111,7 @@ In \autoref{fig:fig}A, we can see that these sites cluster on the "head" of HA, 
 
 # Figures
 
-![Example deep mutational scanning workflow, modified from @lee2019mapping. The goal of this experiment is to quantify the how mutations affect a virus's ability to escape an antibody. The viral variant library contain all single amino-acid changes away from wildtype. The viral library is passaged in cell culture, with and without antibodies, to select for functional variants. Mutational effects are calculated based on deep sequencing on the pre-selected and post-selected libraries.\label{fig:dms}](dms.pdf)
+![Example deep mutational scanning workflow, modified from @lee2019mapping. The goal of this experiment is to quantify the how mutations affect a virus's ability to escape an antibody. The viral variant library contains all single amino-acid changes away from wildtype. The viral library is passaged in cell culture, with and without antibodies, to select for functional variants. Mutational effects are calculated based on deep sequencing of the pre-selected and post-selected libraries.\label{fig:dms}](dms.pdf)
 
 ![Using *dms-view* to analyze DMS data. For further exploration, please visit https://dms-view.github.io. **(A)** The *dms-view* data section has three panels: the site plot, the mutation plot, and the protein structure plot. The interactive features for selecting sites and navigating are in the site plot panel. Here we show the five sites most highly targeted by human serum "2010-Age-21" from the study by @lee2019mapping. All five sites fall in the ``globular head" of influenza virus HA. **(B)** The same five sites as in panel **A** but now plotted with the data from a different human serum, "2009-age-53". Using *dms-view* to compare, we see that different sites on HA are targeted by different sera. \label{fig:fig}](fig.pdf)
 
