@@ -47,5 +47,5 @@ button, select {
 
 .brush_deselect .overlay {
   /* pixels left  pixels down */
-  cursor: url(data/eraser.png) 0 32, default;
+  cursor: url(../images/eraser.png) 0 32, default;
 }

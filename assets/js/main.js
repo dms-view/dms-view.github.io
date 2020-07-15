@@ -19,7 +19,7 @@ var clearbuttonchange;
 let protein;
 const greyColor = "#999999";
 
-var fontPath = "https://dms-view.github.io/data/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
+var fontPath = "/assets/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
 
 const downloadSVG = (elementId, filename) => {
