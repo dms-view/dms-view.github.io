@@ -18,8 +18,3 @@ If you aren't sure about pull requests:
  - How to create a pull request: https://help.github.com/en/articles/creating-a-pull-request
 
  - How to structure your pull requests (one conceptually distinct change per pull request): https://medium.com/@fagnerbrack/one-pull-request-one-concern-e84a27dfe9f1
-
-## Documentation
-
-The documentation for `dms-view` is maintained in a separate repo, [github.com/dms-view/docs](https://github.com/dms-view/docs).
-Any issues for the documentation can be raised at [github.com/dms-view/docs/issues](https://github.com/dms-view/docs/issues)
