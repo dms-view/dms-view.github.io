@@ -87,3 +87,19 @@ We welcome contributions to the `dms-view` code and documentation.
 
 Have you used `dms-view` for your own analyses and think these would make a great case study for our documentation?
 [Open a new issue on GitHub](https://github.com/dms-view/dms-view.github.io/issues/new) to let us know more.
+
+## Building the complete website locally
+
+Build the complete `dms-view` website locally with [Jekyll and Bundler](https://jekyllrb.com/docs/).
+
+```bash
+# Install dependencies for Jekyll.
+bundle install
+
+# Build the site.
+bundle exec jekyll serve
+```
+
+View the local website in your browser at [http://localhost:4000/](http://localhost:4000/).
+
+[See the documentation for more details on deploying or developing `dms-view` locally](https://dms-view.github.io/docs/deploy-or-develop/).
