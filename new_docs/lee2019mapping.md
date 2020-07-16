@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Lee et al., 2019
-permalink: /lee2019mapping/
 ---
 ## [Mapping person-to-person variation in viral mutations that escape polyclonal serum targeting influenza hemagglutinin](https://elifesciences.org/articles/49324)
 
@@ -9,7 +8,7 @@ permalink: /lee2019mapping/
 > A longstanding question is how influenza virus evolves to escape human immunity, which is polyclonal and can target many distinct epitopes. Here, we map how all amino-acid mutations to influenza’s major surface protein affect viral neutralization by polyclonal human sera. The serum of some individuals is so focused that it selects single mutations that reduce viral neutralization by over an order of magnitude. However, different viral mutations escape the sera of different individuals. This individual-to-individual variation in viral escape mutations is not present among ferrets that have been infected just once with a defined viral strain. Our results show how different single mutations help influenza virus escape the immunity of different members of the human population, a phenomenon that could shape viral evolution and disease susceptibility.
 
 ### Figure 3: Mutational antigenic profiling of four human serum samples.
-![Figure 3](images/lee2019mapping_fig3.jpg)
+![Figure 3](/assets/images/lee2019mapping_fig3.jpg)
 
 >Plot titles indicate the year the serum was collected and the age of the individual at that time. (A) Line plots show the total immune selection at each site, and logo plots show mutations at strongly selected sites. (B) Neutralization assays validate that mutations mapped to be under strong immune selection indeed have large antigenic effects. The dashed vertical lines show the serum concentrations used in the mutational antigenic profiling. We validated five amino-acid mutants against all four sera, choosing mutations for the following reasons: F193D is the most strongly selected mutation for the 21- and 65-year-old, L157D is the most selected for the 53-year-old, F159G is the most selected for the 64-year-old, K160T is modestly selected by all sera, and K189D is strongly selected by ferret sera (see below). The ‘syn’ mutant is a control with a synonymous mutation does not change the protein sequence and so should not affect antigenicity. (C) Immune selection mapped onto HA’s structure for each sera. The color scale is calibrated separately for each structure
 

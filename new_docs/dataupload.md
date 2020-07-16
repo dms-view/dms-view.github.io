@@ -1,7 +1,6 @@
 ---
 layout: post
 title: How to upload your own data
-permalink: /dataupload/
 ---
 
 <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> takes three input files.
@@ -72,25 +71,24 @@ Specifically, the **protein_site** column contains the correspondence between th
 If the protein structure has multiple homologous chains, you can specify which chains the site will be plotted on using the a *space*-separated list in the **protein_chain** column.
 See the [data file description](#data-file) section for more details.
 
-You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://raw.githubusercontent.com/dms-view/dms-view.github.io/master/4O5N_trimer.pdb).
+You can also [see the protein file used in the default `dms_view` view](https://raw.githubusercontent.com/dms-view/dms-view.github.io/master/data/IAV/4O5N_trimer.pdb).
 
 ## description file
 
 The description file is a [markdown file](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
 You can use the description file to explain your experiment, acknowledge contributors, or make analysis notes.
 
-You can see the protein file used in the default <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> view [HERE](https://github.com/dms-view/dms-view.github.io/blob/master/lee2019mapping.md).
+You can also [see the description file used in the default `dms_view` view](https://github.com/dms-view/dms-view.github.io/blob/master/data/IAV/lee2019mapping.md).
 
 # Hosting input files
 
 Before you can load any of the three files to <a href="https://dms-view.github.io" target="_blank">`dms_view`</a>, you must host the files somewhere else with a link to the raw data.
 This can be as easy as uploading them to [GitHub](https://github.com/) and linking to the **Raw** files.
 GitHub shows an HTML version by default so you will need to click on the **View raw** link
-![view raw](/images/view_raw.png)
+![view raw](/assets/images/view_raw.png)
 and the URL should start with `https://raw.githubusercontent.com/`.
 
-![raw url](/images/raw_url.png)
-
+![raw url](/assets/images/raw_url.png)
 
 You can still use <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> even if you data is a private repository or directory.
 The only caveat is that the <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> URL sharing will not work.

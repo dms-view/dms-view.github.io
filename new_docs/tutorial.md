@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Tutorial
-permalink: /tutorial/
 ---
 
 # Goal
@@ -113,7 +112,7 @@ Here we will walk through a simple analysis of Influenza Virus data using <a hre
 ### Experimental setup
 
 [Lee _et al_., 2019](https://elifesciences.org/articles/49324) assayed the ability of every single amino-acid change in an Influenza Virus protein on its ability to abrogate binding to antibodies in human sera.
-![mutational antigenic profiling schematic](/images/map_schematic.png)
+![mutational antigenic profiling schematic](/assets/images/map_schematic.png)
 We can compare sera from different people to see individual differences in Influenza Virus immunity.
 
 ### Set up Analysis with [`dms-view`](jbloomlab.github.io/dms-view)

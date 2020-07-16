@@ -6,7 +6,7 @@ layout: default
 
 The goal of `dms-view` is to facilitate easy exploration of deep mutational scanning experiments through interactive visualizations.
 
-![Quick walkthrough of dms-view](frontpage.gif)
+![Quick walkthrough of dms-view](/assets/images/frontpage.gif)
 
 ## Getting started
 

@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Deploy or develop dms-view
-permalink: /deploy-or-develop/
 ---
 
 `dms-view` is a single-page web application that can be run from any web server.

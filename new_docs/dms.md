@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Deep Mutational Scanning primer
-permalink: /dms/
 ---
 
 <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> was designed to facilitate the analysis of deep mutational scanning experiments.
@@ -11,7 +10,7 @@ Here, we will go into a brief introduction to deep mutational scanning to help c
 ## Deep mutational scanning experiments
 [Deep mutational scanning](https://www.nature.com/articles/nmeth.3027) is a high-throughput functional assay that measures the effect of every genetic change at every site in a protein.
 Below is an outline of a deep mutational scanning experiment looking at how antibodies bind to viruses.
-![mutational antigenic profiling](/images/map_schematic.png)
+![mutational antigenic profiling](/assets/images/map_schematic.png)
 First, you introduce genetic changes at each site in a protein/gene.
 For example, mutagenizing the gene to introduce every possible amino-acid change away from wildtype (19 mutations per site).
 Next, you grow up a library of protein variants.
