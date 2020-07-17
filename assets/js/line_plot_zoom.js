@@ -154,6 +154,10 @@ function genomeLineChart() {
     var colors = {},
         min_y_value = d3.min(data, d => +d.metric),
         range = d3.max(data, d => +d.metric) - min_y_value;
+    // if only 1 site, set range to 1
+    if(range == 0){
+      range = 1;
+    }
     data.forEach(function(d) {
       if(d.metric == undefined){
         colors[d.site] = greyColor
@@ -270,11 +274,16 @@ function genomeLineChart() {
         .classed("selected", true);
 
     // update the PROTEIN structure
-    circleData.protein_chain.forEach(function(chain){
-      selectSiteOnProtein(":" + chain + " and " +
-        circleData.protein_site,
-        color_key[circleData.site]);
-    });
+    console.log(missingData.includes(circleData.protein_chain))
+    if(!missingData.includes(circleData.protein_site)){
+      circleData.protein_chain.forEach(function(chain){
+        if(!missingData.includes(chain)){
+          selectSiteOnProtein(":" + chain + " and " +
+            circleData.protein_site,
+            color_key[circleData.site]);
+        }
+      });
+    }
   };
 
   var deselectSite = function(circlePoint){
