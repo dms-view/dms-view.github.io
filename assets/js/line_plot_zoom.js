@@ -274,7 +274,8 @@ function genomeLineChart() {
         .classed("selected", true);
 
     // update the PROTEIN structure
-    if(!missingData.includes(circleData.protein_site)){
+    if(!missingData.includes(circleData.protein_site) &&
+       !missingData.includes(circleData.protein_chain.protein_site)){
       circleData.protein_chain.forEach(function(chain){
         selectSiteOnProtein(":" + chain + " and " +
           circleData.protein_site,
