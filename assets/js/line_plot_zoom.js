@@ -274,12 +274,14 @@ function genomeLineChart() {
         .classed("selected", true);
 
     // update the PROTEIN structure
-    if(!missingData.includes(circleData.protein_site) &&
-       !missingData.includes(circleData.protein_chain)){
+    console.log(missingData.includes(circleData.protein_chain))
+    if(!missingData.includes(circleData.protein_site)){
       circleData.protein_chain.forEach(function(chain){
-        selectSiteOnProtein(":" + chain + " and " +
-          circleData.protein_site,
-          color_key[circleData.site]);
+        if(!missingData.includes(chain)){
+          selectSiteOnProtein(":" + chain + " and " +
+            circleData.protein_site,
+            color_key[circleData.site]);
+        }
       });
     }
   };
