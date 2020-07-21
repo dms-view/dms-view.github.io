@@ -510,6 +510,13 @@ function genomeLineChart() {
         })
       });
       chart.protein_chain_colorscheme = createProteinColorScheme([...new Set(protein_chains)]);
+      if(protein){
+        protein.addRepresentation(polymerSelect.value, {
+          sele: "polymer",
+          name: "polymer",
+          color: chart.protein_chain_colorscheme
+      })
+    }
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
       data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
