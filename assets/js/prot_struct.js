@@ -55,22 +55,26 @@ function deselectSiteOnProtein(siteString) {
 
 var polymerSelect = document.querySelector('select[name="polymerSelect"]');
 
+function colorWholeProtein(_protein, representation){
+  if(chart){
+    _protein.addRepresentation(representation, {
+        sele: "polymer",
+        name: "polymer",
+        color: chart.protein_chain_colorscheme
+      })
+  }else{
+    _protein.addRepresentation(representation, {
+        sele: "polymer",
+        name: "polymer",
+        color: greyColor
+      })
+  }
+}
+
 polymerSelect.addEventListener('change', function(e) {
   stage.getRepresentationsByName("polymer").dispose()
   stage.eachComponent(function(o) {
-      if(chart){
-        o.addRepresentation(e.target.value, {
-            sele: "polymer",
-            name: "polymer",
-            color: chart.protein_chain_colorscheme
-          })
-      }else{
-        o.addRepresentation(e.target.value, {
-            sele: "polymer",
-            name: "polymer",
-            color: greyColor
-          })
-      }
+    colorWholeProtein(o, e.target.value)
       // on change, reselect the points so they are "on top"
     d3.selectAll(".selected").data().forEach(function(element) {
       element.protein_chain.forEach(function(chain){

@@ -286,17 +286,7 @@ function renderPdb(data, dataUrl) {
   protein = data;
   protein.setRotation([2, 0, 0])
   protein.autoView()
-  if(chart){
-    protein.addRepresentation(polymerSelect.value, {
-      sele: "polymer",
-      name: "polymer",
-      color: chart.protein_chain_colorscheme
-  })}else{
-    protein.addRepresentation(polymerSelect.value, {
-      sele: "polymer",
-      name: "polymer",
-      color: greyColor
-  })}
+  colorWholeProtein(protein, polymerSelect.value)
 
   // If data have been loaded into the site plot, select any sites from that
   // panel in the protein view, too.
