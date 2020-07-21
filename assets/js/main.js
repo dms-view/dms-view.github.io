@@ -18,6 +18,8 @@ var clearbuttonchange;
 
 let protein;
 const greyColor = "#999999";
+const targetChainsColor = greyColor;
+const alternativeChainsColor = 'black';
 
 var fontPath = "/assets/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;

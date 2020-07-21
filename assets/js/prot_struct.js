@@ -10,8 +10,8 @@ stage.setParameters({
 function createProteinColorScheme(targetChains){
   targetChains = ":" + targetChains.join(" or :");
   return NGL.ColormakerRegistry.addSelectionScheme([
-    ["red", targetChains],
-    [greyColor, "*"]
+    [alternativeChainsColor, targetChains],
+    [targetChainsColor, "*"]
   ]);
 }
 
