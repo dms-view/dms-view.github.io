@@ -6,6 +6,15 @@ stage.setParameters({
   backgroundColor: "white"
 });
 
+// color scheme
+function createProteinColorScheme(targetChains){
+  targetChains = ":" + targetChains.join(" or :");
+  return NGL.ColormakerRegistry.addSelectionScheme([
+    ["red", targetChains],
+    [greyColor, "*"]
+  ]);
+}
+
 // Handle window resizing
 window.addEventListener("resize", function(event) {
   stage.handleResize();
@@ -30,6 +39,15 @@ function selectSiteOnProtein(siteString, color) {
 }
 }
 
+function selectChainOnProtein(chainString, representation){
+  if(protein){
+    protein.addRepresentation(representation, {
+      name: "target polymer",
+      color: '#000000'
+    }).setSelection(chainString)
+  }
+}
+
 // remove color from a site
 function deselectSiteOnProtein(siteString) {
   stage.getRepresentationsByName(siteString).dispose()
@@ -40,11 +58,19 @@ var polymerSelect = document.querySelector('select[name="polymerSelect"]');
 polymerSelect.addEventListener('change', function(e) {
   stage.getRepresentationsByName("polymer").dispose()
   stage.eachComponent(function(o) {
-    o.addRepresentation(e.target.value, {
-        sele: "polymer",
-        name: "polymer",
-        color: greyColor
-      })
+      if(chart){
+        o.addRepresentation(e.target.value, {
+            sele: "polymer",
+            name: "polymer",
+            color: chart.protein_chain_colorscheme
+          })
+      }else{
+        o.addRepresentation(e.target.value, {
+            sele: "polymer",
+            name: "polymer",
+            color: greyColor
+          })
+      }
       // on change, reselect the points so they are "on top"
     d3.selectAll(".selected").data().forEach(function(element) {
       element.protein_chain.forEach(function(chain){
