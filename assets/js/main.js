@@ -288,7 +288,7 @@ function renderPdb(data, dataUrl) {
   protein = data;
   protein.setRotation([2, 0, 0])
   protein.autoView()
-  colorWholeProtein(protein, polymerSelect.value)
+  colorWholeProtein(protein, polymerSelect.value, false)
 
   // If data have been loaded into the site plot, select any sites from that
   // panel in the protein view, too.

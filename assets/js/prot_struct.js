@@ -55,8 +55,8 @@ function deselectSiteOnProtein(siteString) {
 
 var polymerSelect = document.querySelector('select[name="polymerSelect"]');
 
-function colorWholeProtein(_protein, representation){
-  if(chart){
+function colorWholeProtein(_protein, representation, colorChains){
+  if(colorChains){
     _protein.addRepresentation(representation, {
         sele: "polymer",
         name: "polymer",
