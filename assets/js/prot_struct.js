@@ -10,8 +10,8 @@ stage.setParameters({
 function createProteinColorScheme(targetChains){
   targetChains = ":" + targetChains.join(" or :");
   return NGL.ColormakerRegistry.addSelectionScheme([
-    [targetChainsColor, targetChains],
-    [alternativeChainsColor, "*"]
+    [secondColor.value, targetChains],
+    [greyColor, "*"]
   ]);
 }
 
@@ -54,13 +54,16 @@ function deselectSiteOnProtein(siteString) {
 }
 
 var polymerSelect = document.querySelector('select[name="polymerSelect"]');
+var secondColor = document.querySelector('select[name="secondColor"]');
+
 
 function colorWholeProtein(_protein, representation, colorChains){
   if(colorChains){
+    var colorScheme = createProteinColorScheme(chart.protein_chains)
     _protein.addRepresentation(representation, {
         sele: "polymer",
         name: "polymer",
-        color: chart.protein_chain_colorscheme
+        color: colorScheme
       })
   }else{
     _protein.addRepresentation(representation, {
@@ -87,6 +90,12 @@ polymerSelect.addEventListener('change', function(e) {
 
     });
   })
+});
+
+secondColor.addEventListener('change', function(e) {
+  if(chart && protein){
+        colorWholeProtein(protein, polymerSelect.value, true)
+    }
 });
 
 // tooltip setup

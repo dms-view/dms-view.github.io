@@ -89,8 +89,12 @@
             <option value="surface">surface</option>
           </select>
           <button id="protein_plot_download" type="button" class="btn btn-light float-right"><img src="/assets/images/download.svg" /> Download PNG</button>
-          <input type="checkbox" id="color" name="colorCheckbox" value="colorChains">
-          <label for="color">color chains</label><br>
+          <select id="second-color" name="secondColor" class="ml-0">
+            <option value="#999999">grey</option>
+            <option value="#0303fc">blue</option>
+            <option value="#555555">black</option>
+            <option value="#fc0303">red</option>
+          </select>
         </div>
         <div id="protein" style="width: 400px; height: 550px;"></div>
       </div>

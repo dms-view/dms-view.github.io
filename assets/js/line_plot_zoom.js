@@ -509,7 +509,7 @@ function genomeLineChart() {
           }
         })
       });
-      chart.protein_chain_colorscheme = createProteinColorScheme([...new Set(protein_chains)]);
+      chart.protein_chains = [...new Set(protein_chains)];
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
       data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
@@ -574,14 +574,6 @@ function genomeLineChart() {
           focus.classed("brush_select", true).classed("brush_deselect", false)
         } else if ( this.value === 'deselect' ) {
            focus.classed("brush_select", false).classed("brush_deselect", true)
-        }
-      });
-      d3.selectAll("input[name='colorCheckbox']").on("change", function(){
-        if(this.checked && chart && protein){
-              colorWholeProtein(protein, polymerSelect.value, true)
-          }
-        else if(!(this.checked) && protein){
-          colorWholeProtein(protein, polymerSelect.value, false)
         }
       });
 
