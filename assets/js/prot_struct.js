@@ -55,6 +55,7 @@ function deselectSiteOnProtein(siteString) {
 
 var polymerSelect = document.querySelector('select[name="polymerSelect"]');
 var secondColor = document.querySelector('select[name="secondColor"]');
+var colorToggle = document.querySelector('input[name="colorCheckbox"]');
 
 
 function colorWholeProtein(_protein, representation, colorChains){
@@ -96,6 +97,14 @@ secondColor.addEventListener('change', function(e) {
   if(chart && protein){
         colorWholeProtein(protein, polymerSelect.value, true)
     }
+});
+
+colorToggle.addEventListener('change', function(e) {
+  if(secondColor.style.display == 'none'){
+    secondColor.style.display = 'block'
+  }else{
+    secondColor.style.display = 'none'
+  }
 });
 
 // tooltip setup
