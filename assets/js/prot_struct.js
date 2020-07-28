@@ -10,8 +10,8 @@ stage.setParameters({
 function createProteinColorScheme(targetChains){
   targetChains = ":" + targetChains.join(" or :");
   return NGL.ColormakerRegistry.addSelectionScheme([
-    [secondColor.value, targetChains],
-    [greyColor, "*"]
+    [dataColor.value, targetChains],
+    [otherColor.value, "*"]
   ]);
 }
 
@@ -54,8 +54,9 @@ function deselectSiteOnProtein(siteString) {
 }
 
 var polymerSelect = document.querySelector('select[name="polymerSelect"]');
-var secondColor = document.querySelector('select[name="secondColor"]');
 var colorToggle = document.querySelector('input[name="colorCheckbox"]');
+var dataColor = document.querySelector('input[name="data-color"]');
+var otherColor = document.querySelector('input[name="other-color"]');
 
 
 function colorWholeProtein(_protein, representation, colorChains){
@@ -93,17 +94,30 @@ polymerSelect.addEventListener('change', function(e) {
   })
 });
 
-secondColor.addEventListener('change', function(e) {
+dataColor.addEventListener('change', function(e) {
+  if(chart && protein){
+        colorWholeProtein(protein, polymerSelect.value, true)
+    }
+});
+
+otherColor.addEventListener('change', function(e) {
+  console.log(e.target.value)
   if(chart && protein){
         colorWholeProtein(protein, polymerSelect.value, true)
     }
 });
 
 colorToggle.addEventListener('change', function(e) {
-  if(secondColor.style.display == 'none'){
-    secondColor.style.display = 'block'
+  if(dataColor.style.display == 'none'){
+    dataColor.style.display = 'block'
   }else{
-    secondColor.style.display = 'none'
+    dataColor.style.display = 'none'
+  }
+
+  if(otherColor.style.display == 'none'){
+    otherColor.style.display = 'block'
+  }else{
+    otherColor.style.display = 'none'
   }
 });
 
