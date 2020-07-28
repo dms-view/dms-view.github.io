@@ -9,9 +9,28 @@ stage.setParameters({
 // color scheme
 function createProteinColorScheme(targetChains){
   targetChains = ":" + targetChains.join(" or :");
-  return NGL.ColormakerRegistry.addSelectionScheme([
-    [dataColor.value, targetChains],
-    [otherColor.value, "*"]
+  var targetColor, altColor;
+  if (dataColor.value.length == 0){
+    targetColor = greyColor
+  }
+  else if (_.isEmpty(new THREE.Color(dataColor.value.toLowerCase()))){
+    targetColor = greyColor;
+    document.getElementById("proteinColorAlertForm").hidden = false
+  }else{
+    targetColor = dataColor.value.toLowerCase()
+    document.getElementById("proteinColorAlertForm").hidden = true
+  }
+  if (otherColor.value.length == 0){
+    altColor = greyColor
+  }
+  else if (_.isEmpty(new THREE.Color(otherColor.value.toLowerCase()))){
+    altColor = greyColor;
+  }else{
+    altColor = otherColor.value.toLowerCase()
+  }
+  return scheme = NGL.ColormakerRegistry.addSelectionScheme([
+    [targetColor, targetChains],
+    [altColor, "*"]
   ]);
 }
 

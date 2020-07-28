@@ -13,6 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.3/dist/opentype.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@0.8.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r118/three.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="/assets/css/styles.css" />
 
@@ -78,6 +79,12 @@
 
           The response from the server was: <code></code>
         </div>
+        <div class="alert alert-danger" role="alert" id="proteinColorAlertForm" hidden>
+          <p>
+            <strong>Color error!</strong>
+            Please check that you have entered a <a href="https://www.w3schools.com/cssref/css_colors.asp" target="_blank"> valid color</a>.
+          </p>
+        </div>
         <div class="row">
           <p><input id="pdb-url" text="text" class="form-control" placeholder="PDB URL" /></p>
         </div>
@@ -91,8 +98,8 @@
           <button id="protein_plot_download" type="button" class="btn btn-light float-right"><img src="/assets/images/download.svg" /> Download PNG</button>
           <input type="checkbox" id="colorCheckbox" name="colorCheckbox" value="colorChains">
           <label for="color">color options</label><br>
-          <p><input id="data-color" name='data-color' text="text" class="form-control" placeholder="color for data chains" style="display: none" value="grey"/></p>
-          <p><input id="other-color" name='other-color' text="text" class="form-control" placeholder="color for other chains" style="display: none" value="grey"/></p>
+          <p><input id="data-color" name='data-color' text="text" class="form-control" placeholder="color for data chains" style="display: none"/></p>
+          <p><input id="other-color" name='other-color' text="text" class="form-control" placeholder="color for other chains" style="display: none"/></p>
         </div>
         <div id="protein" style="width: 400px; height: 550px;"></div>
       </div>
