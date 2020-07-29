@@ -10,23 +10,23 @@ stage.setParameters({
 function createProteinColorScheme(targetChains){
   targetChains = ":" + targetChains.join(" or :");
   var targetColor, altColor;
-  if (dataColor.value.length == 0){
+  if (proteinDataColor.value.length == 0){
     targetColor = greyColor
   }
-  else if (_.isEmpty(new THREE.Color(dataColor.value.toLowerCase()))){
+  else if (_.isEmpty(new THREE.Color(proteinDataColor.value.toLowerCase()))){
     targetColor = greyColor;
     document.getElementById("proteinColorAlertForm").hidden = false
   }else{
-    targetColor = dataColor.value.toLowerCase()
+    targetColor = proteinDataColor.value.toLowerCase()
     document.getElementById("proteinColorAlertForm").hidden = true
   }
-  if (otherColor.value.length == 0){
+  if (proteinOtherColor.value.length == 0){
     altColor = greyColor
   }
-  else if (_.isEmpty(new THREE.Color(otherColor.value.toLowerCase()))){
+  else if (_.isEmpty(new THREE.Color(proteinOtherColor.value.toLowerCase()))){
     altColor = greyColor;
   }else{
-    altColor = otherColor.value.toLowerCase()
+    altColor = proteinOtherColor.value.toLowerCase()
   }
   return scheme = NGL.ColormakerRegistry.addSelectionScheme([
     [targetColor, targetChains],
@@ -74,8 +74,8 @@ function deselectSiteOnProtein(siteString) {
 
 var polymerSelect = document.querySelector('select[name="polymerSelect"]');
 var colorToggle = document.querySelector('input[name="colorCheckbox"]');
-var dataColor = document.querySelector('input[name="data-color"]');
-var otherColor = document.querySelector('input[name="other-color"]');
+var proteinDataColor = document.querySelector('input[name="protein-data-color"]');
+var proteinOtherColor = document.querySelector('input[name="protein-other-color"]');
 
 
 function colorWholeProtein(_protein, representation, colorChains){
@@ -113,13 +113,13 @@ polymerSelect.addEventListener('change', function(e) {
   })
 });
 
-dataColor.addEventListener('change', function(e) {
+proteinDataColor.addEventListener('change', function(e) {
   if(chart && protein){
         colorWholeProtein(protein, polymerSelect.value, true)
     }
 });
 
-otherColor.addEventListener('change', function(e) {
+proteinOtherColor.addEventListener('change', function(e) {
   console.log(e.target.value)
   if(chart && protein){
         colorWholeProtein(protein, polymerSelect.value, true)
@@ -127,16 +127,16 @@ otherColor.addEventListener('change', function(e) {
 });
 
 colorToggle.addEventListener('change', function(e) {
-  if(dataColor.style.display == 'none'){
-    dataColor.style.display = 'block'
+  if(proteinDataColor.style.display == 'none'){
+    proteinDataColor.style.display = 'block'
   }else{
-    dataColor.style.display = 'none'
+    proteinDataColor.style.display = 'none'
   }
 
-  if(otherColor.style.display == 'none'){
-    otherColor.style.display = 'block'
+  if(proteinOtherColor.style.display == 'none'){
+    proteinOtherColor.style.display = 'block'
   }else{
-    otherColor.style.display = 'none'
+    proteinOtherColor.style.display = 'none'
   }
 });
 
