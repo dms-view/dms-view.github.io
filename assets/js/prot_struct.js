@@ -9,28 +9,34 @@ stage.setParameters({
 // color scheme
 function createProteinColorScheme(targetChains){
   targetChains = ":" + targetChains.join(" or :");
-  var targetColor, altColor;
+  var targetColor, altColor, targetError=false, otherError=false;
   if (proteinDataColor.value.length == 0){
     targetColor = greyColor
   }
   else if (_.isEmpty(new THREE.Color(proteinDataColor.value.toLowerCase()))){
     targetColor = greyColor;
-    document.getElementById("proteinColorAlertForm").hidden = false
+    targetError = true;
   }else{
     targetColor = proteinDataColor.value.toLowerCase()
-    document.getElementById("proteinColorAlertForm").hidden = true
   }
   if (proteinOtherColor.value.length == 0){
     altColor = greyColor
   }
   else if (_.isEmpty(new THREE.Color(proteinOtherColor.value.toLowerCase()))){
     altColor = greyColor;
+    otherError = true;
   }else{
     altColor = proteinOtherColor.value.toLowerCase()
   }
 
   // Update the URL to reflect the selected colors.
   updateUrlFromFieldIds([proteinDataColor.id, proteinOtherColor.id]);
+  if(targetError | otherError){
+    document.getElementById("proteinColorAlertForm").hidden = false
+  }else{
+    document.getElementById("proteinColorAlertForm").hidden = true
+  }
+
 
   return scheme = NGL.ColormakerRegistry.addSelectionScheme([
     [targetColor, targetChains],
@@ -124,7 +130,6 @@ proteinDataColor.addEventListener('change', function(e) {
 });
 
 proteinOtherColor.addEventListener('change', function(e) {
-  console.log(e.target.value)
   if(chart && protein){
         colorWholeProtein(protein, polymerSelect.value, true)
     }
