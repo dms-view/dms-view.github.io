@@ -28,6 +28,10 @@ function createProteinColorScheme(targetChains){
   }else{
     altColor = proteinOtherColor.value.toLowerCase()
   }
+
+  // Update the URL to reflect the selected colors.
+  updateUrlFromFieldIds([proteinDataColor.id, proteinOtherColor.id]);
+
   return scheme = NGL.ColormakerRegistry.addSelectionScheme([
     [targetColor, targetChains],
     [altColor, "*"]
