@@ -86,6 +86,14 @@ For more information on the input data format, please see the [data upload](/doc
 
 You can toggle between different representations of the protein structure (cartoon, surface, etc) using the protein panel dropdown menu.
 
+## Custom colors for the protein structure
+
+You can highlight the protein chains specified in the data file by coloring them differently than the other chains in the protein structure.
+Clicking the **color options** checkbox in the protein panel reveals two data fields.
+Enter a <a href="https://www.w3schools.com/cssref/css_colors.asp target="_blank">valid CSS color</a> into the top or bottom field to color the "data chains" or "background chains", respectively.
+To reset and return to the default color scheme, clear both data fields.
+Like the other user selections, the protein colors are tracked in the URL for easy sharing.
+
 ## Sharing a state
 
 <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> tracks the state (the combination of data, dropdown menu selections and selected sites) in the URL.
