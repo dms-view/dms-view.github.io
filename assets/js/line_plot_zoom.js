@@ -509,7 +509,8 @@ function genomeLineChart() {
           }
         })
       });
-      chart.protein_chains = [...new Set(protein_chains)];
+
+      chart.protein_chains = [...new Set(protein_chains)].filter((item) => item != "");
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
       data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)
