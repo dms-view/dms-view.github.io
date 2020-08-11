@@ -13,45 +13,30 @@ Please raise issues with the tool at [`github.com/dms-view/dms-view.github.io/is
 
 ## Organization
 
-There are two categories of files in this repo: code to run the website and default data.
+The code and data for the docs, the tool, and the paper are found in the following directories:
 
-### (1) code to run the website
+### [`./assets/`](./assets/)
 
-#### website skeleton and styles
-- [`index.html`](index.html): The HTML skeleton of the tool.
-- [`styles.css`](styles.css): CSS styles for the website.
+This directory contains the code for the [`dms-view.github.io`](https://dms-view.github.io) tool.
+- [`./assets/css/`](./assets/css) contains the CSS stylesheet.
+- [`./assets/fonts/`](./assets/fonts) contains the font file for the logoplots
+- [`./assets/images/`](./assets/images) contains static images used in the docs and the tool.
+- [`./assets/js/`](./assets/js) contains the `JavaScript` code to run the tool.
 
-#### JavaScript / D3 for the plots
-- [`main.js`](main.js): Control script for data processing and JavaScript code for the three panels.
-- [`line_plot_zoom.js`](line_plot_zoom.js): JavaScript and D3 code for the site dot plot panel.
-- [`logoplot.js`](logoplot.js): JavaScript and D3 code for the mutation logoplot panel.
-- [`prot_struct.js`](prot_struct.js): JavaScript and [NGL](http://nglviewer.org/ngl/api/manual/) code for the protein structure panel.
+### [`./data/`](./data/)
 
-#### external packages and files
-- [`DejaVuSansMonoBold_SeqLogo.ttf`](DejaVuSansMonoBold_SeqLogo.ttf): font for the mutation logoplot panel. More info on the font [HERE](https://github.com/jbloomlab/dmslogo/tree/master/dmslogo/ttf_fonts).
-- [`node_modules/`](node_modules/): External JavaScript modules.
-- [`ngl.js`](ngl.js): [NGL](http://nglviewer.org/ngl/api/manual/) module code.
+This directory contains the default data for the tool from [Lee _et al.,_ 2019](https://elifesciences.org/articles/49324).
 
+### [`./docs/`](./docs/)
 
-### (2) default data
+This directory contains the code for the [`dms-view` docs](https://dms-view.github.io/docs).
 
-If [`dms-view.github.io`](https://dms-view.github.io) is loaded without datafiles specified in the URL, influenza serum mapping data from [Lee _et al.,_ 2019](https://elifesciences.org/articles/49324) is loaded by default.
-For more information on how to create the data files, see [`dms-view.github.io/docs/dataupload`](https://dms-view.github.io/docs/dataupload).
+### [`./_layouts/`](./_layouts/)
 
-- [`flu_dms-view.csv`](flu_dms-view.csv): [data file](https://dms-view.github.io/docs/dataupload/#data-file)
-- [`4O5N_trimer.pdb`](4O5N_trimer.pdb): [protein structure file](https://dms-view.github.io/docs/dataupload/#protein-structure)
-- [`lee2019mapping.md`](lee2019mapping.md): [metadata file](https://dms-view.github.io/docs/dataupload/#metatdata-file)
+This directory contains the templates for the docs.
 
-## External dependencies
-
-- [d3 v5](https://d3js.org/d3.v5.min.js)
-- [d3 array v2](https://d3js.org/d3-array.v2.min.js)
-- [underscore v1.9.1](https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js)
-- [opentype v1.1.0](https://cdn.jsdelivr.net/npm/opentype.js@1.1.0/dist/opentype.min.js)
-- [min v0.8.2](https://cdn.jsdelivr.net/npm/marked@0.8.2/marked.min.js)
-- [bootstrap v4.3.1](https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css)
-
-The other dependencies are hosted within the repo.
+### [`./paper/`](./paper/)
+This directory contains the code for the [`dms-view` paper](https://www.biorxiv.org/content/10.1101/2020.05.14.096842v1).
 
 ## Testing
 
