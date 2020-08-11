@@ -98,7 +98,7 @@ Like the other user selections, the protein colors are tracked in the URL for ea
 
 <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> tracks the state (the combination of data, dropdown menu selections and selected sites) in the URL.
 If after exploring a dataset you find a view that you want to save or share with someone else, you simply need to copy the URL.
-As an example, here are two different views of the same dataset with slightly different selections: <a href="https://dms-view.github.io/?markdown-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Flee2019mapping.md&data-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Differential+Selection&selected_sites=144%2C157%2C159%2C160%2C189%2C193%2C222%2C224&pdb-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2F4O5N_trimer.pdb" target="_blank">view #1</a> and <a href="https://dms-view.github.io/?markdown-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Flee2019mapping.md&data-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2Fflu_dms-view.csv&condition=2009-age-53&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Differential+Selection&selected_sites=144%2C157%2C159%2C160%2C189%2C193%2C222%2C224&pdb-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2F4O5N_trimer.pdb" target="_blank">view #2</a>
+As an example, here are two different views of the same dataset with slightly different selections: <a href="https://dms-view.github.io/?markdown-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2Flee2019mapping.md&data-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2Fflu_dms-view.csv&condition=2010-age-21&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Differential+Selection&selected_sites=144%2C157%2C159%2C160%2C189%2C193%2C222%2C224&pdb-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2F4O5N_trimer.pdb" target="_blank">view #1</a> and <a href="https://dms-view.github.io/?markdown-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2Flee2019mapping.md&data-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2Fflu_dms-view.csv&condition=2009-age-53&site_metric=site_Positive+Differential+Selection&mutation_metric=mut_Differential+Selection&selected_sites=144%2C157%2C159%2C160%2C189%2C193%2C222%2C224&pdb-url=https%3A%2F%2Fraw.githubusercontent.com%2Fdms-view%2Fdms-view.github.io%2Fmaster%2Fdata%2FIAV%2F4O5N_trimer.pdb" target="_blank">view #2</a>
 
 ## Saving images
 
@@ -123,14 +123,14 @@ Here we will walk through a simple analysis of Influenza Virus data using <a hre
 ![mutational antigenic profiling schematic](/assets/images/map_schematic.png)
 We can compare sera from different people to see individual differences in Influenza Virus immunity.
 
-### Set up Analysis with [`dms-view`](jbloomlab.github.io/dms-view)
+### Set up Analysis with [`dms-view`](https://dms-view.github.io/)
 
 As mentioned above, <a href="https://dms-view.github.io" target="_blank">`dms_view`</a> takes up to three files: the data file with the deep mutational scanning measurements, the protein structure file, and the description file.
-We followed the [data upload](/docs/dataupload) guidelines and created a [data file](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/flu_dms-view.csv), a [description file](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/lee2019mapping.md), and retrieved a [protein structure](https://github.com/jbloomlab/dms-view/blob/master/docs/_data/IAV/4O5N_trimer.pdb) for this experiment.
+We followed the [data upload](/docs/dataupload) guidelines and created a [data file](https://github.com/dms-view/dms-view.github.io/blob/master/data/IAV/flu_dms-view.csv), a [description file](https://github.com/dms-view/dms-view.github.io/blob/master/data/IAV/lee2019mapping.md), and retrieved a [protein structure](https://github.com/dms-view/dms-view.github.io/blob/master/data/IAV/4O5N_trimer.pdb) for this experiment.
 
 The conditions in this experiment are the sera from different individuals.
 
-### Analysis with [`dms-view`](jbloomlab.github.io/dms-view)
+### Analysis with [`dms-view`](https://dms-view.github.io/)
 
 Here are three questions we might want to ask of this dataset.
 
