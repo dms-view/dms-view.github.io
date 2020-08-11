@@ -454,6 +454,7 @@ function genomeLineChart() {
 
       var site_metrics = []
       var mut_metrics = []
+      var protein_chains = []
       Object.keys(alldata[0]).forEach(function(col){
         if (col.startsWith("site_")){
           site_metrics.push(col)
@@ -490,6 +491,9 @@ function genomeLineChart() {
               "condition": row["condition"],
               "metric": metric_value,
               "metric_name": colname});
+              row["protein_chain"].split(" ").forEach(function(d){
+                protein_chains.push(d)
+              })
           }
           else if (colname.startsWith('mut_')) {
             mut_long_data.push({
@@ -505,6 +509,8 @@ function genomeLineChart() {
           }
         })
       });
+
+      chart.protein_chains = [...new Set(protein_chains)].filter((item) => item != "");
       // Group data by condition and site and only takes the first of the sites,
       // to get site-level data.
       data = d3.rollup(long_data, v => v[0], d => d.condition, d => d.metric_name, d => d.site)

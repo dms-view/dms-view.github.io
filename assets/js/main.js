@@ -11,13 +11,15 @@ let csvDataUrl;
 let conditiondropdown;
 let sitedropdown;
 let mutdropdown;
-const dropdownsToTrack = ["condition", "site_metric", "mutation_metric", "selected_sites"];
+const dropdownsToTrack = ["condition", "site_metric", "mutation_metric", "selected_sites", "protein-data-color", "protein-other-color"];
 
 var dropdownChange;
 var clearbuttonchange;
 
 let protein;
 const greyColor = "#999999";
+const targetChainsColor = greyColor;
+const alternativeChainsColor = '#555555';
 
 var fontPath = "/assets/fonts/DejaVuSansMonoBold_SeqLogo.ttf";
 var fontObject;
@@ -286,16 +288,19 @@ function renderPdb(data, dataUrl) {
   protein = data;
   protein.setRotation([2, 0, 0])
   protein.autoView()
-  protein.addRepresentation(polymerSelect.value, {
-    sele: "polymer",
-    name: "polymer",
-    color: greyColor
-  });
 
   // If data have been loaded into the site plot, select any sites from that
   // panel in the protein view, too.
-  if (chart !== undefined) {
+  if (chart.data !== undefined) {
     chart.updateSites(d3.selectAll(".selected").nodes().map(d => d3.select(d)));
+
+    // If the CSV data are already loaded, we can try to color chains.
+    colorWholeProtein(protein, polymerSelect.value, true);
+  }
+  else {
+    // If we haven't loaded any CSV data yet, we don't know which chains will be
+    // colored, so we use the default.
+    colorWholeProtein(protein, polymerSelect.value, false);
   }
 
   return protein;
