@@ -90,7 +90,7 @@ You can toggle between different representations of the protein structure (carto
 
 You can highlight the protein chains specified in the data file by coloring them differently than the other chains in the protein structure.
 Clicking the **color options** checkbox in the protein panel reveals two data fields.
-Enter a <a href="https://www.w3schools.com/cssref/css_colors.asp target="_blank">valid CSS color</a> into the top or bottom field to color the "data chains" or "background chains", respectively.
+Enter a <a href="https://www.w3schools.com/cssref/css_colors.asp" target="_blank">valid CSS color</a> into the top or bottom field to color the "data chains" or "background chains", respectively.
 To reset and return to the default color scheme, clear both data fields.
 Like the other user selections, the protein colors are tracked in the URL for easy sharing.
 
