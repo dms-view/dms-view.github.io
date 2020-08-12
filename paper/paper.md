@@ -52,7 +52,7 @@ Over the past five years, this technique has been used to study dozens of differ
 For example, DMS has been used for protein engineering [@wrenbeck2017deep], understanding the human immune response to viruses [@lee2019mapping], and interpreting human variation in a clinical setting [@starita2017variant; @gelman2019recommendations].
 Accompanying this proliferation of DMS studies has been the development of software tools [@bloom2015software; @rubin2017statistical] and databases [@esposito2019mavedb] for data analysis and sharing.
 However, for many purposes it is important to integrate and visualize the DMS data in the context of other information, such as the 3-D protein structure or natural sequence-variation data.
-Currently, this visualization requires the use of multiple different tools including custom scripts, static visualization tools like MaveVis [@weile], or protein structure software such as PyMol [@PyMOL].
+Currently, this visualization requires the use of multiple different tools including custom scripts, static visualization tools like MaveVis [@esposito2019mavedb; @weile], or protein structure software such as PyMol [@PyMOL].
 No existing tools provide linked views of the protein structure and DMS data in a single interface to faciliate dynamic data exploration and sharing.
 
 Here we describe *dms-view* (https://dms-view.github.io/), a flexible, web-based, interactive visualization tool for DMS data.
