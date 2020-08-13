@@ -53,7 +53,7 @@ For example, DMS has been used for protein engineering [@wrenbeck2017deep], unde
 Accompanying this proliferation of DMS studies has been the development of software tools [@bloom2015software; @rubin2017statistical] and databases [@esposito2019mavedb] for data analysis and sharing.
 However, for many purposes it is important to integrate and visualize the DMS data in the context of other information, such as the 3-D protein structure or natural sequence-variation data.
 Currently, this visualization requires the use of multiple different tools including custom scripts, static visualization tools like MaveVis [@esposito2019mavedb; @weile], or protein structure software such as PyMol [@PyMOL].
-No existing tools provide linked views of the protein structure and DMS data in a single interface to faciliate dynamic data exploration and sharing.
+No existing tools provide linked views of the protein structure and DMS data in a single interface to facilitate dynamic data exploration and sharing.
 
 Here we describe *dms-view* (https://dms-view.github.io/), a flexible, web-based, interactive visualization tool for DMS data.
 *dms-view* is written in JavaScript and [D3](https://d3js.org), and links site-level and mutation-level DMS data to a 3-D protein structure.
@@ -67,7 +67,7 @@ The data section displays the user-specified data in three panels: the site-plot
 When sites are selected in the site-plot panel, the individual mutation values are shown in the mutation-plot panel and highlighted on the protein structure.
 The user can toggle between different conditions, site- and mutation-level metrics, all of which are defined in the user-generated input file.
 The description section is at the bottom of the page, and allows the user to add arbitrary notes that explain the experimental setup, acknowledge data sources, or provide other relevant information.
-Note: dms-view is designed to visualize the effects of *single* mutations not combinations of mutations.
+Note that dms-view is designed to visualize the effects of *single* mutations, not combinations of mutations.
 
 Please visit the documentation at https://dms-view.github.io/docs to learn more about how to use the tool, how to upload a new dataset, or view case studies.
 
@@ -86,15 +86,15 @@ The site- and mutation-level metrics are different [summary statistics](https://
 Lee and colleagues asked two questions in their paper which can be easily explored using *dms-view*.
 
   1. *Are the same sites selected by sera from different people?* To explore this question, we compared the site-level and mutation-level metric values for a specific set of sites between different conditions.
-  2. *Where on the protein structure are the highly selected sites located?* To explore this question, we selected specific sites of interest to be visualized on the 3-D protein structure
+  2. *Where on the protein structure are the highly selected sites located?* To explore this question, we selected specific sites of interest to be visualized on the 3-D protein structure.
 
 ### Comparing site-level and mutation-level metric values for specific sites between conditions
 
-To address whether or not the same sites are selected by different human sera using *dms-view*, we highlighted the most highly targeted sites for the human sera condition "Age 21 2010" \autoref{fig:fig}A (144, 159, 193, 222, and 244).
+To address whether or not the same sites are selected by different human sera using *dms-view*, we highlighted the most highly targeted sites for the human sera condition "Age 21 2010" in \autoref{fig:fig}A (144, 159, 193, 222, and 244).
 We then used the condition dropdown menu to toggle to the other sera.
 The highlighted sites remain highlighted after the condition is changed so we can easily see if the same sites are targeted in other conditions.
 
-In \autoref{fig:fig}B, we can see that there is no overlap of the sites selected by the human sera "2010-age-21" the human sera "2009-age-53".
+In \autoref{fig:fig}B, we can see that there is no overlap of the sites selected by the human sera "2010-age-21" and the human sera "2009-age-53".
 These data are the default data for *dms-view*, so to explore this question in more detail please see https://dms-view.github.io.
 
 ### View sites on the protein structure
