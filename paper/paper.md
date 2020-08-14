@@ -8,10 +8,10 @@ tags:
   - protein evolution
   - data visualization
 authors:
-  - name: Sarah K. Hilton*
+  - name: Sarah K. Hilton^[These authors contributed equally to this work.]
     affiliation: "1, 2"
     orcid: 0000-0001-9278-3644
-  - name: John Huddleston*
+  - name: John Huddleston$^*$
     affiliation: "3, 4"
     orcid: 0000-0002-4250-2063
   - name: Allison Black
