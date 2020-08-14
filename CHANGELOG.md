@@ -17,6 +17,7 @@ Types of changes
 ### Added
 - Download images of each panel
 - Added custom color scheme option for mutation panel
+- Allow users to choose custom colors for protein structure
 
 ### Changed
 - Reorganized assets
