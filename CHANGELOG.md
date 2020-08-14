@@ -12,7 +12,7 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-## [Unreleased]
+## [1.1.0] - 2020-08-14
 
 ### Added
 - Download images of each panel
