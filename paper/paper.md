@@ -31,15 +31,15 @@ authors:
 affiliations:
   - name: Division of Basic Sciences and Computational Biology Program, Fred Hutchinson Cancer Research Center, Seattle, WA, USA
     index: 1
-  - name: Department of Genome Sciences, University of Washington, Seattle, WA, United States of America
+  - name: Department of Genome Sciences, University of Washington, Seattle, WA, USA
     index: 2
   - name: Vaccine and Infectious Disease Division, Fred Hutchinson Cancer Research Center, Seattle, WA, USA
     index: 3
   - name: Molecular and Cell Biology, University of Washington, Seattle, WA, USA
     index: 4
-  - name: Department of Epidemiology, University of Washington, Seattle, Washington, United States
+  - name: Department of Epidemiology, University of Washington, Seattle, WA, USA
     index: 5
-  - name: Howard Hughes Medical Institute, Seattle, Washington, USA
+  - name: Howard Hughes Medical Institute, Seattle, WA, USA
     index: 6
 date: 22 April 2020
 bibliography: paper.bib
