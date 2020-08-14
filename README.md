@@ -3,6 +3,8 @@
 Sarah Hilton\*, John Huddleston\*, Allison Black, Khrystyna North, Adam Dingens, Trevor Bedford, and Jesse Bloom.
 (* equal contribution)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3986155.svg)](https://doi.org/10.5281/zenodo.3986155)
+
 [`dms-view`](https://dms-view.github.io) is an interactive visualization tool for deep mutational scanning experiments.
 You can find the tool at [`dms-view.github.io`](https://dms-view.github.io).
 
