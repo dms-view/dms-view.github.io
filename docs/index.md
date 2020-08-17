@@ -14,4 +14,4 @@ If you want to learn how to use the tool or explore pre-existing datasets, check
 
 If you would like to upload your own data, check out [upload your own data](dataupload) or [deep mutational scanning primer](dms).
 
-If you would like to learn more about the tool, checkout the [preprint](https://www.biorxiv.org/content/10.1101/2020.05.14.096842v1) describing `dms-view`.
+If you would like to learn more about the tool, [read the dms-view paper in the Journal of Open Source Software](https://joss.theoj.org/papers/10.21105/joss.02353).
